@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CS2RAGE — Серверы Counter-Strike 2</title>
+<meta name="description" content="CS2RAGE — игровой проект Counter-Strike 2. Public, AWP, Minigame, Jail, Arena.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Oswald:wght@500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<section class="hero">
+  <div class="container">
+    <div class="row">
+      <div>
+        <h1>Играй в <span class="text-primary text-glow">CS2RAGE</span></h1>
+        <p>Лучшие публичные серверы Counter-Strike 2. Выбирай режим — подключайся в один клик.</p>
+      </div>
+      <div class="stats" id="hero-stats"></div>
+    </div>
+    <div class="modes" id="modes"></div>
+  </div>
+</section>
+
+<section style="padding-top:.5rem">
+  <div class="container">
+    <div class="mode-info" id="mode-info"></div>
+    <div class="filters">
+      <div class="filter-group">
+        <label class="filter">Регион
+          <select id="region">
+            <option value="all">Все</option>
+            <option value="ru">Россия</option>
+            <option value="eu">Европа</option>
+          </select>
+        </label>
+        <label class="filter">Карта
+          <select id="map-filter"></select>
+        </label>
+      </div>
+      <input id="search" class="search" placeholder="Поиск сервера или карты...">
+    </div>
+  </div>
+</section>
+
+<section style="padding-top:1rem;padding-bottom:3rem">
+  <div class="container" id="servers"></div>
+</section>
+
+<script src="js/data-servers.js"></script>
+<script src="js/layout.js"></script>
+<script src="js/servers.js"></script>
+</body>
+</html>
