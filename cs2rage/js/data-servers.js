@@ -2,8 +2,6 @@
 const MODES = [
   { id: "public", name: "Public", desc: "Классические публичные серверы CS2 — основа проекта." },
   { id: "awp", name: "AWP", desc: "AWP-only арены для любителей снайперских дуэлей." },
-  { id: "minigame", name: "Minigame", desc: "Surf, Bhop, KZ и другие развлекательные мини-игры." },
-  { id: "jail", name: "Jail Break", desc: "Тюрьма: терористы-заключённые против охраны-CT." },
   { id: "arena", name: "Arena 1v1", desc: "Дуэли 1 на 1 с системой ротации арен." },
 ];
 
@@ -11,8 +9,6 @@ const MODES = [
 const MAPS = {
   public:   ["de_mirage", "de_dust2", "de_inferno", "de_nuke"],
   awp:      ["awp_lego", "awp_india", "awp_dust"],
-  minigame: ["surf_utopia", "bhop_arcane", "kz_climb"],
-  jail:     ["jb_lego", "jb_canyondam", "jb_minecraft"],
   arena:    ["aim_redline", "aim_map", "aim_botz"],
 };
 
@@ -51,3 +47,5 @@ for (const mode of Object.keys(MAPS)) {
 const TOTAL_ONLINE = SERVERS.reduce((a, s) => a + s.players, 0);
 
 const mapLabel = (m) => m.replace(/^[a-z]+_/, "").replace(/_/g, " ").toUpperCase();
+
+

@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Админ-панель — CS2RAGE</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Oswald:wght@500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/admin.css">
+</head>
+<body>
+
+<!-- Экран входа -->
+<div class="admin-container" id="login-screen">
+    <div class="admin-card">
+        <div class="admin-icon"><i class="fas fa-lock"></i></div>
+        <h1>Админ-панель</h1>
+        <p>Управление серверами CS2RAGE</p>
+        <div class="admin-field">
+            <input type="password" id="admin-password" placeholder="Пароль">
+        </div>
+        <button class="admin-btn" id="login-btn"><i class="fas fa-arrow-right"></i> Войти</button>
+        <p class="admin-error" id="login-error"></p>
+    </div>
+</div>
+
+<!-- Панель управления -->
+<div class="admin-container" id="admin-panel" style="display:none;">
+    <div class="admin-panel-wrap">
+        <div class="admin-header">
+            <a href="index.html" class="admin-btn-outline"><i class="fas fa-home"></i> На главную</a>
+            <h1><i class="fas fa-cog"></i> Управление серверами</h1>
+            <button class="admin-btn-outline" id="logout-btn"><i class="fas fa-sign-out-alt"></i> Выйти</button>
+        </div>
+
+        <!-- Статистика -->
+        <div class="admin-stats">
+            <div class="admin-stat"><span id="total-servers">0</span> всего серверов</div>
+            <div class="admin-stat"><span id="online-servers">0</span> онлайн</div>
+            <div class="admin-stat"><span id="total-players">0</span> игроков</div>
+            <button class="admin-btn" id="export-btn"><i class="fas fa-download"></i> Экспорт JSON</button>
+        </div>
+
+        <!-- Форма добавления сервера -->
+        <div class="admin-card">
+            <h2><i class="fas fa-plus-circle"></i> Добавить сервер</h2>
+            <div class="admin-form">
+                <div class="admin-row">
+                    <div class="admin-field">
+                        <label>Название сервера</label>
+                        <input type="text" id="srv-name" placeholder="CS2RAGE | PUBLIC #1">
+                    </div>
+                    <div class="admin-field">
+                        <label>Режим</label>
+                        <select id="srv-mode">
+                            <option value="public">Public</option>
+                            <option value="awp">AWP</option>
+                            <option value="minigame">Minigame</option>
+                            <option value="jail">Jail Break</option>
+                            <option value="arena">Arena 1v1</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="admin-row">
+                    <div class="admin-field">
+                        <label>Карта</label>
+                        <select id="srv-map">
+                            <optgroup label="Public">
+                                <option value="de_mirage">Mirage</option>
+                                <option value="de_dust2">Dust 2</option>
+                                <option value="de_inferno">Inferno</option>
+                                <option value="de_nuke">Nuke</option>
+                            </optgroup>
+                            <optgroup label="AWP">
+                                <option value="awp_lego">awp_lego</option>
+                                <option value="awp_india">awp_india</option>
+                                <option value="awp_dust">awp_dust</option>
+                            </optgroup>
+                            <optgroup label="Minigame">
+                                <option value="surf_utopia">surf_utopia</option>
+                                <option value="bhop_arcane">bhop_arcane</option>
+                                <option value="kz_climb">kz_climb</option>
+                            </optgroup>
+                            <optgroup label="Jail">
+                                <option value="jb_lego">jb_lego</option>
+                                <option value="jb_canyondam">jb_canyondam</option>
+                                <option value="jb_minecraft">jb_minecraft</option>
+                            </optgroup>
+                            <optgroup label="Arena">
+                                <option value="aim_redline">aim_redline</option>
+                                <option value="aim_map">aim_map</option>
+                                <option value="aim_botz">aim_botz</option>
+                            </optgroup>
+                        </select>
+                    </div>
+                    <div class="admin-field">
+                        <label>Регион</label>
+                        <select id="srv-region">
+                            <option value="ru">Россия</option>
+                            <option value="eu">Европа</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="admin-row">
+                    <div class="admin-field">
+                        <label>Город</label>
+                        <select id="srv-city">
+                            <option value="Москва">Москва</option>
+                            <option value="СПб">Санкт-Петербург</option>
+                            <option value="Frankfurt">Frankfurt</option>
+                            <option value="Amsterdam">Amsterdam</option>
+                        </select>
+                    </div>
+                    <div class="admin-field">
+                        <label>Слотов</label>
+                        <input type="number" id="srv-slots" value="32" min="8" max="64">
+                    </div>
+                </div>
+                <div class="admin-row">
+                    <div class="admin-field">
+                        <label>Игроков онлайн</label>
+                        <input type="number" id="srv-players" value="0" min="0">
+                    </div>
+                    <div class="admin-field">
+                        <label>Статус</label>
+                        <select id="srv-status">
+                            <option value="online">Online</option>
+                            <option value="offline" selected>Offline</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="admin-field">
+                    <label>IP:Port (опционально)</label>
+                    <input type="text" id="srv-ip" placeholder="45.123.45.67:27015">
+                </div>
+                <button class="admin-btn" id="add-server-btn"><i class="fas fa-plus"></i> Сформировать JSON</button>
+            </div>
+        </div>
+
+        <!-- Список серверов -->
+        <div class="admin-card">
+            <h2><i class="fas fa-list"></i> Список серверов (<span id="srv-count">0</span>)</h2>
+            <div class="admin-search">
+                <input type="text" id="admin-search" placeholder="Поиск по названию или карте...">
+            </div>
+            <div class="admin-mod-list" id="srv-list"></div>
+        </div>
+    </div>
+</div>
+
+<script src="js/admin.js"></script>
+</body>
+</html>
