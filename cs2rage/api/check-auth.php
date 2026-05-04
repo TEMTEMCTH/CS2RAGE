@@ -5,7 +5,7 @@ header('Content-Type: application/json');
 if (isset($_SESSION['user'])) {
     echo json_encode([
         'authenticated' => true,
-        'user' => [
+        'user' => [ 
             'steamid' => $_SESSION['user']['steamid'],
             'nickname' => $_SESSION['user']['nickname'],
             'avatar' => $_SESSION['user']['avatar'],

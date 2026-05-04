@@ -9,27 +9,29 @@ const NAV = [
 ];
 
 function renderHeader() {
-  const here = location.pathname.split("/").pop() || "index.html";
-  // Используем TOTAL_ONLINE из data-servers.js если он подключён
-  const online = (typeof TOTAL_ONLINE !== "undefined") ? TOTAL_ONLINE : 0;
-  const navHtml = NAV.map(n =>
-    `<a href="${n.href}" class="${here === n.href ? "active" : ""}">${n.label}</a>`
-  ).join("");
-  document.body.insertAdjacentHTML("afterbegin", `
-    <header class="site">
-      <div class="container inner">
-        <a href="index.html" class="logo">
-          <span class="text-primary text-glow">▲</span>
-          <span>CS2</span><span class="text-primary text-glow">RAGE</span>
-        </a>
-        <nav class="main">${navHtml}</nav>
-        <div style="display:flex;align-items:center;gap:.75rem">
-          <div class="online-pill"><span class="dot"></span><b>${online}</b> онлайн</div>
-          <button class="btn-steam" onclick="alert('Демо: вход через Steam отключён.')">Войти через Steam</button>
-        </div>
-      </div>
-    </header>
-  `);
+    const here = location.pathname.split("/").pop() || "index.html";
+    const online = (typeof TOTAL_ONLINE !== "undefined") ? TOTAL_ONLINE : 0;
+    const navHtml = NAV.map(n =>
+        `<a href="${n.href}" class="${here === n.href ? "active" : ""}">${n.label}</a>`
+    ).join("");
+    
+    document.body.insertAdjacentHTML("afterbegin", `
+        <header class="site">
+            <div class="container inner">
+                <a href="index.html" class="logo">
+                    <span class="text-primary text-glow">▲</span>
+                    <span>CS2</span><span class="text-primary text-glow">RAGE</span>
+                </a>
+                <nav class="main">${navHtml}</nav>
+                <div style="display:flex;align-items:center;gap:.75rem">
+                    <div class="online-pill"><span class="dot"></span><b>${online}</b> онлайн</div>
+                    <a href="/steam-auth.php?return=" + encodeURIComponent(window.location.pathname) + window.location.search + window.location.hash + "" class="btn-steam" style="text-decoration:none; display:inline-flex; align-items:center; gap:8px;">
+                        <i class="fab fa-steam"></i> Войти через Steam
+                    </a>
+                </div>
+            </div>
+        </header>
+    `);
 }
 
 function renderFooter() {
