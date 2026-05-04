@@ -313,3 +313,268 @@ nav.main a.active::after {
     animation: spinLoader 0.6s linear infinite;
     display: inline-block;
 }
+/* ===== ПЛАВНЫЕ АНИМАЦИИ ДЛЯ ВСЕХ ДЕЙСТВИЙ ===== */
+
+/* Плавное появление контента при загрузке */
+.container, section, .server-card, .mode-btn, .tier, .weapon, .faq-item, .rule-item {
+    animation: fadeInUp 0.5s cubic-bezier(0.2, 0.9, 0.4, 1.1) forwards;
+    opacity: 0;
+}
+
+/* Задержки для элементов */
+.server-card:nth-child(1) { animation-delay: 0.05s; }
+.server-card:nth-child(2) { animation-delay: 0.1s; }
+.server-card:nth-child(3) { animation-delay: 0.15s; }
+.server-card:nth-child(4) { animation-delay: 0.2s; }
+.server-card:nth-child(5) { animation-delay: 0.25s; }
+.server-card:nth-child(6) { animation-delay: 0.3s; }
+.mode-btn:nth-child(1) { animation-delay: 0.05s; }
+.mode-btn:nth-child(2) { animation-delay: 0.1s; }
+.mode-btn:nth-child(3) { animation-delay: 0.15s; }
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Плавные переходы для всех кликабельных элементов */
+button, 
+a, 
+.mode-btn, 
+.server-card, 
+.weapon, 
+.tier .buy,
+.admin-btn,
+.btn-steam,
+.btn-connect,
+.filter select,
+.skin-cats button,
+.faq-item summary {
+    transition: all 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1) !important;
+}
+
+/* Эффект нажатия для кнопок */
+button:active, 
+.mode-btn:active, 
+.weapon:active,
+.btn-steam:active,
+.admin-btn:active {
+    transform: scale(0.97) !important;
+    transition: transform 0.1s ease !important;
+}
+
+/* Плавное изменение фона при ховере */
+button:hover, 
+.mode-btn:hover, 
+.weapon:hover,
+.server-card:hover,
+.tier:hover {
+    transition: all 0.25s cubic-bezier(0.2, 0.9, 0.4, 1.1) !important;
+}
+
+/* Плавное появление модальных окон */
+.commands-modal {
+    animation: fadeInModal 0.25s cubic-bezier(0.2, 0.9, 0.4, 1.1) forwards;
+}
+
+.commands-modal-content {
+    animation: slideUpModal 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1) forwards;
+}
+
+@keyframes fadeInModal {
+    from { opacity: 0; backdrop-filter: blur(0px); }
+    to { opacity: 1; backdrop-filter: blur(8px); }
+}
+
+@keyframes slideUpModal {
+    from { 
+        opacity: 0;
+        transform: translateY(50px) scale(0.95);
+    }
+    to { 
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+/* Плавное закрытие модалки */
+.commands-modal.closing {
+    animation: fadeOutModal 0.2s ease forwards;
+}
+
+.commands-modal.closing .commands-modal-content {
+    animation: slideDownModal 0.2s ease forwards;
+}
+
+@keyframes fadeOutModal {
+    to { opacity: 0; backdrop-filter: blur(0px); }
+}
+
+@keyframes slideDownModal {
+    to { transform: translateY(30px) scale(0.95); opacity: 0; }
+}
+
+/* Плавная смена фильтров */
+.filters select,
+.filters input {
+    transition: all 0.2s cubic-bezier(0.2, 0.9, 0.4, 1.1) !important;
+}
+
+.filters select:focus,
+.filters input:focus {
+    transform: scale(1.02);
+    transition: all 0.15s ease !important;
+}
+
+/* Плавное появление серверов при фильтрации */
+.servers-grid .server-card {
+    animation: fadeInScale 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1) forwards;
+}
+
+@keyframes fadeInScale {
+    from {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+/* Плавное переключение режимов */
+.mode-info {
+    transition: all 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1) !important;
+}
+
+.mode-btn.active {
+    transition: all 0.25s cubic-bezier(0.2, 0.9, 0.4, 1.1) !important;
+}
+
+/* Плавный скролл для всей страницы */
+html {
+    scroll-behavior: smooth;
+}
+
+/* Плавное переключение вкладок в скинченджере */
+.skin-cats button {
+    transition: all 0.25s cubic-bezier(0.2, 0.9, 0.4, 1.1) !important;
+}
+
+.weapons-grid .weapon {
+    transition: all 0.2s cubic-bezier(0.2, 0.9, 0.4, 1.1) !important;
+}
+
+/* Плавное появление конфига скина */
+.skin-config {
+    animation: fadeInConfig 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1) forwards;
+}
+
+@keyframes fadeInConfig {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Плавное изменение чисел в статистике */
+.stat b, .online-pill b {
+    transition: all 0.3s ease-out;
+}
+
+/* Плавный эффект для select dropdown */
+select {
+    cursor: pointer;
+    transition: all 0.2s ease !important;
+}
+
+select:hover {
+    border-color: var(--primary) !important;
+}
+
+/* Плавная анимация для FAQ */
+.faq-item {
+    transition: all 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1) !important;
+}
+
+.faq-item[open] {
+    transition: all 0.3s ease !important;
+}
+
+.faq-item p {
+    animation: fadeInText 0.25s ease forwards;
+}
+
+@keyframes fadeInText {
+    from { opacity: 0; transform: translateY(-5px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Плавная анимация для правил */
+.rule-item {
+    transition: all 0.25s cubic-bezier(0.2, 0.9, 0.4, 1.1) !important;
+}
+
+.rule-item:hover {
+    transform: translateX(5px);
+    transition: all 0.2s ease !important;
+}
+
+/* Плавный эффект для строк таблицы топа */
+.top-table tr {
+    transition: all 0.2s cubic-bezier(0.2, 0.9, 0.4, 1.1) !important;
+}
+
+.top-table tr:hover {
+    transform: scale(1.01);
+    transition: all 0.15s ease !important;
+}
+
+/* Плавное появление прелоадера */
+.preloader {
+    transition: opacity 0.5s cubic-bezier(0.2, 0.9, 0.4, 1.1) !important;
+}
+
+.preloader.hide {
+    transition: opacity 0.4s ease !important;
+}
+
+/* Плавный hover для карточек серверов */
+.server-card {
+    transition: all 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1) !important;
+}
+
+.server-card:hover {
+    transform: translateY(-5px);
+    transition: all 0.25s cubic-bezier(0.2, 0.9, 0.4, 1.1) !important;
+}
+
+/* Плавный эффект для кнопки команд */
+.btn-commands {
+    transition: all 0.25s cubic-bezier(0.2, 0.9, 0.4, 1.1) !important;
+}
+
+.btn-commands:hover {
+    transform: translateY(-2px);
+    transition: all 0.2s ease !important;
+}
+
+/* Плавные изменения в админ-панели */
+.admin-card, .admin-mod-item {
+    transition: all 0.25s cubic-bezier(0.2, 0.9, 0.4, 1.1) !important;
+}
+
+.admin-mod-item:hover {
+    transform: translateX(5px);
+    transition: all 0.2s ease !important;
+}

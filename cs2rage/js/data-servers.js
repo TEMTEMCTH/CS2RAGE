@@ -15,7 +15,7 @@ const MAPS = {
 // Генерация серверов
 const REGIONS = ["ru"];
 const CITIES = { ru: ["Москва"] };
-const SLOTS_BY_MODE = { public: 32, awp: 20, minigame: 24, jail: 28, arena: 16 };
+const SLOTS_BY_MODE = { public: 32, awp: 20, arena: 16 };
 
 const SERVERS = [];
 let id = 1;
@@ -47,5 +47,3 @@ for (const mode of Object.keys(MAPS)) {
 const TOTAL_ONLINE = SERVERS.reduce((a, s) => a + s.players, 0);
 
 const mapLabel = (m) => m.replace(/^[a-z]+_/, "").replace(/_/g, " ").toUpperCase();
-
-
