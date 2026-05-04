@@ -13,8 +13,8 @@ const MAPS = {
 };
 
 // Генерация серверов
-const REGIONS = ["ru", "eu"];
-const CITIES = { ru: ["Москва", "СПб"], eu: ["Frankfurt", "Amsterdam"] };
+const REGIONS = ["ru"];
+const CITIES = { ru: ["Москва"] };
 const SLOTS_BY_MODE = { public: 32, awp: 20, minigame: 24, jail: 28, arena: 16 };
 
 const SERVERS = [];

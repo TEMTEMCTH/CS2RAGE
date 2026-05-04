@@ -1,4 +1,4 @@
-// Скинченджер
+// Скинченджер CS2RAGE
 let cat = "rifles";
 let weapon = "AK-47";
 let skin = "Vulcan";
@@ -52,20 +52,92 @@ function renderConfig() {
       <select id="sel-skin">${skins.map(s => `<option ${s === skin ? "selected" : ""}>${s}</option>`).join("")}</select>
     </div>
     <div class="field">
-      <label>Паттерн (Seed): 0–1000</label>
-      <input id="inp-pattern" type="number" min="0" max="1000" value="${pattern}">
+      <label>Паттерн (Seed)</label>
+      <div style="display:flex;gap:10px;align-items:center;">
+        <input id="inp-pattern" type="number" min="0" max="1000" value="${pattern}" style="flex:1;">
+        <button class="btn-random" id="btn-random" title="Случайный паттерн"><i class="fas fa-dice"></i></button>
+      </div>
+      <div class="row-val"><span>От 0 до 1000</span><b id="pattern-display">Seed: ${pattern}</b></div>
     </div>
     <div class="field">
-      <label>Износ (Float): 0.00 – 1.00</label>
-      <input id="inp-wear" type="range" min="0" max="1" step="0.001" value="${wear}">
-      <div class="row-val"><span>${wearLabel(wear)}</span><b>${wear.toFixed(3)}</b></div>
+      <label>Износ (Float): <span id="float-value">${wear.toFixed(3)}</span></label>
+      <div style="display:flex;gap:8px;align-items:center;">
+        <input id="inp-wear-range" type="range" min="0" max="1000" value="${Math.round(wear * 1000)}" style="flex:1;">
+        <input id="inp-wear-number" type="number" min="0" max="1" step="0.001" value="${wear.toFixed(3)}" style="width:80px;text-align:center;">
+      </div>
+      <div class="row-val"><span id="wear-label">${wearLabel(wear)}</span><b>${wear.toFixed(3)}</b></div>
     </div>
-    <button class="btn-apply" onclick="alert('Применено: ${weapon} | ${skin} | seed ${pattern} | float ${wear.toFixed(3)}')">Применить настройки</button>
+    <button class="btn-apply" id="btn-apply">
+      Применить: <span id="apply-weapon">${weapon}</span> | <span id="apply-skin">${skin}</span> | seed <span id="apply-pattern">${pattern}</span> | float <span id="apply-float">${wear.toFixed(3)}</span>
+    </button>
   `;
-  document.getElementById("sel-weapon").onchange = (e) => { weapon = e.target.value; skin = skinsForWeapon(weapon)[0]; renderConfig(); renderWeapons(); };
-  document.getElementById("sel-skin").onchange   = (e) => { skin = e.target.value; };
-  document.getElementById("inp-pattern").oninput = (e) => { pattern = +e.target.value; };
-  document.getElementById("inp-wear").oninput    = (e) => { wear = +e.target.value; renderConfig(); };
+
+  // Обработчики
+  document.getElementById("sel-weapon").onchange = (e) => { 
+    weapon = e.target.value; 
+    skin = skinsForWeapon(weapon)[0]; 
+    renderConfig(); 
+    renderWeapons(); 
+  };
+  
+  document.getElementById("sel-skin").onchange = (e) => { 
+    skin = e.target.value; 
+    updateApplyButton();
+  };
+
+  // Паттерн - ручной ввод
+  document.getElementById("inp-pattern").oninput = (e) => {
+    let val = parseInt(e.target.value) || 0;
+    if (val < 0) val = 0;
+    if (val > 1000) val = 1000;
+    pattern = val;
+    document.getElementById("pattern-display").textContent = `Seed: ${pattern}`;
+    updateApplyButton();
+  };
+
+  // Случайный паттерн
+  document.getElementById("btn-random").onclick = () => {
+    pattern = Math.floor(Math.random() * 1001);
+    document.getElementById("inp-pattern").value = pattern;
+    document.getElementById("pattern-display").textContent = `Seed: ${pattern}`;
+    updateApplyButton();
+  };
+
+  // Износ - ползунок
+  document.getElementById("inp-wear-range").oninput = (e) => {
+    wear = parseInt(e.target.value) / 1000;
+    syncWearInputs();
+  };
+
+  // Износ - ручной ввод
+  document.getElementById("inp-wear-number").oninput = (e) => {
+    let val = parseFloat(e.target.value);
+    if (isNaN(val)) val = 0;
+    if (val < 0) val = 0;
+    if (val > 1) val = 1;
+    wear = val;
+    syncWearInputs();
+  };
+
+  // Кнопка применить
+  document.getElementById("btn-apply").onclick = () => {
+    alert(`✅ Применено!\n\nОружие: ${weapon}\nСкин: ${skin}\nПаттерн (Seed): ${pattern}\nИзнос (Float): ${wear.toFixed(3)} (${wearLabel(wear)})`);
+  };
+}
+
+function syncWearInputs() {
+  document.getElementById("inp-wear-range").value = Math.round(wear * 1000);
+  document.getElementById("inp-wear-number").value = wear.toFixed(3);
+  document.getElementById("float-value").textContent = wear.toFixed(3);
+  document.getElementById("wear-label").textContent = wearLabel(wear);
+  updateApplyButton();
+}
+
+function updateApplyButton() {
+  document.getElementById("apply-weapon").textContent = weapon;
+  document.getElementById("apply-skin").textContent = skin;
+  document.getElementById("apply-pattern").textContent = pattern;
+  document.getElementById("apply-float").textContent = wear.toFixed(3);
 }
 
 function renderAll() { renderCats(); renderWeapons(); renderConfig(); }
