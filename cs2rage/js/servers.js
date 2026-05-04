@@ -108,3 +108,23 @@ document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("map-filter").onchange = (e) => { mapFilter = e.target.value; renderServers(); };
   document.getElementById("search").oninput = (e) => { q = e.target.value; renderServers(); };
 });
+// Добавить в js/servers.js в конец
+function animateNumbers() {
+    const stats = document.querySelectorAll('.stat b, .online-pill b');
+    stats.forEach(stat => {
+        const final = parseInt(stat.innerText);
+        let current = 0;
+        const increment = final / 30;
+        const timer = setInterval(() => {
+            current += increment;
+            if (current >= final) {
+                stat.innerText = final;
+                clearInterval(timer);
+            } else {
+                stat.innerText = Math.floor(current);
+            }
+        }, 50);
+    });
+}
+// Вызвать при загрузке
+document.addEventListener('DOMContentLoaded', animateNumbers);

@@ -154,3 +154,162 @@ footer.site {
 .weapon:hover {
   background: rgba(26, 26, 26, 0.85) !important;
 }
+/* Логотип */
+.logo {
+    font-family: 'Oswald', sans-serif;
+    font-size: 1.5rem;
+    letter-spacing: .2em;
+    font-weight: 700;
+    display: inline-flex;
+    align-items: center;
+    gap: .5rem;
+    text-decoration: none;
+}
+
+/* Анимация только для треугольника (стрелочки) */
+.logo:hover .text-primary:first-child {
+    animation: fullRotate 0.6s ease-in-out;
+}
+
+@keyframes fullRotate {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+/* Обводка только для карточек серверов */
+.server-card:hover,
+.mode-btn:hover,
+.tier:hover {
+    border: 1px solid #e0883a;
+    box-shadow: 0 0 0 1px rgba(224,136,58,0.3), 0 8px 20px rgba(0,0,0,0.2);
+    transition: all 0.2s ease;
+}
+/* Добавить в конец main.css */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.server-card, .tier, .mode-btn, .skin-tile, .faq-item, .rule-item {
+    animation: fadeInUp 0.5s ease forwards;
+    opacity: 0;
+}
+
+.server-card:nth-child(1) { animation-delay: 0.05s; }
+.server-card:nth-child(2) { animation-delay: 0.1s; }
+.server-card:nth-child(3) { animation-delay: 0.15s; }
+.server-card:nth-child(4) { animation-delay: 0.2s; }
+.server-card:nth-child(5) { animation-delay: 0.25s; }
+/* Мягкий блеск на карточках (едва заметный) */
+.server-card, .tier, .skin-tile, .mode-btn, .faq-item, .rule-item {
+    position: relative;
+    overflow: hidden;
+}
+
+.server-card::before, .tier::before, .skin-tile::before, 
+.mode-btn::before, .faq-item::before, .rule-item::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -150%;
+    width: 80%;
+    height: 100%;
+    background: linear-gradient(90deg, 
+        transparent, 
+        rgba(224,136,58,0.03), 
+        rgba(224,136,58,0.06),
+        rgba(224,136,58,0.03), 
+        transparent);
+    transform: skewX(-15deg);
+    transition: left 0.8s ease;
+    pointer-events: none;
+}
+
+.server-card:hover::before, .tier:hover::before, .skin-tile:hover::before,
+.mode-btn:hover::before, .faq-item:hover::before, .rule-item:hover::before {
+    left: 100%;
+}
+/* Минималистичная подсветка активного пункта меню */
+nav.main a.active {
+    position: relative;
+    color: #e0883a;
+}
+
+nav.main a.active::after {
+    content: '';
+    position: absolute;
+    bottom: -4px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 20px;
+    height: 2px;
+    background: #e0883a;
+    border-radius: 2px;
+}
+/* Добавить в main.css */
+.preloader {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #0a0f1c;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    transition: opacity 0.5s ease;
+}
+
+.preloader.hide {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.loader {
+    width: 50px;
+    height: 50px;
+    border: 3px solid rgba(224,136,58,0.2);
+    border-top-color: #e0883a;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+.skeleton-loader {
+    background: linear-gradient(90deg, #1a1f2e 25%, #2a2f3e 50%, #1a1f2e 75%);
+    background-size: 200% 100%;
+    animation: loading 1.5s infinite;
+    border-radius: 8px;
+}
+
+@keyframes loading {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+}
+
+@keyframes spinLoader {
+    to { transform: rotate(360deg); }
+}
+
+.loading-spinner {
+    width: 24px;
+    height: 24px;
+    border: 2px solid rgba(224,136,58,0.2);
+    border-top-color: #e0883a;
+    border-radius: 50%;
+    animation: spinLoader 0.6s linear infinite;
+    display: inline-block;
+}

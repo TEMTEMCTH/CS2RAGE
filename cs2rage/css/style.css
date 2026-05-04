@@ -175,3 +175,15 @@ section{padding:2rem 0}
 .field .row-val b{color:var(--fg)}
 .btn-apply{background:var(--gradient-red);color:#fff;border:none;padding:1rem;border-radius:8px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;cursor:pointer;box-shadow:var(--shadow-red);transition:.2s}
 .btn-apply:hover{opacity:.9}
+.logo:hover {
+    animation: pulse 0.8s ease infinite;
+}
+
+@keyframes pulse {
+    0%, 100% {
+        text-shadow: 0 0 0px rgba(224,136,58,0);
+    }
+    50% {
+        text-shadow: 0 0 15px rgba(224,136,58,0.8);
+    }
+}

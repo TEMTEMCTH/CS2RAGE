@@ -1,3 +1,8 @@
+
+window.addEventListener('load', () => {
+    const preloader = document.querySelector('.preloader');
+    if (preloader) preloader.classList.add('hide');
+});
 // Общий layout: вставка шапки и подвала, подсветка активной ссылки
 const NAV = [
   { href: "index.html",       label: "Серверы" },
