@@ -4,7 +4,7 @@ window.addEventListener('load', () => {
 });
 
 const NAV = [
-    { href: "index.html",       label: "Серверы" },
+    { href: "index.html",       label: "Сервера" },
     { href: "skinchanger.html", label: "Скинченджер" },
     { href: "shop.html",        label: "Привилегии" },
     { href: "top.html",         label: "Топ" },

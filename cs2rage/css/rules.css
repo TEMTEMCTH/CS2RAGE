@@ -19,3 +19,49 @@
 .ban-type-card h4{font-family:'Oswald',sans-serif;font-size:1.1rem;text-transform:uppercase;letter-spacing:.05em;color:var(--fg);margin-bottom:.5rem}
 .ban-type-card p{color:var(--muted);font-size:.9rem;line-height:1.5}
 @media(max-width:600px){.rule-item .rule-header{flex-direction:column;gap:.5rem}}
+.rule-header {
+    display: flex;
+    align-items: baseline;
+    gap: 1rem;
+    margin-bottom: 0.75rem;
+    flex-wrap: wrap;
+}
+
+.rule-num {
+    font-family: 'Oswald', sans-serif;
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: #e0883a;
+    min-width: 50px;
+}
+
+.rule-title {
+    font-family: 'Oswald', sans-serif;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--fg);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.rule-text {
+    color: var(--muted);
+    font-size: 0.95rem;
+    line-height: 1.5;
+    margin-bottom: 0.75rem;
+    padding-left: 0.5rem;
+}
+
+.rule-penalty {
+    background: rgba(224,136,58,0.08);
+    border-left: 3px solid #e0883a;
+    padding: 0.6rem 1rem;
+    border-radius: 0 8px 8px 0;
+    font-size: 0.85rem;
+    color: var(--fg);
+    margin-top: 0.5rem;
+}
+
+.rule-penalty strong {
+    color: #e0883a;
+}
