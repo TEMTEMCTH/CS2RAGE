@@ -578,3 +578,50 @@ select:hover {
     transform: translateX(5px);
     transition: all 0.2s ease !important;
 }
+/* ===== ФОНОВАЯ ГИФКА (едва заметная) ===== */
+.background-gif {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    pointer-events: none;
+    overflow: hidden;
+}
+
+.background-gif::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url('../images/bg-loop.gif');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    opacity: 0.12;  /* Очень слабая прозрачность — почти незаметно */
+    animation: slowZoom 30s ease-in-out infinite;
+}
+
+@keyframes slowZoom {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
+
+/* Убедимся, что весь контент поверх гифки */
+.container, header, footer, section, .hero, .modes, .filters, #servers {
+    position: relative;
+    z-index: 1;
+}
+
+/* Для body убираем старые радиальные градиенты если мешают */
+body {
+    background-color: #0f0f0f;
+    /* Раскомментируй если хочешь убрать старые пятна:
+    background-image: none; 
+    */
+}
+/* ===== ГИФКА ТОЛЬКО В ВЕРХНЕЙ ЧАСТИ (до серверов) ===== */
