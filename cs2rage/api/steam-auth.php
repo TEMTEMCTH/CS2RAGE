@@ -12,7 +12,7 @@ if (!isset($_GET['openid_ns'])) {
     $openid_url = 'https://steamcommunity.com/openid/login?' . http_build_query([
         'openid.ns' => 'http://specs.openid.net/auth/2.0',
         'openid.mode' => 'checkid_setup',
-        'openid.return_to' => SITE_URL . '/steam-auth.php?return=' . urlencode($return_url),
+        'openid.return_to' => SITE_URL . '/api/steam-auth.php?return=' . urlencode($return_url),
         'openid.realm' => SITE_URL,
         'openid.identity' => 'http://specs.openid.net/auth/2.0/identifier_select',
         'openid.claimed_id' => 'http://specs.openid.net/auth/2.0/identifier_select'
