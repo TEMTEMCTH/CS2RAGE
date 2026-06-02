@@ -10,30 +10,59 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="css/main.css">
     <style>
-        * {
-            scrollbar-width: thin;
-            scrollbar-color: #e0883a #2a2a2a;
+        * { scrollbar-width: thin; scrollbar-color: #e0883a #2a2a2a; }
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: #2a2a2a; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb { background: #e0883a; border-radius: 10px; }
+        
+        img {
+            user-drag: none;
+            -webkit-user-drag: none;
+            pointer-events: none;
         }
         
-        ::-webkit-scrollbar {
-            width: 6px;
-            height: 6px;
+        .stattrak-switch {
+            position: relative;
+            display: inline-block;
+            width: 44px;
+            height: 22px;
         }
-        ::-webkit-scrollbar-track {
-            background: #2a2a2a;
-            border-radius: 10px;
+        .stattrak-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
         }
-        ::-webkit-scrollbar-thumb {
-            background: #e0883a;
-            border-radius: 10px;
+        .stattrak-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #2a2a2a;
+            transition: 0.3s;
+            border-radius: 34px;
         }
-        ::-webkit-scrollbar-thumb:hover {
-            background: #f0a050;
+        .stattrak-slider:before {
+            position: absolute;
+            content: "";
+            height: 16px;
+            width: 16px;
+            left: 3px;
+            bottom: 3px;
+            background-color: #8a8a8a;
+            transition: 0.3s;
+            border-radius: 50%;
+        }
+        input:checked + .stattrak-slider {
+            background: linear-gradient(135deg, #c0702a, #f0a050);
+        }
+        input:checked + .stattrak-slider:before {
+            transform: translateX(22px);
+            background-color: #1a1a1a;
         }
         
-        .skinchanger-wrapper { max-width: 1800px; margin: 0 auto; padding: 2rem; animation: fadeInUp 0.5s ease forwards; opacity: 0; }
-        @keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
-        
+        .skinchanger-wrapper { max-width: 1800px; margin: 0 auto; padding: 2rem; }
         .skinchanger-layout { display: flex; gap: 2rem; flex-wrap: wrap; }
         
         .weapon-sidebar {
@@ -96,7 +125,6 @@
             transform: translateY(-4px); 
             border-color: var(--primary);
             background: rgba(224,136,58,0.1);
-            box-shadow: 0 10px 25px -5px rgba(224,136,58,0.2);
         }
         .skin-card-image { 
             width: 100%;
@@ -108,35 +136,13 @@
             justify-content: center;
             margin-bottom: 0.8rem;
         }
-        .skin-card-image img { 
-            max-width: 140px; 
-            max-height: 140px; 
-            transition: transform 0.3s;
-        }
-        .skin-card:hover .skin-card-image img { transform: scale(1.05); }
-        .skin-card-info { text-align: center; }
-        .skin-card-name { 
-            font-family: 'Oswald', sans-serif; 
-            font-size: 1rem; 
-            font-weight: 600; 
-            color: var(--text);
-            margin-bottom: 0.3rem;
-        }
-        .skin-card-weapon { 
-            font-size: 0.7rem; 
-            color: var(--primary); 
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-        }
-        .skin-card-rarity {
-            font-size: 0.65rem;
-            color: var(--text-muted);
-            margin-top: 0.3rem;
-        }
+        .skin-card-image img { max-width: 140px; max-height: 140px; }
+        .skin-card-name { font-family: 'Oswald', sans-serif; font-size: 1rem; font-weight: 600; margin-bottom: 0.3rem; }
+        .skin-card-weapon { font-size: 0.7rem; color: var(--primary); text-transform: uppercase; }
         
         .collection-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
             gap: 1rem;
         }
         
@@ -146,64 +152,101 @@
             border-radius: 16px;
             padding: 1rem;
             text-align: center;
-            transition: all 0.2s;
+            transition: all 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1);
             position: relative;
+            cursor: pointer;
+            overflow: hidden;
         }
         .collection-card:hover {
             border-color: var(--primary);
             transform: translateY(-3px);
-            background: rgba(224,136,58,0.05);
+            backdrop-filter: blur(6px);
         }
+        .collection-card:hover .collection-card-image::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 12px;
+        }
+        .collection-card .edit-overlay {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0.8);
+            background: linear-gradient(135deg, #c0702a, #f0a050);
+            color: #1a1a1a;
+            padding: 8px 16px;
+            border-radius: 30px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            opacity: 0;
+            transition: all 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+            z-index: 20;
+            pointer-events: none;
+            white-space: nowrap;
+            box-shadow: 0 0 15px rgba(224,136,58,0.5);
+        }
+        .collection-card:hover .edit-overlay {
+            opacity: 1;
+            transform: translate(-50%, -50%) scale(1);
+        }
+        
         .collection-card-image {
             width: 100%;
-            height: 140px;
+            height: 120px;
             background: linear-gradient(135deg, #1a1a1a, #0f0f0f);
             border-radius: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
             margin-bottom: 0.8rem;
+            position: relative;
         }
-        .collection-card-image img { 
-            max-width: 120px; 
-            max-height: 120px; 
-        }
-        .collection-card-info { text-align: center; }
-        .collection-card-weapon { 
-            font-size: 0.7rem; 
-            color: var(--primary); 
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-        }
-        .collection-card-name { 
-            font-size: 0.9rem; 
-            font-weight: 600;
-            margin: 0.3rem 0;
-        }
-        .collection-card-details { 
-            font-size: 0.6rem; 
-            color: var(--text-muted);
-            display: flex;
-            justify-content: center;
-            gap: 0.8rem;
+        .collection-card-image img { max-width: 100px; max-height: 100px; position: relative; z-index: 1; }
+        .collection-card-weapon { font-size: 0.65rem; color: var(--primary); text-transform: uppercase; }
+        .collection-card-name { font-size: 0.85rem; font-weight: 600; margin: 0.3rem 0; }
+        .collection-card-details { font-size: 0.6rem; color: var(--text-muted); margin-top: 0.3rem; }
+        
+        .custom-name {
+            display: inline-block;
+            background: rgba(224,136,58,0.2);
+            border-radius: 20px;
+            padding: 0.2rem 0.6rem;
+            font-size: 0.6rem;
+            color: #e0883a;
             margin-top: 0.3rem;
         }
-        .collection-card-details span { color: var(--primary); }
+        
         .collection-remove-btn {
-            background: rgba(227, 77, 77, 0.1);
-            border: 1px solid rgba(227, 77, 77, 0.3);
-            border-radius: 20px;
-            padding: 0.3rem 0.8rem;
-            font-size: 0.65rem;
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            background: rgba(227, 77, 77, 0.2);
+            border: none;
+            border-radius: 50%;
+            width: 26px;
+            height: 26px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             color: #e34d4d;
             cursor: pointer;
-            transition: 0.2s;
-            margin-top: 0.8rem;
-            width: 100%;
+            transition: all 0.2s;
+            font-size: 0.65rem;
+            opacity: 0;
+            z-index: 25;
         }
-        .collection-remove-btn:hover { 
-            background: #e34d4d; 
+        .collection-card:hover .collection-remove-btn {
+            opacity: 1;
+        }
+        .collection-remove-btn:hover {
+            background: #e34d4d;
             color: #1a1a1a;
+            transform: scale(1.1);
         }
         
         .collection-header {
@@ -211,20 +254,16 @@
             justify-content: space-between;
             align-items: center;
             margin-bottom: 1.2rem;
-            padding-bottom: 0.5rem;
-            border-bottom: 1px solid var(--border);
             flex-wrap: wrap;
             gap: 1rem;
         }
         .collection-header h3 {
             font-family: 'Oswald', sans-serif;
             font-size: 1.2rem;
-            text-transform: uppercase;
             color: var(--primary);
-            margin: 0;
         }
         
-        .collection-team-switch {
+        .team-switch {
             display: flex;
             gap: 0.3rem;
             background: rgba(15, 15, 15, 0.6);
@@ -232,28 +271,28 @@
             padding: 0.2rem;
             border: 1px solid var(--border);
         }
-        .collection-team-btn {
+        .team-switch-btn {
             background: none;
             border: none;
-            padding: 0.25rem 0.8rem;
+            padding: 0.3rem 1rem;
             border-radius: 25px;
             font-size: 0.7rem;
             font-weight: 600;
             cursor: pointer;
-            transition: all 0.2s;
             color: var(--text-muted);
         }
-        .collection-team-btn.ct { color: #3a86ff; }
-        .collection-team-btn.t { color: #ff6b3a; }
-        .collection-team-btn.active {
+        .team-switch-btn.ct { color: #3a86ff; }
+        .team-switch-btn.t { color: #ff6b3a; }
+        .team-switch-btn.both { color: var(--primary); }
+        .team-switch-btn.active {
             background: linear-gradient(135deg, #c0702a, #f0a050);
             color: #1a1a1a;
         }
-        .collection-team-btn.ct.active {
+        .team-switch-btn.ct.active {
             background: linear-gradient(135deg, #2a5fbb, #3a86ff);
             color: white;
         }
-        .collection-team-btn.t.active {
+        .team-switch-btn.t.active {
             background: linear-gradient(135deg, #cc5522, #ff6b3a);
             color: white;
         }
@@ -266,24 +305,16 @@
             font-size: 0.7rem;
             color: #e34d4d;
             cursor: pointer;
-            transition: 0.2s;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.4rem;
         }
-        .reset-all-btn:hover { 
-            background: #e34d4d; 
-            color: #1a1a1a;
-        }
+        .reset-all-btn:hover { background: #e34d4d; color: #1a1a1a; }
         
         .selected-weapon-title { 
             font-family: 'Oswald', sans-serif; 
             font-size: 1.5rem; 
-            text-transform: uppercase; 
             color: var(--primary); 
             margin-bottom: 1.2rem;
-            padding-bottom: 0.5rem;
             border-bottom: 1px solid var(--border);
+            padding-bottom: 0.5rem;
         }
         
         .empty-collection {
@@ -294,137 +325,305 @@
             border-radius: 16px;
             grid-column: 1 / -1;
         }
-        .empty-collection i { font-size: 3rem; margin-bottom: 1rem; display: block; color: var(--primary); opacity: 0.5; }
         
-        .skin-modal {
+        .edit-modal {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.85);
+            background: rgba(0, 0, 0, 0.6);
             backdrop-filter: blur(8px);
             display: flex;
             align-items: center;
             justify-content: center;
             z-index: 10001;
+            animation: fadeModal 0.25s ease;
         }
-        .skin-modal-content {
-            background: rgba(26, 26, 26, 0.98);
-            backdrop-filter: blur(20px);
-            border: 1px solid var(--primary);
+        @keyframes fadeModal { from { opacity: 0; } to { opacity: 1; } }
+        
+        .edit-modal-content {
+            background: rgba(20, 20, 20, 0.95);
+            border: none;
             border-radius: 24px;
             width: 90%;
-            max-width: 500px;
-            padding: 1.8rem;
-        }
-        .skin-modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; border-bottom: 1px solid var(--border); padding-bottom: 0.5rem; }
-        .skin-modal-header h3 { color: var(--primary); font-family: 'Oswald', sans-serif; text-transform: uppercase; font-size: 1rem; margin: 0; }
-        .modal-close { background: none; border: none; color: var(--text-muted); font-size: 1.2rem; cursor: pointer; }
-        .modal-close:hover { color: var(--primary); }
-        .skin-modal-preview { text-align: center; margin-bottom: 1rem; }
-        .skin-modal-preview img { max-width: 100%; max-height: 160px; border-radius: 12px; }
-        .skin-modal-info { text-align: center; margin-bottom: 1rem; }
-        .skin-modal-info h4 { font-size: 1rem; margin-bottom: 0.2rem; }
-        .skin-modal-info p { font-size: 0.75rem; color: var(--text-muted); }
-        
-        .team-selector {
+            max-width: 900px;
+            padding: 0;
+            animation: scaleModal 0.3s ease;
             display: flex;
-            gap: 0.5rem;
-            margin-bottom: 1rem;
-            background: rgba(15, 15, 15, 0.6);
-            border-radius: 40px;
-            padding: 0.3rem;
+            overflow: hidden;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
         }
-        .team-selector-btn {
+        @keyframes scaleModal { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
+        
+        .edit-preview {
             flex: 1;
-            background: none;
-            border: none;
-            padding: 0.5rem;
-            border-radius: 35px;
-            font-size: 0.7rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s;
-            color: var(--text-muted);
+            background: linear-gradient(135deg, #1a1a1a, #0f0f0f);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            min-height: 500px;
         }
-        .team-selector-btn.ct { color: #3a86ff; }
-        .team-selector-btn.t { color: #ff6b3a; }
-        .team-selector-btn.active {
-            background: linear-gradient(135deg, #c0702a, #f0a050);
-            color: #1a1a1a;
-        }
-        .team-selector-btn.ct.active {
-            background: linear-gradient(135deg, #2a5fbb, #3a86ff);
-            color: white;
-        }
-        .team-selector-btn.t.active {
-            background: linear-gradient(135deg, #cc5522, #ff6b3a);
-            color: white;
+        .edit-preview img {
+            width: 100%;
+            max-height: 450px;
+            object-fit: contain;
+            border-radius: 12px;
+            pointer-events: none;
         }
         
-        .qualities { display: flex; gap: 0.5rem; flex-wrap: wrap; justify-content: center; margin-bottom: 1rem; }
-        .quality-btn {
+        .edit-controls {
+            flex: 0.8;
+            padding: 1.5rem;
+            background: rgba(15, 15, 15, 0.9);
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        .edit-group { width: 100%; }
+        .edit-group label {
+            display: block;
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-muted);
+            margin-bottom: 0.4rem;
+        }
+        
+        .wear-slider {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+        .wear-slider input {
+            flex: 1;
+            height: 4px;
+            -webkit-appearance: none;
+            background: linear-gradient(90deg, #00c853, #ffd700, #e34d4d);
+            border-radius: 2px;
+            outline: none;
+        }
+        .wear-slider input::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 14px;
+            height: 14px;
+            background: #e0883a;
+            border-radius: 50%;
+            cursor: pointer;
+            border: none;
+        }
+        .wear-value {
+            font-size: 0.7rem;
+            color: #e0883a;
+            font-weight: 600;
+            min-width: 45px;
+        }
+        
+        .pattern-edit {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
             background: rgba(15, 15, 15, 0.8);
             border: 1px solid var(--border);
-            border-radius: 20px;
-            padding: 0.4rem 0.8rem;
+            border-radius: 30px;
+            padding: 0.35rem 0.8rem;
+        }
+        .pattern-edit input {
+            flex: 1;
+            background: transparent;
+            border: none;
+            color: var(--primary);
+            text-align: center;
+            outline: none;
+            font-size: 0.8rem;
+        }
+        .random-pattern {
+            background: none;
+            border: none;
+            color: var(--primary);
+            cursor: pointer;
+        }
+        
+        .custom-name-input {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+        }
+        .custom-name-input input {
+            flex: 1;
+            background: rgba(15, 15, 15, 0.8);
+            border: 1px solid var(--border);
+            border-radius: 30px;
+            padding: 0.45rem 0.8rem;
+            color: var(--fg);
+            font-size: 0.7rem;
+            outline: none;
+        }
+        .custom-name-input input:focus {
+            border-color: var(--primary);
+        }
+        .custom-name-save {
+            background: rgba(15, 15, 15, 0.8);
+            border: 1px solid var(--border);
+            border-radius: 30px;
+            padding: 0.45rem 0.8rem;
             font-size: 0.65rem;
             cursor: pointer;
-            transition: all 0.2s;
+            color: var(--primary);
+            transition: 0.2s;
         }
-        .quality-btn:hover { border-color: var(--primary); color: var(--primary); }
-        .quality-btn.active { background: linear-gradient(135deg, #c0702a, #f0a050); border-color: var(--primary); color: #1a1a1a; }
-        .pattern-control { display: flex; align-items: center; gap: 0.5rem; background: rgba(15, 15, 15, 0.8); border: 1px solid var(--border); border-radius: 30px; padding: 0.4rem 1rem; margin-bottom: 1rem; }
-        .pattern-control label { font-size: 0.65rem; color: var(--text-muted); }
-        .pattern-control input { flex: 1; background: transparent; border: none; color: var(--primary); text-align: center; outline: none; font-size: 0.85rem; }
-        .random-pattern { background: none; border: none; color: var(--primary); cursor: pointer; }
-        .stattrak-btn {
+        .custom-name-save:hover {
+            background: rgba(224,136,58,0.2);
+            border-color: var(--primary);
+        }
+        
+        .team-edit {
+            display: flex;
+            gap: 0.5rem;
+        }
+        .team-edit-btn {
+            background: rgba(15, 15, 15, 0.8);
+            border: 1px solid var(--border);
+            border-radius: 30px;
+            padding: 0.35rem 0.7rem;
+            font-size: 0.65rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+            transition: 0.2s;
+            color: var(--text-muted);
+        }
+        .team-edit-btn.ct { color: #3a86ff; }
+        .team-edit-btn.t { color: #ff6b3a; }
+        .team-edit-btn.both { color: var(--primary); }
+        .team-edit-btn.active {
+            background: linear-gradient(135deg, #c0702a, #f0a050);
+            color: #1a1a1a;
+            border-color: transparent;
+        }
+        .team-edit-btn.ct.active { background: linear-gradient(135deg, #2a5fbb, #3a86ff); color: white; }
+        .team-edit-btn.t.active { background: linear-gradient(135deg, #cc5522, #ff6b3a); color: white; }
+        
+        .edit-actions {
+            display: flex;
+            gap: 0.8rem;
+            margin-top: 0.5rem;
+            flex-direction: column;
+        }
+        .edit-save {
+            background: linear-gradient(135deg, #c0702a, #f0a050);
+            border: none;
+            border-radius: 30px;
+            padding: 0.6rem;
+            color: #1a1a1a;
+            font-weight: 700;
+            cursor: pointer;
+            font-size: 0.8rem;
+            transition: 0.2s;
+        }
+        .edit-save:hover { transform: translateY(-2px); box-shadow: 0 5px 15px -5px rgba(224,136,58,0.5); }
+        .edit-change-skin {
             background: rgba(15, 15, 15, 0.8);
             border: 1px solid var(--border);
             border-radius: 30px;
             padding: 0.6rem;
-            font-size: 0.75rem;
+            color: var(--primary);
+            font-weight: 600;
             cursor: pointer;
-            width: 100%;
-            margin-bottom: 1rem;
+            font-size: 0.8rem;
+            transition: 0.2s;
         }
-        .stattrak-btn.active { background: linear-gradient(135deg, #c0702a, #f0a050); color: #1a1a1a; }
+        .edit-change-skin:hover {
+            border-color: var(--primary);
+            background: rgba(224,136,58,0.1);
+        }
+        .edit-cancel {
+            background: rgba(15, 15, 15, 0.8);
+            border: 1px solid var(--border);
+            border-radius: 30px;
+            padding: 0.6rem;
+            color: var(--text-muted);
+            cursor: pointer;
+            font-size: 0.8rem;
+            transition: 0.2s;
+        }
+        .edit-cancel:hover { border-color: var(--primary); color: var(--primary); }
+        
+        .team-toggle {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.2rem;
+            background: rgba(15, 15, 15, 0.6);
+            border-radius: 50px;
+            padding: 0.2rem;
+            margin-bottom: 0.5rem;
+            border: 1px solid var(--border);
+        }
+        .team-toggle-btn {
+            background: none;
+            border: none;
+            padding: 0.4rem 1rem;
+            border-radius: 40px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            color: var(--text-muted);
+            transition: 0.2s;
+        }
+        .team-toggle-btn i { font-size: 0.7rem; }
+        .team-toggle-btn.ct { color: #3a86ff; }
+        .team-toggle-btn.t { color: #ff6b3a; }
+        .team-toggle-btn.both { color: var(--primary); }
+        .team-toggle-btn.active {
+            background: linear-gradient(135deg, #c0702a, #f0a050);
+            color: #1a1a1a;
+        }
+        .team-toggle-btn.active i { color: #1a1a1a; }
+        .team-toggle-btn.ct.active { background: linear-gradient(135deg, #2a5fbb, #3a86ff); color: white; }
+        .team-toggle-btn.t.active { background: linear-gradient(135deg, #cc5522, #ff6b3a); color: white; }
+        
         .modal-apply-btn {
             background: linear-gradient(135deg, #c0702a, #f0a050);
             border: none;
             border-radius: 30px;
-            padding: 0.8rem;
+            padding: 0.7rem;
             color: #1a1a1a;
             font-weight: 700;
             cursor: pointer;
             width: 100%;
-            font-size: 0.85rem;
+            font-size: 0.8rem;
+            transition: 0.2s;
         }
         .modal-apply-btn:hover { transform: translateY(-2px); }
         
-        .toast-notification {
+        .toast {
             position: fixed;
             top: 90px;
             right: 20px;
             background: #1a1a1a;
             border-left: 4px solid var(--primary);
             border-radius: 12px;
-            padding: 0.7rem 1.2rem;
+            padding: 0.6rem 1rem;
             display: flex;
             align-items: center;
-            gap: 0.8rem;
+            gap: 0.6rem;
             z-index: 10000;
-            animation: slideInRight 0.3s ease forwards;
-            font-size: 0.85rem;
+            font-size: 0.8rem;
+            animation: slideRight 0.3s ease;
         }
-        @keyframes slideInRight {
+        @keyframes slideRight {
             from { opacity: 0; transform: translateX(50px); }
             to { opacity: 1; transform: translateX(0); }
         }
         
         .weapon-category { margin-bottom: 1.5rem; }
-        .weapon-category-title { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-muted); margin-bottom: 0.8rem; display: flex; align-items: center; gap: 0.5rem; }
+        .weapon-category-title { font-size: 0.75rem; text-transform: uppercase; color: var(--text-muted); margin-bottom: 0.8rem; display: flex; align-items: center; gap: 0.5rem; }
         .weapon-category-title i { color: var(--primary); width: 20px; }
         .weapon-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.8rem; }
         .weapon-item {
@@ -438,40 +637,13 @@
             position: relative;
         }
         .weapon-icon { width: 85px; height: 85px; display: flex; align-items: center; justify-content: center; margin: 0 auto; }
-        .weapon-icon img { width: 75px; height: 75px; filter: brightness(0.7); border-radius: 8px; object-fit: contain; }
+        .weapon-icon img { width: 75px; height: 75px; filter: brightness(0.7); border-radius: 8px; object-fit: contain; pointer-events: none; }
         .weapon-item:hover { border-color: var(--primary); background: rgba(224,136,58,0.1); }
         .weapon-item:hover .weapon-icon img { filter: brightness(1); }
         .weapon-item.active { border-color: var(--primary); background: rgba(224,136,58,0.15); }
         .weapon-item.active .weapon-icon img { filter: brightness(1); }
-        .weapon-name { font-size: 0.7rem; color: var(--text-muted); text-align: center; margin-top: 0.3rem; }
+        .weapon-name { font-size: 0.7rem; color: var(--text-muted); margin-top: 0.3rem; }
         .weapon-item.active .weapon-name { color: var(--primary); }
-        
-        /* Индикаторы для CT и T скинов */
-        .skin-indicators {
-            position: absolute;
-            bottom: 5px;
-            right: 5px;
-            display: flex;
-            gap: 3px;
-        }
-        .skin-indicator {
-            width: 16px;
-            height: 16px;
-            border-radius: 50%;
-            font-size: 0.6rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-        }
-        .skin-indicator.ct {
-            background: #3a86ff;
-            color: white;
-        }
-        .skin-indicator.t {
-            background: #ff6b3a;
-            color: white;
-        }
         
         .show-more-btn {
             background: transparent;
@@ -484,11 +656,19 @@
             color: var(--primary);
             width: 100%;
         }
-        .show-more-btn:hover { background: rgba(224,136,58,0.1); }
         
         .loader-wrapper { text-align: center; padding: 2rem; color: var(--text-muted); }
         .loader-spinner { width: 40px; height: 40px; border: 3px solid rgba(224,136,58,0.2); border-top-color: var(--primary); border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0 auto 1rem; }
         @keyframes spin { to { transform: rotate(360deg); } }
+        
+        .back-link {
+            display: inline-block;
+            margin-bottom: 1rem;
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.8rem;
+        }
+        .back-link:hover { color: var(--primary); }
         
         .team-badge {
             display: inline-block;
@@ -499,23 +679,22 @@
         }
         .team-badge.ct { background: rgba(58,134,255,0.2); color: #3a86ff; }
         .team-badge.t { background: rgba(255,107,58,0.2); color: #ff6b3a; }
+        .team-badge.both { background: linear-gradient(135deg, rgba(58,134,255,0.3), rgba(255,107,58,0.3)); color: var(--primary); }
     </style>
 </head>
 <body>
 
 <div class="skinchanger-wrapper">
-    <div style="margin-bottom: 1.5rem;">
-        <a href="index.html" style="color: var(--text-muted); text-decoration: none; font-size: 0.8rem;">← Назад к серверам</a>
-    </div>
+    <a href="index.html" class="back-link">← Назад к серверам</a>
 
     <div class="skinchanger-layout">
         <div class="weapon-sidebar" id="weaponSidebar">
             <div style="margin-bottom: 1.2rem; padding-bottom: 0.8rem; border-bottom: 1px solid var(--border);">
-                <h3 style="font-family: 'Oswald', sans-serif; font-size: 1.1rem; text-transform: uppercase; color: var(--primary); margin: 0;">
+                <h3 style="font-family: 'Oswald', sans-serif; font-size: 1.1rem; color: var(--primary); margin: 0;">
                     <i class="fas fa-gun"></i> Оружие
                 </h3>
             </div>
-            <div id="weaponCategories"></div>
+            <div id="weaponCategories"><div class="loader-wrapper"><div class="loader-spinner"></div><p>Загрузка оружия...</p></div></div>
         </div>
 
         <div class="skins-content">
@@ -524,36 +703,24 @@
                 <button class="content-tab-btn" data-tab="my-collection">⭐ Моя коллекция</button>
             </div>
             
-            <div id="allSkinsTab" style="display: block;">
+            <div id="allSkinsTab">
                 <div class="selected-weapon-title" id="selectedWeaponTitle">Выберите оружие</div>
-                <div id="skinsContainer">
-                    <div class="loader-wrapper">
-                        <div class="loader-spinner"></div>
-                        <p>Загрузка скинов...</p>
-                    </div>
-                </div>
+                <div id="skinsContainer"><div class="loader-wrapper"><div class="loader-spinner"></div><p>Загрузка скинов...</p></div></div>
             </div>
             
             <div id="myCollectionTab" style="display: none;">
                 <div class="collection-header">
-                    <h3><i class="fas fa-star"></i> Основная коллекция</h3>
+                    <h3><i class="fas fa-star"></i> Моя коллекция</h3>
                     <div style="display: flex; gap: 1rem; align-items: center;">
-                        <div class="collection-team-switch">
-                            <button class="collection-team-btn ct" data-team="ct">CT</button>
-                            <button class="collection-team-btn t" data-team="t">T</button>
-                            <button class="collection-team-btn active" data-team="both">ВСЕ</button>
+                        <div class="team-switch">
+                            <button class="team-switch-btn ct" data-team="ct">CT</button>
+                            <button class="team-switch-btn t" data-team="t">T</button>
+                            <button class="team-switch-btn both active" data-team="both">ВСЕ</button>
                         </div>
-                        <button class="reset-all-btn" id="resetAllSkinsBtn">
-                            <i class="fas fa-trash-alt"></i> Сбросить все
-                        </button>
+                        <button class="reset-all-btn" id="resetAllSkinsBtn"><i class="fas fa-trash-alt"></i> Сбросить все</button>
                     </div>
                 </div>
-                <div id="collectionContainer">
-                    <div class="loader-wrapper">
-                        <div class="loader-spinner"></div>
-                        <p>Загрузка коллекции...</p>
-                    </div>
-                </div>
+                <div id="collectionContainer"><div class="loader-wrapper"><div class="loader-spinner"></div><p>Загрузка...</p></div></div>
             </div>
         </div>
     </div>
@@ -561,57 +728,62 @@
 
 <script src="js/layout.js"></script>
 <script>
-// КАТЕГОРИИ - НОЖИ И ПЕРЧАТКИ ПЕРВЫМИ
-const CATEGORIES = {
-    knives: { name: "🔪 Ножи", icon: "fas fa-gavel", weapons: ["Karambit", "M9 Bayonet", "Butterfly Knife", "Bayonet", "Talon Knife", "Skeleton Knife", "Stiletto Knife", "Huntsman Knife", "Falchion Knife", "Flip Knife", "Gut Knife", "Bowie Knife"] },
-    gloves: { name: "🧤 Перчатки", icon: "fas fa-hand-peace", weapons: ["Sport Gloves", "Driver Gloves", "Specialist Gloves", "Hand Wraps", "Moto Gloves", "Bloodhound Gloves", "Hydra Gloves", "Broken Fang Gloves"] },
-    rifles: { name: "🔫 Винтовки", icon: "fas fa-gun", weapons: ["AK-47", "M4A4", "M4A1-S", "Galil AR", "FAMAS", "SG 553", "AUG"] },
-    snipers: { name: "🎯 Снайперские винтовки", icon: "fas fa-crosshairs", weapons: ["AWP", "SSG 08", "SCAR-20", "G3SG1"] },
-    pistols: { name: "🔫 Пистолеты", icon: "fas fa-bullseye", weapons: ["Desert Eagle", "USP-S", "Glock-18", "P250", "Tec-9", "Five-SeveN", "CZ75-Auto", "Dual Berettas", "R8 Revolver"] },
-    smgs: { name: "💨 Пистолеты-пулемёты", icon: "fas fa-fill-drip", weapons: ["MP9", "MAC-10", "MP7", "UMP-45", "P90", "PP-Bizon", "MP5-SD"] },
-    heavy: { name: "💣 Тяжёлое оружие", icon: "fas fa-bomb", weapons: ["Nova", "XM1014", "Sawed-Off", "MAG-7", "M249", "Negev"] }
-};
-
+// === ВСЕ КАТЕГОРИИ ОРУЖИЯ ===
 const WEAPON_TEAM = {
+    // CT оружие
     "M4A4": "ct", "M4A1-S": "ct", "FAMAS": "ct", "AUG": "ct", "SCAR-20": "ct",
     "USP-S": "ct", "Five-SeveN": "ct", "MP9": "ct", "MAG-7": "ct",
+    // T оружие
     "AK-47": "t", "Galil AR": "t", "SG 553": "t", "G3SG1": "t",
     "Glock-18": "t", "Tec-9": "t", "MAC-10": "t", "Sawed-Off": "t",
+    // both оружие
     "AWP": "both", "SSG 08": "both", "Desert Eagle": "both", "P250": "both",
     "CZ75-Auto": "both", "Dual Berettas": "both", "R8 Revolver": "both",
     "MP7": "both", "UMP-45": "both", "P90": "both", "PP-Bizon": "both", "MP5-SD": "both",
     "Nova": "both", "XM1014": "both", "M249": "both", "Negev": "both",
+    // Ножи
     "Karambit": "both", "M9 Bayonet": "both", "Butterfly Knife": "both", "Bayonet": "both",
-    "Talon Knife": "both", "Skeleton Knife": "both", "Stiletto Knife": "both", "Huntsman Knife": "both",
-    "Falchion Knife": "both", "Flip Knife": "both", "Gut Knife": "both", "Bowie Knife": "both",
-    "Sport Gloves": "both", "Driver Gloves": "both", "Specialist Gloves": "both", "Hand Wraps": "both",
-    "Moto Gloves": "both", "Bloodhound Gloves": "both", "Hydra Gloves": "both", "Broken Fang Gloves": "both"
+    "Talon Knife": "both", "Stiletto Knife": "both", "Huntsman Knife": "both",
+    "Flip Knife": "both", "Gut Knife": "both", "Bowie Knife": "both", "Classic Knife": "both",
+    "Nomad Knife": "both", "Skeleton Knife": "both", "Kukri Knife": "both",
+    // Перчатки
+    "Sport Gloves": "both", "Driver Gloves": "both", "Specialist Gloves": "both",
+    "Hand Wraps": "both", "Moto Gloves": "both", "Bloodhound Gloves": "both",
+    "Hydra Gloves": "both", "Broken Fang Gloves": "both"
 };
 
 const WEAR_VALUES = { "Factory New": 0.03, "Minimal Wear": 0.10, "Field-Tested": 0.25, "Well-Worn": 0.40, "Battle-Scarred": 0.75 };
-const WEAR_NAMES = ["Factory New", "Minimal Wear", "Field-Tested", "Well-Worn", "Battle-Scarred"];
 
-let allSkins = [];
-let weaponsList = {};
-let weaponIcons = {};
-let userSkins = {}; // Ключ: "оружие_сторона" (например "AK-47_t" или "M4A4_ct")
-let currentWeapon = null;
+const CATEGORIES = {
+    knives: { name: "🔪 Ножи", icon: "fa-gavel", weapons: ["Karambit", "M9 Bayonet", "Butterfly Knife", "Bayonet", "Talon Knife", "Stiletto Knife", "Huntsman Knife", "Flip Knife", "Gut Knife", "Bowie Knife", "Classic Knife", "Nomad Knife", "Skeleton Knife", "Kukri Knife"] },
+    gloves: { name: "🧤 Перчатки", icon: "fa-hand-peace", weapons: ["Sport Gloves", "Driver Gloves", "Specialist Gloves", "Hand Wraps", "Moto Gloves", "Bloodhound Gloves", "Hydra Gloves", "Broken Fang Gloves"] },
+    rifles: { name: "🔫 Винтовки", icon: "fa-gun", weapons: ["AK-47", "M4A4", "M4A1-S", "Galil AR", "FAMAS", "SG 553", "AUG"] },
+    snipers: { name: "🎯 Снайперские", icon: "fa-crosshairs", weapons: ["AWP", "SSG 08", "SCAR-20", "G3SG1"] },
+    pistols: { name: "🔫 Пистолеты", icon: "fa-bullseye", weapons: ["Desert Eagle", "USP-S", "Glock-18", "P250", "Tec-9", "Five-SeveN", "CZ75-Auto", "Dual Berettas", "R8 Revolver"] },
+    smgs: { name: "💨 ПП", icon: "fa-fill-drip", weapons: ["MP9", "MAC-10", "MP7", "UMP-45", "P90", "PP-Bizon", "MP5-SD"] },
+    heavy: { name: "💣 Тяжёлое", icon: "fa-bomb", weapons: ["Nova", "XM1014", "Sawed-Off", "MAG-7", "M249", "Negev"] }
+};
+
+let weaponsSkins = {};
+let weaponsIcons = {};
+let userSkins = {};
+let currentWeapon = "AK-47";
 let hiddenWeapons = {};
 let currentTab = "all-skins";
 let collectionTeamFilter = "both";
+let pendingChangeKey = null;
 
 function showToast(msg, isError = false) {
     const toast = document.createElement('div');
-    toast.className = 'toast-notification';
+    toast.className = 'toast';
     toast.style.borderLeftColor = isError ? '#e34d4d' : '#e0883a';
     toast.innerHTML = `<i class="fas ${isError ? 'fa-exclamation-circle' : 'fa-check-circle'}"></i><div>${msg}</div>`;
     document.body.appendChild(toast);
     setTimeout(() => toast.remove(), 3000);
 }
 
-function escapeHtml(str) {
-    if (!str) return '';
-    return str.replace(/[&<>]/g, m => m === '&' ? '&amp;' : (m === '<' ? '&lt;' : '&gt;'));
+function getWeaponTeam(weaponName) {
+    return WEAPON_TEAM[weaponName] || "both";
 }
 
 function getWearName(floatVal) {
@@ -622,136 +794,364 @@ function getWearName(floatVal) {
     return "Battle-Scarred";
 }
 
-function getWeaponTeam(weaponName) {
-    return WEAPON_TEAM[weaponName] || "both";
+function floatToWearName(floatVal) {
+    if (floatVal <= 0.07) return "Factory New";
+    if (floatVal <= 0.15) return "Minimal Wear";
+    if (floatVal <= 0.38) return "Field-Tested";
+    if (floatVal <= 0.45) return "Well-Worn";
+    return "Battle-Scarred";
 }
 
 async function loadSkins() {
     try {
         const response = await fetch('/api/skins.json');
-        let data = await response.json();
-        if (Array.isArray(data)) allSkins = data;
-        else if (typeof data === 'object') allSkins = Object.values(data);
+        const data = await response.json();
+        let skinsArray = Array.isArray(data) ? data : Object.values(data);
         
-        allSkins.forEach(skin => {
+        weaponsSkins = {};
+        weaponsIcons = {};
+        
+        for (const skin of skinsArray) {
             const weaponName = skin.weapon?.name || skin.weapon_name;
-            if (weaponName && weaponName !== 'Unknown' && weaponName !== 'undefined') {
-                if (!weaponsList[weaponName]) {
-                    weaponsList[weaponName] = [];
-                    if (skin.image && !weaponIcons[weaponName]) {
-                        weaponIcons[weaponName] = skin.image;
-                    }
-                }
-                weaponsList[weaponName].push(skin);
-            }
-        });
+            if (!weaponName || weaponName === 'Unknown') continue;
+            if (!weaponsSkins[weaponName]) weaponsSkins[weaponName] = [];
+            weaponsSkins[weaponName].push({
+                name: skin.name,
+                paint_index: skin.paint_index || 0,
+                image: skin.image || '',
+                rarity: skin.rarity?.name || skin.rarity || 'Common'
+            });
+            if (!weaponsIcons[weaponName] && skin.image) weaponsIcons[weaponName] = skin.image;
+        }
         
-        for (const weapon of Object.keys(weaponsList)) {
-            if (!weaponIcons[weapon] && weaponsList[weapon].length > 0) {
-                weaponIcons[weapon] = weaponsList[weapon][0].image || '/images/no-image.png';
+        for (const weapon of Object.keys(weaponsSkins)) {
+            if (!weaponsIcons[weapon]) {
+                weaponsIcons[weapon] = `https://community.cloudflare.steamstatic.com/econ/image/CSGO/game/items/rifles/${weapon.toLowerCase().replace(/\s/g, '_')}_large.png`;
             }
         }
         
-        const firstWeapon = Object.keys(weaponsList)[0];
-        if (firstWeapon) {
-            currentWeapon = firstWeapon;
-            renderWeaponSidebar();
-            renderSkinsForWeapon(currentWeapon);
+        if (Object.keys(weaponsSkins).length === 0) {
+            weaponsSkins = {
+                "AK-47": [{ name: "Vulcan", paint_index: 1, image: "", rarity: "Classified" }],
+                "AWP": [{ name: "Dragon Lore", paint_index: 2, image: "", rarity: "Covert" }],
+                "M4A4": [{ name: "Howl", paint_index: 3, image: "", rarity: "Covert" }]
+            };
         }
-        await loadUserSkins();
-    } catch(err) {
-        console.error('loadSkins error:', err);
-        document.getElementById('skinsContainer').innerHTML = '<div class="loader-wrapper"><p>❌ Ошибка загрузки скинов</p></div>';
+        
+        loadUserSkins();
+        renderWeaponSidebar();
+        renderSkinsForWeapon(currentWeapon);
+    } catch(e) {
+        console.error(e);
+        loadUserSkins();
+        renderWeaponSidebar();
     }
 }
 
-function getWeaponIcon(weaponName) {
-    return weaponIcons[weaponName] || '/images/no-image.png';
+function loadUserSkins() {
+    const saved = localStorage.getItem('cs2rage_skins_final8');
+    if (saved) userSkins = JSON.parse(saved);
+    else userSkins = {};
 }
 
-async function loadUserSkins() {
-    const saved = localStorage.getItem('cs2rage_skins_v4');
-    if (saved) {
-        userSkins = JSON.parse(saved);
+// НОВАЯ ФУНКЦИЯ: сохранение скина с дублированием для both
+function saveSkinLocal(weapon, skinName, paintIndex, seed, wearFloat, isStatTrak, skinImage, team, customName = '') {
+    if (team === 'both') {
+        // Удаляем старые оба скина если были
+        delete userSkins[weapon + '_ct'];
+        delete userSkins[weapon + '_t'];
+        
+        // Сохраняем копию для CT
+        userSkins[weapon + '_ct'] = {
+            weapon: weapon,
+            skin_name: skinName,
+            pattern: seed,
+            float: wearFloat,
+            stattrak: isStatTrak,
+            image: skinImage,
+            paint: paintIndex,
+            team: 'ct',
+            custom_name: customName,
+            from_both: true
+        };
+        
+        // Сохраняем копию для T
+        userSkins[weapon + '_t'] = {
+            weapon: weapon,
+            skin_name: skinName,
+            pattern: seed,
+            float: wearFloat,
+            stattrak: isStatTrak,
+            image: skinImage,
+            paint: paintIndex,
+            team: 't',
+            custom_name: customName,
+            from_both: true
+        };
+        
+        localStorage.setItem('cs2rage_skins_final8', JSON.stringify(userSkins));
+        showToast(`${weapon} | ${skinName} установлен для CT и T!`);
     } else {
-        userSkins = {};
+        // Для одной стороны удаляем противоположную если она была создана через both
+        const opposite = team === 'ct' ? 't' : 'ct';
+        if (userSkins[weapon + '_' + opposite] && userSkins[weapon + '_' + opposite].from_both) {
+            delete userSkins[weapon + '_' + opposite];
+        }
+        
+        userSkins[weapon + '_' + team] = {
+            weapon: weapon,
+            skin_name: skinName,
+            pattern: seed,
+            float: wearFloat,
+            stattrak: isStatTrak,
+            image: skinImage,
+            paint: paintIndex,
+            team: team,
+            custom_name: customName,
+            from_both: false
+        };
+        
+        localStorage.setItem('cs2rage_skins_final8', JSON.stringify(userSkins));
+        showToast(`${weapon} | ${skinName} для ${team === 'ct' ? 'CT' : 'T'} установлен!`);
     }
     renderWeaponSidebar();
     renderCollection();
 }
 
-// Сохранение скина - ЗАМЕНЯЕТ старый если есть
-function saveSkinLocal(weapon, skinName, paintIndex, seed, wearFloat, isStatTrak, skinImage, team) {
-    const key = weapon + '_' + team;
+function updateSkin(key, newPattern, newWear, newStatTrak, newTeam, newCustomName) {
+    if (!userSkins[key]) return;
+    const skin = userSkins[key];
+    const weapon = skin.weapon;
+    const skinName = skin.skin_name;
+    const paintIndex = skin.paint;
+    const skinImage = skin.image;
+    const wasFromBoth = skin.from_both;
     
-    userSkins[key] = {
+    // Удаляем старый скин
+    delete userSkins[key];
+    
+    // Если был both и мы обновляем отдельную сторону - удаляем связанную
+    if (wasFromBoth) {
+        const opposite = key.includes('_ct') ? '_t' : '_ct';
+        delete userSkins[weapon + opposite];
+    }
+    
+    // Сохраняем обновлённый скин
+    userSkins[weapon + '_' + newTeam] = {
         weapon: weapon,
         skin_name: skinName,
-        pattern: seed,
-        float: wearFloat,
-        stattrak: isStatTrak,
+        pattern: newPattern,
+        float: newWear,
+        stattrak: newStatTrak,
         image: skinImage,
         paint: paintIndex,
-        team: team
+        team: newTeam,
+        custom_name: newCustomName,
+        from_both: false
     };
     
-    localStorage.setItem('cs2rage_skins_v4', JSON.stringify(userSkins));
-    showToast(`${isStatTrak ? '🔫 STATRAK ' : ''}${weapon} | ${skinName} применён для ${team === 'ct' ? 'CT' : 'T'}!`);
+    localStorage.setItem('cs2rage_skins_final8', JSON.stringify(userSkins));
+    showToast(`${weapon} | ${skinName} обновлён!`);
     renderWeaponSidebar();
     renderCollection();
-    return true;
+    closeEditModal();
 }
 
 function removeSkinLocal(key) {
-    delete userSkins[key];
-    localStorage.setItem('cs2rage_skins_v4', JSON.stringify(userSkins));
-    showToast(`🗑️ Скин удалён`);
+    const skin = userSkins[key];
+    if (skin && skin.from_both) {
+        // Если удаляем скин из пары both - удаляем и второй
+        const weapon = skin.weapon;
+        delete userSkins[weapon + '_ct'];
+        delete userSkins[weapon + '_t'];
+    } else {
+        delete userSkins[key];
+    }
+    localStorage.setItem('cs2rage_skins_final8', JSON.stringify(userSkins));
+    showToast('Скин удалён');
     renderWeaponSidebar();
     renderCollection();
 }
 
-function resetAllSkinsLocal() {
-    if (!confirm('⚠️ Вы уверены, что хотите сбросить ВСЕ установленные скины?')) return;
+function resetAllSkins() {
+    if (!confirm('Сбросить ВСЕ скины?')) return;
     userSkins = {};
-    localStorage.setItem('cs2rage_skins_v4', JSON.stringify(userSkins));
-    showToast('✅ Все скины сброшены!');
+    localStorage.setItem('cs2rage_skins_final8', JSON.stringify(userSkins));
+    showToast('Все скины сброшены!');
     renderWeaponSidebar();
     renderCollection();
+}
+
+function openChangeSkinModal(weapon, currentKey) {
+    pendingChangeKey = currentKey;
+    currentWeapon = weapon;
+    renderWeaponSidebar();
+    if (currentTab !== 'all-skins') switchTab('all-skins');
+    renderSkinsForWeapon(currentWeapon);
+    closeEditModal();
+    showToast(`Выберите новый скин для ${weapon}`);
+}
+
+function openEditModal(key) {
+    const skin = userSkins[key];
+    if (!skin) return;
+    
+    const wearName = getWearName(skin.float);
+    const weaponTeam = getWeaponTeam(skin.weapon);
+    const canChooseTeam = weaponTeam === "both";
+    // Учитываем что если скин из both, то сторона фиксированная (нельзя менять на both)
+    const isFromBoth = skin.from_both;
+    
+    const modalHtml = `
+        <div class="edit-modal" id="editModal">
+            <div class="edit-modal-content">
+                <div class="edit-preview">
+                    <img src="${skin.image || 'https://via.placeholder.com/500x400?text=CS2'}" onerror="this.src='https://via.placeholder.com/500x400?text=CS2'">
+                </div>
+                <div class="edit-controls">
+                    <h4 style="margin:0 0 0.5rem 0; color:var(--primary);">${escapeHtml(skin.skin_name)}</h4>
+                    <p style="margin:0 0 1rem 0; font-size:0.7rem; color:var(--text-muted);">${skin.weapon}</p>
+                    
+                    <div class="edit-group">
+                        <label>Качество: <span id="wearValueDisplay">${skin.float.toFixed(3)}</span> (<span id="wearNameDisplay">${wearName}</span>)</label>
+                        <div class="wear-slider">
+                            <input type="range" id="wearSlider" min="0" max="1" step="0.001" value="${skin.float}">
+                            <span class="wear-value" id="wearValue">${skin.float.toFixed(3)}</span>
+                        </div>
+                    </div>
+                    <div class="edit-group">
+                        <label>Паттерн (Seed)</label>
+                        <div class="pattern-edit">
+                            <input type="number" id="editSeed" min="0" max="1000" value="${skin.pattern}">
+                            <button class="random-pattern" id="editRandom"><i class="fas fa-random"></i></button>
+                        </div>
+                    </div>
+                    <div class="edit-group">
+                        <label>STATRAK</label>
+                        <label class="stattrak-switch">
+                            <input type="checkbox" id="editStatTrakCheckbox" ${skin.stattrak ? 'checked' : ''}>
+                            <span class="stattrak-slider"></span>
+                        </label>
+                    </div>
+                    <div class="edit-group">
+                        <label>Именной ярлык</label>
+                        <div class="custom-name-input">
+                            <input type="text" id="editCustomName" placeholder="Введите имя" value="${escapeHtml(skin.custom_name || '')}" maxlength="30">
+                            <button class="custom-name-save" id="saveCustomNameBtn"><i class="fas fa-save"></i></button>
+                        </div>
+                    </div>
+                    ${!isFromBoth && canChooseTeam ? `
+                    <div class="edit-group">
+                        <label>Сторона</label>
+                        <div class="team-edit" id="editTeam">
+                            <button class="team-edit-btn ct ${skin.team === 'ct' ? 'active' : ''}" data-team="ct">CT</button>
+                            <button class="team-edit-btn t ${skin.team === 't' ? 'active' : ''}" data-team="t">T</button>
+                        </div>
+                    </div>
+                    ` : `<div class="edit-group"><label>Сторона</label><div style="text-align:center;padding:0.3rem;background:rgba(15,15,15,0.6);border-radius:30px;">${skin.team === 'ct' ? 'CT' : 'T'} (фиксировано)</div></div>`}
+                    <div class="edit-actions">
+                        <button class="edit-save" id="editSave">💾 Сохранить</button>
+                        <button class="edit-change-skin" id="editChangeSkin">🔄 Замена скина</button>
+                        <button class="edit-cancel" id="editCancel">Отмена</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+    document.body.insertAdjacentHTML('beforeend', modalHtml);
+    
+    let newPattern = skin.pattern;
+    let newStatTrak = skin.stattrak;
+    let newTeam = skin.team;
+    let newCustomName = skin.custom_name || '';
+    
+    const wearSlider = document.getElementById('wearSlider');
+    const wearNameSpan = document.getElementById('wearNameDisplay');
+    wearSlider.oninput = () => {
+        const val = parseFloat(wearSlider.value);
+        document.getElementById('wearValue').innerText = val.toFixed(3);
+        wearNameSpan.innerText = floatToWearName(val);
+    };
+    
+    document.getElementById('editRandom').onclick = () => {
+        newPattern = Math.floor(Math.random() * 1001);
+        document.getElementById('editSeed').value = newPattern;
+    };
+    document.getElementById('editSeed').oninput = (e) => {
+        newPattern = Math.min(1000, Math.max(0, parseInt(e.target.value) || 0));
+    };
+    
+    const statCheckbox = document.getElementById('editStatTrakCheckbox');
+    statCheckbox.onchange = () => {
+        newStatTrak = statCheckbox.checked;
+    };
+    
+    const customInput = document.getElementById('editCustomName');
+    document.getElementById('saveCustomNameBtn').onclick = () => {
+        newCustomName = customInput.value.trim();
+        showToast(`Ярлык сохранён: ${newCustomName || 'удалён'}`);
+    };
+    
+    if (!isFromBoth && canChooseTeam) {
+        document.querySelectorAll('#editTeam .team-edit-btn').forEach(btn => {
+            btn.onclick = () => {
+                document.querySelectorAll('#editTeam .team-edit-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                newTeam = btn.dataset.team;
+            };
+        });
+    }
+    
+    document.getElementById('editSave').onclick = () => {
+        updateSkin(key, newPattern, parseFloat(wearSlider.value), newStatTrak, newTeam, newCustomName);
+    };
+    document.getElementById('editChangeSkin').onclick = () => {
+        openChangeSkinModal(skin.weapon, key);
+    };
+    document.getElementById('editCancel').onclick = () => closeEditModal();
+    document.getElementById('editModal').onclick = (e) => { if (e.target === e.currentTarget) closeEditModal(); };
+}
+
+function closeEditModal() {
+    const modal = document.getElementById('editModal');
+    if (modal) modal.remove();
 }
 
 function renderWeaponSidebar() {
     let html = '';
     for (const [catId, cat] of Object.entries(CATEGORIES)) {
-        const visible = cat.weapons.slice(0, 6);
-        const hiddenList = cat.weapons.slice(6);
+        const weapons = cat.weapons.filter(w => weaponsSkins[w]);
+        if (weapons.length === 0) continue;
+        const visible = weapons.slice(0, 6);
+        const hiddenCount = weapons.length - 6;
         const isExpanded = hiddenWeapons[catId] || false;
-        const displayList = isExpanded ? cat.weapons : visible;
+        const displayList = isExpanded ? weapons : visible;
         
         html += `<div class="weapon-category">
-            <div class="weapon-category-title"><i class="${cat.icon}"></i> ${cat.name}</div>
+            <div class="weapon-category-title"><i class="fas ${cat.icon}"></i> ${cat.name}</div>
             <div class="weapon-grid">`;
-        displayList.forEach(w => {
-            const hasCt = userSkins && userSkins[w + '_ct'];
-            const hasT = userSkins && userSkins[w + '_t'];
-            
-            let indicatorsHtml = '';
-            if (hasCt || hasT) {
-                indicatorsHtml = '<div class="skin-indicators">';
-                if (hasCt) indicatorsHtml += '<div class="skin-indicator ct" title="Есть скин для CT">CT</div>';
-                if (hasT) indicatorsHtml += '<div class="skin-indicator t" title="Есть скин для T">T</div>';
-                indicatorsHtml += '</div>';
+        for (const w of displayList) {
+            const hasCt = userSkins[w + '_ct'];
+            const hasT = userSkins[w + '_t'];
+            let indicators = '';
+            if (hasCt && hasT) {
+                indicators = '<div class="skin-indicators"><div class="skin-indicator both" style="position:absolute; bottom:5px; right:5px; width:12px; height:12px; background:linear-gradient(135deg, #3a86ff, #ff6b3a); border-radius:50%;"></div></div>';
+            } else if (hasCt) {
+                indicators = '<div class="skin-indicators"><div class="skin-indicator ct" style="position:absolute; bottom:5px; right:5px; width:12px; height:12px; background:#3a86ff; border-radius:50%;"></div></div>';
+            } else if (hasT) {
+                indicators = '<div class="skin-indicators"><div class="skin-indicator t" style="position:absolute; bottom:5px; right:5px; width:12px; height:12px; background:#ff6b3a; border-radius:50%;"></div></div>';
             }
-            
-            html += `<button class="weapon-item ${currentWeapon === w ? 'active' : ''}" data-weapon="${w.replace(/'/g, "\\'")}" style="position:relative;">
-                <div class="weapon-icon"><img src="${getWeaponIcon(w)}" onerror="this.src='/images/no-image.png'"></div>
+            const iconUrl = weaponsIcons[w] || 'https://community.cloudflare.steamstatic.com/econ/image/CSGO/game/items/rifles/ak47/ak47_large.png';
+            html += `<button class="weapon-item ${currentWeapon === w ? 'active' : ''}" data-weapon="${w}" style="position:relative;">
+                <div class="weapon-icon"><img src="${iconUrl}" onerror="this.src='https://community.cloudflare.steamstatic.com/econ/image/CSGO/game/items/rifles/ak47/ak47_large.png'"></div>
                 <span class="weapon-name">${w}</span>
-                ${indicatorsHtml}
+                ${indicators}
             </button>`;
-        });
+        }
         html += `</div>`;
-        if (hiddenList.length > 0 && !isExpanded) {
-            html += `<button class="show-more-btn" data-category="${catId}"><i class="fas fa-chevron-down"></i> Скрыто ${hiddenList.length}</button>`;
-        } else if (hiddenList.length > 0 && isExpanded) {
+        if (hiddenCount > 0 && !isExpanded) {
+            html += `<button class="show-more-btn" data-category="${catId}"><i class="fas fa-chevron-down"></i> Скрыто ${hiddenCount}</button>`;
+        } else if (hiddenCount > 0 && isExpanded) {
             html += `<button class="show-more-btn" data-category="${catId}"><i class="fas fa-chevron-up"></i> Скрыть</button>`;
         }
         html += `</div>`;
@@ -759,213 +1159,221 @@ function renderWeaponSidebar() {
     document.getElementById('weaponCategories').innerHTML = html;
     
     document.querySelectorAll('.weapon-item').forEach(btn => {
-        btn.addEventListener('click', () => {
-            const w = btn.dataset.weapon;
-            if (w && weaponsList[w]) {
-                currentWeapon = w;
-                renderWeaponSidebar();
-                if (currentTab !== 'all-skins') switchTab('all-skins');
-                renderSkinsForWeapon(currentWeapon);
-            }
-        });
+        btn.onclick = () => {
+            currentWeapon = btn.dataset.weapon;
+            renderWeaponSidebar();
+            if (currentTab !== 'all-skins') switchTab('all-skins');
+            renderSkinsForWeapon(currentWeapon);
+        };
     });
     
     document.querySelectorAll('.show-more-btn').forEach(btn => {
-        btn.addEventListener('click', (e) => {
+        btn.onclick = (e) => {
             e.stopPropagation();
             const cat = btn.dataset.category;
             if (cat) {
                 hiddenWeapons[cat] = !hiddenWeapons[cat];
                 renderWeaponSidebar();
             }
-        });
+        };
     });
 }
 
 function renderSkinsForWeapon(weapon) {
-    const skins = weaponsList[weapon] || [];
+    const skins = weaponsSkins[weapon] || [];
     document.getElementById('selectedWeaponTitle').innerHTML = `<i class="fas fa-gun"></i> ${weapon}`;
     if (!skins.length) {
         document.getElementById('skinsContainer').innerHTML = '<div class="loader-wrapper"><p>Нет скинов для этого оружия</p></div>';
         return;
     }
-    
     const grid = document.createElement('div');
     grid.className = 'skins-grid';
-    grid.innerHTML = skins.slice(0, 100).map((s, i) => `
-        <div class="skin-card" data-index="${i}">
-            <div class="skin-card-image"><img src="${s.image || '/images/no-image.png'}" onerror="this.src='/images/no-image.png'"></div>
-            <div class="skin-card-info">
-                <div class="skin-card-name">${escapeHtml(s.name)}</div>
-                <div class="skin-card-weapon">${escapeHtml(s.weapon?.name || s.weapon_name)}</div>
-                <div class="skin-card-rarity">${s.rarity?.name || s.rarity || 'Common'}</div>
-            </div>
+    grid.innerHTML = skins.map((s, idx) => `
+        <div class="skin-card" data-index="${idx}">
+            <div class="skin-card-image"><img src="${s.image || 'https://via.placeholder.com/140x100?text=CS2'}" onerror="this.src='https://via.placeholder.com/140x100?text=CS2'"></div>
+            <div class="skin-card-name">${escapeHtml(s.name)}</div>
+            <div class="skin-card-weapon">${s.rarity}</div>
         </div>
     `).join('');
-    
     document.getElementById('skinsContainer').innerHTML = '';
     document.getElementById('skinsContainer').appendChild(grid);
     
     document.querySelectorAll('.skin-card').forEach(card => {
-        card.addEventListener('click', () => {
+        card.onclick = () => {
             const idx = parseInt(card.dataset.index);
-            if (!isNaN(idx) && skins[idx]) openModal(skins[idx]);
-        });
+            if (!isNaN(idx) && skins[idx]) {
+                if (pendingChangeKey && userSkins[pendingChangeKey]) {
+                    const oldSkin = userSkins[pendingChangeKey];
+                    const newSkin = skins[idx];
+                    // Обновляем скин в коллекции
+                    const weapon = oldSkin.weapon;
+                    const team = oldSkin.team;
+                    const key = weapon + '_' + team;
+                    if (userSkins[key]) {
+                        userSkins[key].skin_name = newSkin.name;
+                        userSkins[key].image = newSkin.image;
+                        userSkins[key].paint = newSkin.paint_index;
+                        userSkins[key].from_both = false;
+                        localStorage.setItem('cs2rage_skins_final8', JSON.stringify(userSkins));
+                        showToast(`Скин заменён на ${newSkin.name}`);
+                        renderWeaponSidebar();
+                        renderCollection();
+                    }
+                    pendingChangeKey = null;
+                } else {
+                    openApplyModal(skins[idx], weapon);
+                }
+            }
+        };
     });
 }
 
-function renderCollection() {
-    const container = document.getElementById('collectionContainer');
-    if (!container) return;
-    
-    let skinsArray = Object.entries(userSkins);
-    
-    if (collectionTeamFilter !== "both") {
-        skinsArray = skinsArray.filter(([key, info]) => info.team === collectionTeamFilter);
-    }
-    
-    if (skinsArray.length === 0) {
-        container.innerHTML = `
-            <div class="empty-collection">
-                <i class="fas fa-star-of-life"></i>
-                <p>У вас пока нет сохранённых скинов</p>
-                <p style="font-size: 0.7rem; margin-top: 0.5rem;">Выберите оружие и скин, чтобы добавить его в коллекцию</p>
-            </div>
-        `;
-        return;
-    }
-    
-    skinsArray.sort((a, b) => a[1].weapon.localeCompare(b[1].weapon));
-    
-    container.innerHTML = `
-        <div class="collection-grid">
-            ${skinsArray.map(([key, info]) => {
-                const wearName = getWearName(info.float);
-                const teamBadge = info.team === 'ct' ? '<span class="team-badge ct">CT</span>' : '<span class="team-badge t">T</span>';
-                return `
-                    <div class="collection-card">
-                        <div class="collection-card-image">
-                            <img src="${info.image || '/images/no-image.png'}" onerror="this.src='/images/no-image.png'">
-                        </div>
-                        <div class="collection-card-info">
-                            <div class="collection-card-weapon">${escapeHtml(info.weapon)} ${teamBadge}</div>
-                            <div class="collection-card-name">${escapeHtml(info.skin_name)} ${info.stattrak ? '<span style="color:#f0a050;">★ STATRAK™</span>' : ''}</div>
-                            <div class="collection-card-details">
-                                <span>🔧 Seed: ${info.pattern}</span>
-                                <span>💧 Float: ${info.float.toFixed(3)} (${wearName})</span>
-                            </div>
-                        </div>
-                        <button class="collection-remove-btn" onclick="window.removeSkinLocal('${key.replace(/'/g, "\\'")}')">
-                            <i class="fas fa-trash"></i> Удалить
-                        </button>
-                    </div>
-                `;
-            }).join('')}
-        </div>
-    `;
-}
-
-function openModal(skin) {
-    let selectedWear = "Factory New";
+function openApplyModal(skin, weaponName) {
+    let selectedWear = 0.07;
     let isStatTrak = false;
     let seed = Math.floor(Math.random() * 1001);
-    let selectedTeam = "ct";
-    const weaponName = skin.weapon?.name || skin.weapon_name;
-    const paintIndex = skin.paint_index || 0;
-    const skinImage = skin.image || '/images/no-image.png';
+    let selectedTeam = "both";
     const weaponTeam = getWeaponTeam(weaponName);
-    const canChooseTeam = (weaponTeam === "both");
+    if (weaponTeam === 'ct') selectedTeam = 'ct';
+    if (weaponTeam === 't') selectedTeam = 't';
     
-    let teamSelectorHtml = '';
-    if (canChooseTeam) {
-        teamSelectorHtml = `
-            <div class="team-selector">
-                <button class="team-selector-btn ct active" data-team="ct">🔵 CT</button>
-                <button class="team-selector-btn t" data-team="t">🔴 T</button>
-            </div>
-        `;
+    let teamHtml = '';
+    if (weaponTeam === 'both') {
+        teamHtml = `<div class="team-toggle">
+            <button class="team-toggle-btn ct" data-team="ct">CT</button>
+            <button class="team-toggle-btn both active" data-team="both">ВСЕ</button>
+            <button class="team-toggle-btn t" data-team="t">T</button>
+        </div>`;
     } else {
-        selectedTeam = weaponTeam;
+        teamHtml = `<div style="text-align:center;margin-bottom:0.5rem;padding:0.3rem;background:rgba(15,15,15,0.6);border-radius:30px;">${weaponTeam === 'ct' ? 'CT' : 'T'} (фиксировано)</div>`;
     }
     
     const modalHtml = `
-        <div class="skin-modal" id="skinModal">
-            <div class="skin-modal-content">
-                <div class="skin-modal-header">
-                    <h3><i class="fas fa-gun"></i> Применить скин</h3>
-                    <button class="modal-close" id="closeModalBtn"><i class="fas fa-times"></i></button>
+        <div class="edit-modal" id="applyModal">
+            <div class="edit-modal-content">
+                <div class="edit-preview">
+                    <img src="${skin.image || 'https://via.placeholder.com/500x400?text=CS2'}" onerror="this.src='https://via.placeholder.com/500x400?text=CS2'">
                 </div>
-                <div class="skin-modal-preview">
-                    <img src="${skinImage}" onerror="this.src='/images/no-image.png'">
+                <div class="edit-controls">
+                    <h4 style="margin:0 0 0.5rem 0; color:var(--primary);">${escapeHtml(skin.name)}</h4>
+                    <p style="margin:0 0 1rem 0; font-size:0.7rem; color:var(--text-muted);">${weaponName}</p>
+                    
+                    <div class="edit-group">
+                        <label>Качество: <span id="applyWearLabel">0.07 (Factory New)</span></label>
+                        <div class="wear-slider">
+                            <input type="range" id="applyWearSlider" min="0" max="1" step="0.001" value="0.07">
+                            <span class="wear-value" id="applyWearValue">0.07</span>
+                        </div>
+                    </div>
+                    <div class="edit-group">
+                        <label>Паттерн (Seed)</label>
+                        <div class="pattern-edit">
+                            <input type="number" id="applySeed" min="0" max="1000" value="${seed}">
+                            <button class="random-pattern" id="applyRandom"><i class="fas fa-random"></i></button>
+                        </div>
+                    </div>
+                    <div class="edit-group">
+                        <label>STATRAK</label>
+                        <label class="stattrak-switch">
+                            <input type="checkbox" id="applyStatTrakCheckbox">
+                            <span class="stattrak-slider"></span>
+                        </label>
+                    </div>
+                    <div class="edit-group">
+                        <label>Именной ярлык</label>
+                        <div class="custom-name-input">
+                            <input type="text" id="applyCustomName" placeholder="Введите имя" maxlength="30">
+                            <button class="custom-name-save" id="saveApplyCustomNameBtn"><i class="fas fa-save"></i></button>
+                        </div>
+                    </div>
+                    ${teamHtml}
+                    <button class="modal-apply-btn" id="applyBtn">Применить скин</button>
                 </div>
-                <div class="skin-modal-info">
-                    <h4>${escapeHtml(skin.name)}</h4>
-                    <p>${escapeHtml(weaponName)}</p>
-                </div>
-                ${teamSelectorHtml}
-                <div class="qualities">
-                    ${WEAR_NAMES.map(w => `<button class="quality-btn ${w === selectedWear ? 'active' : ''}" data-wear="${w}">${w}</button>`).join('')}
-                </div>
-                <div class="pattern-control">
-                    <label>PATTERN SEED</label>
-                    <input type="number" id="patternSeed" min="0" max="1000" value="${seed}">
-                    <button class="random-pattern" id="randomPatternBtn"><i class="fas fa-random"></i></button>
-                </div>
-                <button class="stattrak-btn" id="stattrakBtn">
-                    <i class="fas fa-star"></i> STATRAK™
-                </button>
-                <button class="modal-apply-btn" id="modalApplyBtn">
-                    <i class="fas fa-check-circle"></i> Применить скин
-                </button>
             </div>
         </div>
     `;
     document.body.insertAdjacentHTML('beforeend', modalHtml);
-    const modal = document.getElementById('skinModal');
     
-    if (canChooseTeam) {
-        document.querySelectorAll('.team-selector-btn').forEach(btn => {
-            btn.addEventListener('click', () => {
-                document.querySelectorAll('.team-selector-btn').forEach(b => b.classList.remove('active'));
+    let applyCustomName = '';
+    
+    const wearSlider = document.getElementById('applyWearSlider');
+    const wearLabel = document.getElementById('applyWearLabel');
+    wearSlider.oninput = () => {
+        const val = parseFloat(wearSlider.value);
+        document.getElementById('applyWearValue').innerText = val.toFixed(3);
+        wearLabel.innerText = `${val.toFixed(3)} (${floatToWearName(val)})`;
+    };
+    
+    if (weaponTeam === 'both') {
+        document.querySelectorAll('#applyModal .team-toggle-btn').forEach(btn => {
+            btn.onclick = () => {
+                document.querySelectorAll('#applyModal .team-toggle-btn').forEach(b => b.classList.remove('active'));
                 btn.classList.add('active');
                 selectedTeam = btn.dataset.team;
-            });
+            };
         });
     }
     
-    document.querySelectorAll('.quality-btn').forEach(btn => {
-        btn.addEventListener('click', () => {
-            document.querySelectorAll('.quality-btn').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-            selectedWear = btn.dataset.wear;
-        });
-    });
-    
-    document.getElementById('randomPatternBtn').addEventListener('click', () => {
+    document.getElementById('applyRandom').onclick = () => {
         seed = Math.floor(Math.random() * 1001);
-        document.getElementById('patternSeed').value = seed;
-    });
+        document.getElementById('applySeed').value = seed;
+    };
+    document.getElementById('applySeed').oninput = (e) => {
+        seed = Math.min(1000, Math.max(0, parseInt(e.target.value) || 0));
+    };
     
-    document.getElementById('patternSeed').addEventListener('input', (e) => {
-        seed = parseInt(e.target.value) || 0;
-        if (seed < 0) seed = 0;
-        if (seed > 1000) seed = 1000;
-    });
+    const statCheckbox = document.getElementById('applyStatTrakCheckbox');
+    statCheckbox.onchange = () => {
+        isStatTrak = statCheckbox.checked;
+    };
     
-    const stBtn = document.getElementById('stattrakBtn');
-    stBtn.addEventListener('click', () => {
-        isStatTrak = !isStatTrak;
-        stBtn.classList.toggle('active');
-        stBtn.innerHTML = `<i class="fas fa-star"></i> STATRAK™ ${isStatTrak ? '✓' : ''}`;
-    });
+    document.getElementById('saveApplyCustomNameBtn').onclick = () => {
+        applyCustomName = document.getElementById('applyCustomName').value.trim();
+        showToast(`Ярлык сохранён: ${applyCustomName || 'удалён'}`);
+    };
     
-    document.getElementById('closeModalBtn').addEventListener('click', () => modal.remove());
-    modal.addEventListener('click', (e) => { if (e.target === modal) modal.remove(); });
+    document.getElementById('applyBtn').onclick = () => {
+        const finalCustomName = document.getElementById('applyCustomName').value.trim();
+        saveSkinLocal(weaponName, skin.name, skin.paint_index, seed, parseFloat(wearSlider.value), isStatTrak, skin.image, selectedTeam, finalCustomName);
+        document.getElementById('applyModal').remove();
+    };
+    document.getElementById('applyModal').onclick = (e) => { if (e.target === e.currentTarget) e.currentTarget.remove(); };
+}
+
+function renderCollection() {
+    let skinsArray = Object.entries(userSkins);
+    if (collectionTeamFilter !== "both") {
+        skinsArray = skinsArray.filter(([k, i]) => i.team === collectionTeamFilter);
+    }
+    const container = document.getElementById('collectionContainer');
+    if (skinsArray.length === 0) {
+        container.innerHTML = `<div class="empty-collection"><i class="fas fa-star-of-life"></i><p>Нет сохранённых скинов</p></div>`;
+        return;
+    }
+    const showBadge = collectionTeamFilter === "both";
+    container.innerHTML = `<div class="collection-grid">${skinsArray.map(([key, info]) => {
+        const wearName = getWearName(info.float);
+        let badge = '';
+        if (showBadge) {
+            if (info.team === 'ct') badge = '<span class="team-badge ct">CT</span>';
+            else if (info.team === 't') badge = '<span class="team-badge t">T</span>';
+        }
+        const customHtml = info.custom_name ? `<div class="custom-name">🏷️ ${escapeHtml(info.custom_name)}</div>` : '';
+        return `<div class="collection-card" data-key="${key}">
+            <button class="collection-remove-btn" onclick="event.stopPropagation(); window.removeSkinLocal('${key.replace(/'/g, "\\'")}')"><i class="fas fa-trash"></i></button>
+            <div class="collection-card-image">
+                <img src="${info.image || 'https://via.placeholder.com/100x80?text=CS2'}" onerror="this.src='https://via.placeholder.com/100x80?text=CS2'">
+                <div class="edit-overlay">✏️ Редактировать</div>
+            </div>
+            <div class="collection-card-weapon">${escapeHtml(info.weapon)} ${badge}</div>
+            <div class="collection-card-name">${escapeHtml(info.skin_name)} ${info.stattrak ? '<span style="color:#f0a050;">★ STATRAK</span>' : ''}</div>
+            ${customHtml}
+            <div class="collection-card-details">Seed: ${info.pattern} | Float: ${info.float.toFixed(3)} (${wearName})</div>
+        </div>`;
+    }).join('')}</div>`;
     
-    document.getElementById('modalApplyBtn').addEventListener('click', () => {
-        const wearFloat = WEAR_VALUES[selectedWear];
-        saveSkinLocal(weaponName, skin.name, paintIndex, seed, wearFloat, isStatTrak, skinImage, selectedTeam);
-        modal.remove();
+    document.querySelectorAll('.collection-card').forEach(card => {
+        card.onclick = () => openEditModal(card.dataset.key);
     });
 }
 
@@ -975,33 +1383,33 @@ function switchTab(tabId) {
         if (btn.dataset.tab === tabId) btn.classList.add('active');
         else btn.classList.remove('active');
     });
-    
-    const allSkinsTab = document.getElementById('allSkinsTab');
-    const myCollectionTab = document.getElementById('myCollectionTab');
-    
+    const allTab = document.getElementById('allSkinsTab');
+    const collectionTab = document.getElementById('myCollectionTab');
     if (tabId === 'all-skins') {
-        allSkinsTab.style.display = 'block';
-        myCollectionTab.style.display = 'none';
+        allTab.style.display = 'block';
+        collectionTab.style.display = 'none';
         if (currentWeapon) renderSkinsForWeapon(currentWeapon);
     } else {
-        allSkinsTab.style.display = 'none';
-        myCollectionTab.style.display = 'block';
+        allTab.style.display = 'none';
+        collectionTab.style.display = 'block';
         renderCollection();
     }
 }
 
-document.addEventListener('DOMContentLoaded', async () => {
-    await loadSkins();
-    
-    document.getElementById('resetAllSkinsBtn').addEventListener('click', resetAllSkinsLocal);
-    
+function escapeHtml(str) {
+    if (!str) return '';
+    return str.replace(/[&<>]/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;'})[m]);
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    loadSkins();
+    document.getElementById('resetAllSkinsBtn').addEventListener('click', resetAllSkins);
     document.querySelectorAll('.content-tab-btn').forEach(btn => {
         btn.addEventListener('click', () => switchTab(btn.dataset.tab));
     });
-    
-    document.querySelectorAll('.collection-team-btn').forEach(btn => {
+    document.querySelectorAll('.team-switch-btn').forEach(btn => {
         btn.addEventListener('click', () => {
-            document.querySelectorAll('.collection-team-btn').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('.team-switch-btn').forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
             collectionTeamFilter = btn.dataset.team;
             renderCollection();
@@ -1010,7 +1418,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 });
 
 window.removeSkinLocal = removeSkinLocal;
-window.resetAllSkinsLocal = resetAllSkinsLocal;
+window.resetAllSkins = resetAllSkins;
 </script>
 </body>
 </html>
