@@ -1,0 +1,235 @@
+/* Стили для модального окна пополнения */
+.topup-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(8px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10001;
+    animation: fadeIn 0.2s ease;
+}
+
+.topup-modal-content {
+    background: rgba(26, 26, 26, 0.95);
+    backdrop-filter: blur(20px);
+    border: 1px solid var(--border);
+    border-radius: 24px;
+    width: 90%;
+    max-width: 500px;
+    max-height: 90vh;
+    overflow-y: auto;
+    animation: scaleIn 0.3s ease;
+}
+
+.topup-modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.2rem 1.5rem;
+    border-bottom: 1px solid var(--border);
+}
+
+.topup-modal-header h3 {
+    font-family: 'Oswald', sans-serif;
+    color: var(--primary);
+    text-transform: uppercase;
+    font-size: 1.1rem;
+    margin: 0;
+}
+
+.topup-modal-close {
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.topup-modal-close:hover {
+    color: var(--primary);
+}
+
+.topup-modal-body {
+    padding: 1.5rem;
+}
+
+.topup-amount-section label {
+    display: block;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--text-muted);
+    margin-bottom: 0.8rem;
+}
+
+.topup-amount-inputs {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+.amount-preset {
+    background: rgba(15, 15, 15, 0.8);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 0.6rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--text);
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.amount-preset:hover {
+    border-color: var(--primary);
+    color: var(--primary);
+}
+
+.amount-preset.active {
+    background: linear-gradient(135deg, #c0702a, #f0a050);
+    border-color: var(--primary);
+    color: #1a1a1a;
+}
+
+.custom-amount input {
+    width: 100%;
+    background: rgba(15, 15, 15, 0.8);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 0.7rem;
+    color: var(--text);
+    font-size: 0.9rem;
+    text-align: center;
+}
+
+.custom-amount input:focus {
+    outline: none;
+    border-color: var(--primary);
+}
+
+.payment-methods {
+    margin: 1.5rem 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.payment-method {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    background: rgba(15, 15, 15, 0.6);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 0.8rem 1rem;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.payment-method i {
+    width: 24px;
+    color: var(--primary);
+}
+
+.payment-method:hover {
+    border-color: var(--primary);
+    background: rgba(224,136,58,0.1);
+}
+
+.payment-method.active {
+    border-color: var(--primary);
+    background: linear-gradient(135deg, rgba(224,136,58,0.15), transparent);
+}
+
+.sbp-info {
+    margin: 1rem 0;
+    text-align: center;
+}
+
+.sbp-qr-placeholder {
+    background: rgba(15, 15, 15, 0.8);
+    border: 1px dashed var(--border);
+    border-radius: 16px;
+    padding: 1.5rem;
+    text-align: center;
+}
+
+.sbp-qr-placeholder i {
+    font-size: 3rem;
+    color: var(--primary);
+    margin-bottom: 0.5rem;
+    display: inline-block;
+}
+
+.sbp-qr-placeholder p {
+    color: var(--text-muted);
+    font-size: 0.8rem;
+}
+
+.sbp-qr-code {
+    text-align: center;
+}
+
+.sbp-qr-code img {
+    width: 200px;
+    height: 200px;
+    margin: 0 auto;
+    border-radius: 12px;
+}
+
+.sbp-qr-code p {
+    margin-top: 0.5rem;
+}
+
+.qr-amount {
+    color: var(--primary);
+    font-weight: bold;
+}
+
+.topup-submit-btn {
+    width: 100%;
+    background: linear-gradient(135deg, #c0702a, #f0a050);
+    border: none;
+    border-radius: 40px;
+    padding: 0.8rem;
+    color: #1a1a1a;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    cursor: pointer;
+    font-size: 0.85rem;
+    transition: all 0.3s;
+    margin-top: 1rem;
+}
+
+.topup-submit-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px -5px rgba(224,136,58,0.4);
+}
+
+.topup-modal-footer {
+    padding: 1rem 1.5rem;
+    border-top: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.7rem;
+    color: var(--text-muted);
+}
+
+@keyframes scaleIn {
+    from {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}

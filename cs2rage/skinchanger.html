@@ -1,0 +1,1016 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CS2RAGE — Скинченджер</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Oswald:wght@500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="css/main.css">
+    <style>
+        * {
+            scrollbar-width: thin;
+            scrollbar-color: #e0883a #2a2a2a;
+        }
+        
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #2a2a2a;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #e0883a;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #f0a050;
+        }
+        
+        .skinchanger-wrapper { max-width: 1800px; margin: 0 auto; padding: 2rem; animation: fadeInUp 0.5s ease forwards; opacity: 0; }
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+        
+        .skinchanger-layout { display: flex; gap: 2rem; flex-wrap: wrap; }
+        
+        .weapon-sidebar {
+            flex: 0 0 450px;
+            background: rgba(26, 26, 26, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 1.5rem;
+            position: sticky;
+            top: 100px;
+            max-height: calc(100vh - 120px);
+            overflow-y: auto;
+        }
+        
+        .skins-content { flex: 1; min-width: 0; }
+        
+        .content-tabs {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+            border-bottom: 1px solid rgba(42,42,42,0.5);
+            padding-bottom: 0.5rem;
+        }
+        .content-tab-btn {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            cursor: pointer;
+            padding: 0.5rem 1.5rem;
+            transition: 0.2s;
+            font-family: 'Oswald', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            border-radius: 30px;
+        }
+        .content-tab-btn.active {
+            color: var(--primary);
+            background: rgba(224,136,58,0.15);
+        }
+        
+        .skins-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1.2rem;
+        }
+        
+        .skin-card {
+            background: rgba(15, 15, 15, 0.8);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            overflow: hidden;
+            transition: all 0.3s;
+            cursor: pointer;
+            text-align: center;
+            padding: 1rem;
+        }
+        .skin-card:hover { 
+            transform: translateY(-4px); 
+            border-color: var(--primary);
+            background: rgba(224,136,58,0.1);
+            box-shadow: 0 10px 25px -5px rgba(224,136,58,0.2);
+        }
+        .skin-card-image { 
+            width: 100%;
+            height: 160px;
+            background: linear-gradient(135deg, #1a1a1a, #0f0f0f);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 0.8rem;
+        }
+        .skin-card-image img { 
+            max-width: 140px; 
+            max-height: 140px; 
+            transition: transform 0.3s;
+        }
+        .skin-card:hover .skin-card-image img { transform: scale(1.05); }
+        .skin-card-info { text-align: center; }
+        .skin-card-name { 
+            font-family: 'Oswald', sans-serif; 
+            font-size: 1rem; 
+            font-weight: 600; 
+            color: var(--text);
+            margin-bottom: 0.3rem;
+        }
+        .skin-card-weapon { 
+            font-size: 0.7rem; 
+            color: var(--primary); 
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        .skin-card-rarity {
+            font-size: 0.65rem;
+            color: var(--text-muted);
+            margin-top: 0.3rem;
+        }
+        
+        .collection-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 1rem;
+        }
+        
+        .collection-card {
+            background: rgba(15, 15, 15, 0.8);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 1rem;
+            text-align: center;
+            transition: all 0.2s;
+            position: relative;
+        }
+        .collection-card:hover {
+            border-color: var(--primary);
+            transform: translateY(-3px);
+            background: rgba(224,136,58,0.05);
+        }
+        .collection-card-image {
+            width: 100%;
+            height: 140px;
+            background: linear-gradient(135deg, #1a1a1a, #0f0f0f);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 0.8rem;
+        }
+        .collection-card-image img { 
+            max-width: 120px; 
+            max-height: 120px; 
+        }
+        .collection-card-info { text-align: center; }
+        .collection-card-weapon { 
+            font-size: 0.7rem; 
+            color: var(--primary); 
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        .collection-card-name { 
+            font-size: 0.9rem; 
+            font-weight: 600;
+            margin: 0.3rem 0;
+        }
+        .collection-card-details { 
+            font-size: 0.6rem; 
+            color: var(--text-muted);
+            display: flex;
+            justify-content: center;
+            gap: 0.8rem;
+            margin-top: 0.3rem;
+        }
+        .collection-card-details span { color: var(--primary); }
+        .collection-remove-btn {
+            background: rgba(227, 77, 77, 0.1);
+            border: 1px solid rgba(227, 77, 77, 0.3);
+            border-radius: 20px;
+            padding: 0.3rem 0.8rem;
+            font-size: 0.65rem;
+            color: #e34d4d;
+            cursor: pointer;
+            transition: 0.2s;
+            margin-top: 0.8rem;
+            width: 100%;
+        }
+        .collection-remove-btn:hover { 
+            background: #e34d4d; 
+            color: #1a1a1a;
+        }
+        
+        .collection-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.2rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--border);
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        .collection-header h3 {
+            font-family: 'Oswald', sans-serif;
+            font-size: 1.2rem;
+            text-transform: uppercase;
+            color: var(--primary);
+            margin: 0;
+        }
+        
+        .collection-team-switch {
+            display: flex;
+            gap: 0.3rem;
+            background: rgba(15, 15, 15, 0.6);
+            border-radius: 30px;
+            padding: 0.2rem;
+            border: 1px solid var(--border);
+        }
+        .collection-team-btn {
+            background: none;
+            border: none;
+            padding: 0.25rem 0.8rem;
+            border-radius: 25px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            color: var(--text-muted);
+        }
+        .collection-team-btn.ct { color: #3a86ff; }
+        .collection-team-btn.t { color: #ff6b3a; }
+        .collection-team-btn.active {
+            background: linear-gradient(135deg, #c0702a, #f0a050);
+            color: #1a1a1a;
+        }
+        .collection-team-btn.ct.active {
+            background: linear-gradient(135deg, #2a5fbb, #3a86ff);
+            color: white;
+        }
+        .collection-team-btn.t.active {
+            background: linear-gradient(135deg, #cc5522, #ff6b3a);
+            color: white;
+        }
+        
+        .reset-all-btn {
+            background: rgba(227, 77, 77, 0.15);
+            border: 1px solid #e34d4d;
+            border-radius: 20px;
+            padding: 0.3rem 0.8rem;
+            font-size: 0.7rem;
+            color: #e34d4d;
+            cursor: pointer;
+            transition: 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+        .reset-all-btn:hover { 
+            background: #e34d4d; 
+            color: #1a1a1a;
+        }
+        
+        .selected-weapon-title { 
+            font-family: 'Oswald', sans-serif; 
+            font-size: 1.5rem; 
+            text-transform: uppercase; 
+            color: var(--primary); 
+            margin-bottom: 1.2rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .empty-collection {
+            text-align: center;
+            padding: 3rem;
+            color: var(--text-muted);
+            background: rgba(15,15,15,0.5);
+            border-radius: 16px;
+            grid-column: 1 / -1;
+        }
+        .empty-collection i { font-size: 3rem; margin-bottom: 1rem; display: block; color: var(--primary); opacity: 0.5; }
+        
+        .skin-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(8px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10001;
+        }
+        .skin-modal-content {
+            background: rgba(26, 26, 26, 0.98);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--primary);
+            border-radius: 24px;
+            width: 90%;
+            max-width: 500px;
+            padding: 1.8rem;
+        }
+        .skin-modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; border-bottom: 1px solid var(--border); padding-bottom: 0.5rem; }
+        .skin-modal-header h3 { color: var(--primary); font-family: 'Oswald', sans-serif; text-transform: uppercase; font-size: 1rem; margin: 0; }
+        .modal-close { background: none; border: none; color: var(--text-muted); font-size: 1.2rem; cursor: pointer; }
+        .modal-close:hover { color: var(--primary); }
+        .skin-modal-preview { text-align: center; margin-bottom: 1rem; }
+        .skin-modal-preview img { max-width: 100%; max-height: 160px; border-radius: 12px; }
+        .skin-modal-info { text-align: center; margin-bottom: 1rem; }
+        .skin-modal-info h4 { font-size: 1rem; margin-bottom: 0.2rem; }
+        .skin-modal-info p { font-size: 0.75rem; color: var(--text-muted); }
+        
+        .team-selector {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+            background: rgba(15, 15, 15, 0.6);
+            border-radius: 40px;
+            padding: 0.3rem;
+        }
+        .team-selector-btn {
+            flex: 1;
+            background: none;
+            border: none;
+            padding: 0.5rem;
+            border-radius: 35px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            color: var(--text-muted);
+        }
+        .team-selector-btn.ct { color: #3a86ff; }
+        .team-selector-btn.t { color: #ff6b3a; }
+        .team-selector-btn.active {
+            background: linear-gradient(135deg, #c0702a, #f0a050);
+            color: #1a1a1a;
+        }
+        .team-selector-btn.ct.active {
+            background: linear-gradient(135deg, #2a5fbb, #3a86ff);
+            color: white;
+        }
+        .team-selector-btn.t.active {
+            background: linear-gradient(135deg, #cc5522, #ff6b3a);
+            color: white;
+        }
+        
+        .qualities { display: flex; gap: 0.5rem; flex-wrap: wrap; justify-content: center; margin-bottom: 1rem; }
+        .quality-btn {
+            background: rgba(15, 15, 15, 0.8);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 0.4rem 0.8rem;
+            font-size: 0.65rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .quality-btn:hover { border-color: var(--primary); color: var(--primary); }
+        .quality-btn.active { background: linear-gradient(135deg, #c0702a, #f0a050); border-color: var(--primary); color: #1a1a1a; }
+        .pattern-control { display: flex; align-items: center; gap: 0.5rem; background: rgba(15, 15, 15, 0.8); border: 1px solid var(--border); border-radius: 30px; padding: 0.4rem 1rem; margin-bottom: 1rem; }
+        .pattern-control label { font-size: 0.65rem; color: var(--text-muted); }
+        .pattern-control input { flex: 1; background: transparent; border: none; color: var(--primary); text-align: center; outline: none; font-size: 0.85rem; }
+        .random-pattern { background: none; border: none; color: var(--primary); cursor: pointer; }
+        .stattrak-btn {
+            background: rgba(15, 15, 15, 0.8);
+            border: 1px solid var(--border);
+            border-radius: 30px;
+            padding: 0.6rem;
+            font-size: 0.75rem;
+            cursor: pointer;
+            width: 100%;
+            margin-bottom: 1rem;
+        }
+        .stattrak-btn.active { background: linear-gradient(135deg, #c0702a, #f0a050); color: #1a1a1a; }
+        .modal-apply-btn {
+            background: linear-gradient(135deg, #c0702a, #f0a050);
+            border: none;
+            border-radius: 30px;
+            padding: 0.8rem;
+            color: #1a1a1a;
+            font-weight: 700;
+            cursor: pointer;
+            width: 100%;
+            font-size: 0.85rem;
+        }
+        .modal-apply-btn:hover { transform: translateY(-2px); }
+        
+        .toast-notification {
+            position: fixed;
+            top: 90px;
+            right: 20px;
+            background: #1a1a1a;
+            border-left: 4px solid var(--primary);
+            border-radius: 12px;
+            padding: 0.7rem 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            z-index: 10000;
+            animation: slideInRight 0.3s ease forwards;
+            font-size: 0.85rem;
+        }
+        @keyframes slideInRight {
+            from { opacity: 0; transform: translateX(50px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        
+        .weapon-category { margin-bottom: 1.5rem; }
+        .weapon-category-title { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-muted); margin-bottom: 0.8rem; display: flex; align-items: center; gap: 0.5rem; }
+        .weapon-category-title i { color: var(--primary); width: 20px; }
+        .weapon-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.8rem; }
+        .weapon-item {
+            background: rgba(15, 15, 15, 0.6);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 0.8rem 0.3rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            position: relative;
+        }
+        .weapon-icon { width: 85px; height: 85px; display: flex; align-items: center; justify-content: center; margin: 0 auto; }
+        .weapon-icon img { width: 75px; height: 75px; filter: brightness(0.7); border-radius: 8px; object-fit: contain; }
+        .weapon-item:hover { border-color: var(--primary); background: rgba(224,136,58,0.1); }
+        .weapon-item:hover .weapon-icon img { filter: brightness(1); }
+        .weapon-item.active { border-color: var(--primary); background: rgba(224,136,58,0.15); }
+        .weapon-item.active .weapon-icon img { filter: brightness(1); }
+        .weapon-name { font-size: 0.7rem; color: var(--text-muted); text-align: center; margin-top: 0.3rem; }
+        .weapon-item.active .weapon-name { color: var(--primary); }
+        
+        /* Индикаторы для CT и T скинов */
+        .skin-indicators {
+            position: absolute;
+            bottom: 5px;
+            right: 5px;
+            display: flex;
+            gap: 3px;
+        }
+        .skin-indicator {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            font-size: 0.6rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+        .skin-indicator.ct {
+            background: #3a86ff;
+            color: white;
+        }
+        .skin-indicator.t {
+            background: #ff6b3a;
+            color: white;
+        }
+        
+        .show-more-btn {
+            background: transparent;
+            border: 1px dashed var(--border);
+            border-radius: 8px;
+            padding: 0.4rem;
+            margin-top: 0.5rem;
+            cursor: pointer;
+            font-size: 0.65rem;
+            color: var(--primary);
+            width: 100%;
+        }
+        .show-more-btn:hover { background: rgba(224,136,58,0.1); }
+        
+        .loader-wrapper { text-align: center; padding: 2rem; color: var(--text-muted); }
+        .loader-spinner { width: 40px; height: 40px; border: 3px solid rgba(224,136,58,0.2); border-top-color: var(--primary); border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0 auto 1rem; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        
+        .team-badge {
+            display: inline-block;
+            font-size: 0.55rem;
+            padding: 0.2rem 0.5rem;
+            border-radius: 20px;
+            margin-left: 0.3rem;
+        }
+        .team-badge.ct { background: rgba(58,134,255,0.2); color: #3a86ff; }
+        .team-badge.t { background: rgba(255,107,58,0.2); color: #ff6b3a; }
+    </style>
+</head>
+<body>
+
+<div class="skinchanger-wrapper">
+    <div style="margin-bottom: 1.5rem;">
+        <a href="index.html" style="color: var(--text-muted); text-decoration: none; font-size: 0.8rem;">← Назад к серверам</a>
+    </div>
+
+    <div class="skinchanger-layout">
+        <div class="weapon-sidebar" id="weaponSidebar">
+            <div style="margin-bottom: 1.2rem; padding-bottom: 0.8rem; border-bottom: 1px solid var(--border);">
+                <h3 style="font-family: 'Oswald', sans-serif; font-size: 1.1rem; text-transform: uppercase; color: var(--primary); margin: 0;">
+                    <i class="fas fa-gun"></i> Оружие
+                </h3>
+            </div>
+            <div id="weaponCategories"></div>
+        </div>
+
+        <div class="skins-content">
+            <div class="content-tabs">
+                <button class="content-tab-btn active" data-tab="all-skins">🎨 Все скины</button>
+                <button class="content-tab-btn" data-tab="my-collection">⭐ Моя коллекция</button>
+            </div>
+            
+            <div id="allSkinsTab" style="display: block;">
+                <div class="selected-weapon-title" id="selectedWeaponTitle">Выберите оружие</div>
+                <div id="skinsContainer">
+                    <div class="loader-wrapper">
+                        <div class="loader-spinner"></div>
+                        <p>Загрузка скинов...</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="myCollectionTab" style="display: none;">
+                <div class="collection-header">
+                    <h3><i class="fas fa-star"></i> Основная коллекция</h3>
+                    <div style="display: flex; gap: 1rem; align-items: center;">
+                        <div class="collection-team-switch">
+                            <button class="collection-team-btn ct" data-team="ct">CT</button>
+                            <button class="collection-team-btn t" data-team="t">T</button>
+                            <button class="collection-team-btn active" data-team="both">ВСЕ</button>
+                        </div>
+                        <button class="reset-all-btn" id="resetAllSkinsBtn">
+                            <i class="fas fa-trash-alt"></i> Сбросить все
+                        </button>
+                    </div>
+                </div>
+                <div id="collectionContainer">
+                    <div class="loader-wrapper">
+                        <div class="loader-spinner"></div>
+                        <p>Загрузка коллекции...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="js/layout.js"></script>
+<script>
+// КАТЕГОРИИ - НОЖИ И ПЕРЧАТКИ ПЕРВЫМИ
+const CATEGORIES = {
+    knives: { name: "🔪 Ножи", icon: "fas fa-gavel", weapons: ["Karambit", "M9 Bayonet", "Butterfly Knife", "Bayonet", "Talon Knife", "Skeleton Knife", "Stiletto Knife", "Huntsman Knife", "Falchion Knife", "Flip Knife", "Gut Knife", "Bowie Knife"] },
+    gloves: { name: "🧤 Перчатки", icon: "fas fa-hand-peace", weapons: ["Sport Gloves", "Driver Gloves", "Specialist Gloves", "Hand Wraps", "Moto Gloves", "Bloodhound Gloves", "Hydra Gloves", "Broken Fang Gloves"] },
+    rifles: { name: "🔫 Винтовки", icon: "fas fa-gun", weapons: ["AK-47", "M4A4", "M4A1-S", "Galil AR", "FAMAS", "SG 553", "AUG"] },
+    snipers: { name: "🎯 Снайперские винтовки", icon: "fas fa-crosshairs", weapons: ["AWP", "SSG 08", "SCAR-20", "G3SG1"] },
+    pistols: { name: "🔫 Пистолеты", icon: "fas fa-bullseye", weapons: ["Desert Eagle", "USP-S", "Glock-18", "P250", "Tec-9", "Five-SeveN", "CZ75-Auto", "Dual Berettas", "R8 Revolver"] },
+    smgs: { name: "💨 Пистолеты-пулемёты", icon: "fas fa-fill-drip", weapons: ["MP9", "MAC-10", "MP7", "UMP-45", "P90", "PP-Bizon", "MP5-SD"] },
+    heavy: { name: "💣 Тяжёлое оружие", icon: "fas fa-bomb", weapons: ["Nova", "XM1014", "Sawed-Off", "MAG-7", "M249", "Negev"] }
+};
+
+const WEAPON_TEAM = {
+    "M4A4": "ct", "M4A1-S": "ct", "FAMAS": "ct", "AUG": "ct", "SCAR-20": "ct",
+    "USP-S": "ct", "Five-SeveN": "ct", "MP9": "ct", "MAG-7": "ct",
+    "AK-47": "t", "Galil AR": "t", "SG 553": "t", "G3SG1": "t",
+    "Glock-18": "t", "Tec-9": "t", "MAC-10": "t", "Sawed-Off": "t",
+    "AWP": "both", "SSG 08": "both", "Desert Eagle": "both", "P250": "both",
+    "CZ75-Auto": "both", "Dual Berettas": "both", "R8 Revolver": "both",
+    "MP7": "both", "UMP-45": "both", "P90": "both", "PP-Bizon": "both", "MP5-SD": "both",
+    "Nova": "both", "XM1014": "both", "M249": "both", "Negev": "both",
+    "Karambit": "both", "M9 Bayonet": "both", "Butterfly Knife": "both", "Bayonet": "both",
+    "Talon Knife": "both", "Skeleton Knife": "both", "Stiletto Knife": "both", "Huntsman Knife": "both",
+    "Falchion Knife": "both", "Flip Knife": "both", "Gut Knife": "both", "Bowie Knife": "both",
+    "Sport Gloves": "both", "Driver Gloves": "both", "Specialist Gloves": "both", "Hand Wraps": "both",
+    "Moto Gloves": "both", "Bloodhound Gloves": "both", "Hydra Gloves": "both", "Broken Fang Gloves": "both"
+};
+
+const WEAR_VALUES = { "Factory New": 0.03, "Minimal Wear": 0.10, "Field-Tested": 0.25, "Well-Worn": 0.40, "Battle-Scarred": 0.75 };
+const WEAR_NAMES = ["Factory New", "Minimal Wear", "Field-Tested", "Well-Worn", "Battle-Scarred"];
+
+let allSkins = [];
+let weaponsList = {};
+let weaponIcons = {};
+let userSkins = {}; // Ключ: "оружие_сторона" (например "AK-47_t" или "M4A4_ct")
+let currentWeapon = null;
+let hiddenWeapons = {};
+let currentTab = "all-skins";
+let collectionTeamFilter = "both";
+
+function showToast(msg, isError = false) {
+    const toast = document.createElement('div');
+    toast.className = 'toast-notification';
+    toast.style.borderLeftColor = isError ? '#e34d4d' : '#e0883a';
+    toast.innerHTML = `<i class="fas ${isError ? 'fa-exclamation-circle' : 'fa-check-circle'}"></i><div>${msg}</div>`;
+    document.body.appendChild(toast);
+    setTimeout(() => toast.remove(), 3000);
+}
+
+function escapeHtml(str) {
+    if (!str) return '';
+    return str.replace(/[&<>]/g, m => m === '&' ? '&amp;' : (m === '<' ? '&lt;' : '&gt;'));
+}
+
+function getWearName(floatVal) {
+    if (floatVal < 0.07) return "Factory New";
+    if (floatVal < 0.15) return "Minimal Wear";
+    if (floatVal < 0.38) return "Field-Tested";
+    if (floatVal < 0.45) return "Well-Worn";
+    return "Battle-Scarred";
+}
+
+function getWeaponTeam(weaponName) {
+    return WEAPON_TEAM[weaponName] || "both";
+}
+
+async function loadSkins() {
+    try {
+        const response = await fetch('/api/skins.json');
+        let data = await response.json();
+        if (Array.isArray(data)) allSkins = data;
+        else if (typeof data === 'object') allSkins = Object.values(data);
+        
+        allSkins.forEach(skin => {
+            const weaponName = skin.weapon?.name || skin.weapon_name;
+            if (weaponName && weaponName !== 'Unknown' && weaponName !== 'undefined') {
+                if (!weaponsList[weaponName]) {
+                    weaponsList[weaponName] = [];
+                    if (skin.image && !weaponIcons[weaponName]) {
+                        weaponIcons[weaponName] = skin.image;
+                    }
+                }
+                weaponsList[weaponName].push(skin);
+            }
+        });
+        
+        for (const weapon of Object.keys(weaponsList)) {
+            if (!weaponIcons[weapon] && weaponsList[weapon].length > 0) {
+                weaponIcons[weapon] = weaponsList[weapon][0].image || '/images/no-image.png';
+            }
+        }
+        
+        const firstWeapon = Object.keys(weaponsList)[0];
+        if (firstWeapon) {
+            currentWeapon = firstWeapon;
+            renderWeaponSidebar();
+            renderSkinsForWeapon(currentWeapon);
+        }
+        await loadUserSkins();
+    } catch(err) {
+        console.error('loadSkins error:', err);
+        document.getElementById('skinsContainer').innerHTML = '<div class="loader-wrapper"><p>❌ Ошибка загрузки скинов</p></div>';
+    }
+}
+
+function getWeaponIcon(weaponName) {
+    return weaponIcons[weaponName] || '/images/no-image.png';
+}
+
+async function loadUserSkins() {
+    const saved = localStorage.getItem('cs2rage_skins_v4');
+    if (saved) {
+        userSkins = JSON.parse(saved);
+    } else {
+        userSkins = {};
+    }
+    renderWeaponSidebar();
+    renderCollection();
+}
+
+// Сохранение скина - ЗАМЕНЯЕТ старый если есть
+function saveSkinLocal(weapon, skinName, paintIndex, seed, wearFloat, isStatTrak, skinImage, team) {
+    const key = weapon + '_' + team;
+    
+    userSkins[key] = {
+        weapon: weapon,
+        skin_name: skinName,
+        pattern: seed,
+        float: wearFloat,
+        stattrak: isStatTrak,
+        image: skinImage,
+        paint: paintIndex,
+        team: team
+    };
+    
+    localStorage.setItem('cs2rage_skins_v4', JSON.stringify(userSkins));
+    showToast(`${isStatTrak ? '🔫 STATRAK ' : ''}${weapon} | ${skinName} применён для ${team === 'ct' ? 'CT' : 'T'}!`);
+    renderWeaponSidebar();
+    renderCollection();
+    return true;
+}
+
+function removeSkinLocal(key) {
+    delete userSkins[key];
+    localStorage.setItem('cs2rage_skins_v4', JSON.stringify(userSkins));
+    showToast(`🗑️ Скин удалён`);
+    renderWeaponSidebar();
+    renderCollection();
+}
+
+function resetAllSkinsLocal() {
+    if (!confirm('⚠️ Вы уверены, что хотите сбросить ВСЕ установленные скины?')) return;
+    userSkins = {};
+    localStorage.setItem('cs2rage_skins_v4', JSON.stringify(userSkins));
+    showToast('✅ Все скины сброшены!');
+    renderWeaponSidebar();
+    renderCollection();
+}
+
+function renderWeaponSidebar() {
+    let html = '';
+    for (const [catId, cat] of Object.entries(CATEGORIES)) {
+        const visible = cat.weapons.slice(0, 6);
+        const hiddenList = cat.weapons.slice(6);
+        const isExpanded = hiddenWeapons[catId] || false;
+        const displayList = isExpanded ? cat.weapons : visible;
+        
+        html += `<div class="weapon-category">
+            <div class="weapon-category-title"><i class="${cat.icon}"></i> ${cat.name}</div>
+            <div class="weapon-grid">`;
+        displayList.forEach(w => {
+            const hasCt = userSkins && userSkins[w + '_ct'];
+            const hasT = userSkins && userSkins[w + '_t'];
+            
+            let indicatorsHtml = '';
+            if (hasCt || hasT) {
+                indicatorsHtml = '<div class="skin-indicators">';
+                if (hasCt) indicatorsHtml += '<div class="skin-indicator ct" title="Есть скин для CT">CT</div>';
+                if (hasT) indicatorsHtml += '<div class="skin-indicator t" title="Есть скин для T">T</div>';
+                indicatorsHtml += '</div>';
+            }
+            
+            html += `<button class="weapon-item ${currentWeapon === w ? 'active' : ''}" data-weapon="${w.replace(/'/g, "\\'")}" style="position:relative;">
+                <div class="weapon-icon"><img src="${getWeaponIcon(w)}" onerror="this.src='/images/no-image.png'"></div>
+                <span class="weapon-name">${w}</span>
+                ${indicatorsHtml}
+            </button>`;
+        });
+        html += `</div>`;
+        if (hiddenList.length > 0 && !isExpanded) {
+            html += `<button class="show-more-btn" data-category="${catId}"><i class="fas fa-chevron-down"></i> Скрыто ${hiddenList.length}</button>`;
+        } else if (hiddenList.length > 0 && isExpanded) {
+            html += `<button class="show-more-btn" data-category="${catId}"><i class="fas fa-chevron-up"></i> Скрыть</button>`;
+        }
+        html += `</div>`;
+    }
+    document.getElementById('weaponCategories').innerHTML = html;
+    
+    document.querySelectorAll('.weapon-item').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const w = btn.dataset.weapon;
+            if (w && weaponsList[w]) {
+                currentWeapon = w;
+                renderWeaponSidebar();
+                if (currentTab !== 'all-skins') switchTab('all-skins');
+                renderSkinsForWeapon(currentWeapon);
+            }
+        });
+    });
+    
+    document.querySelectorAll('.show-more-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const cat = btn.dataset.category;
+            if (cat) {
+                hiddenWeapons[cat] = !hiddenWeapons[cat];
+                renderWeaponSidebar();
+            }
+        });
+    });
+}
+
+function renderSkinsForWeapon(weapon) {
+    const skins = weaponsList[weapon] || [];
+    document.getElementById('selectedWeaponTitle').innerHTML = `<i class="fas fa-gun"></i> ${weapon}`;
+    if (!skins.length) {
+        document.getElementById('skinsContainer').innerHTML = '<div class="loader-wrapper"><p>Нет скинов для этого оружия</p></div>';
+        return;
+    }
+    
+    const grid = document.createElement('div');
+    grid.className = 'skins-grid';
+    grid.innerHTML = skins.slice(0, 100).map((s, i) => `
+        <div class="skin-card" data-index="${i}">
+            <div class="skin-card-image"><img src="${s.image || '/images/no-image.png'}" onerror="this.src='/images/no-image.png'"></div>
+            <div class="skin-card-info">
+                <div class="skin-card-name">${escapeHtml(s.name)}</div>
+                <div class="skin-card-weapon">${escapeHtml(s.weapon?.name || s.weapon_name)}</div>
+                <div class="skin-card-rarity">${s.rarity?.name || s.rarity || 'Common'}</div>
+            </div>
+        </div>
+    `).join('');
+    
+    document.getElementById('skinsContainer').innerHTML = '';
+    document.getElementById('skinsContainer').appendChild(grid);
+    
+    document.querySelectorAll('.skin-card').forEach(card => {
+        card.addEventListener('click', () => {
+            const idx = parseInt(card.dataset.index);
+            if (!isNaN(idx) && skins[idx]) openModal(skins[idx]);
+        });
+    });
+}
+
+function renderCollection() {
+    const container = document.getElementById('collectionContainer');
+    if (!container) return;
+    
+    let skinsArray = Object.entries(userSkins);
+    
+    if (collectionTeamFilter !== "both") {
+        skinsArray = skinsArray.filter(([key, info]) => info.team === collectionTeamFilter);
+    }
+    
+    if (skinsArray.length === 0) {
+        container.innerHTML = `
+            <div class="empty-collection">
+                <i class="fas fa-star-of-life"></i>
+                <p>У вас пока нет сохранённых скинов</p>
+                <p style="font-size: 0.7rem; margin-top: 0.5rem;">Выберите оружие и скин, чтобы добавить его в коллекцию</p>
+            </div>
+        `;
+        return;
+    }
+    
+    skinsArray.sort((a, b) => a[1].weapon.localeCompare(b[1].weapon));
+    
+    container.innerHTML = `
+        <div class="collection-grid">
+            ${skinsArray.map(([key, info]) => {
+                const wearName = getWearName(info.float);
+                const teamBadge = info.team === 'ct' ? '<span class="team-badge ct">CT</span>' : '<span class="team-badge t">T</span>';
+                return `
+                    <div class="collection-card">
+                        <div class="collection-card-image">
+                            <img src="${info.image || '/images/no-image.png'}" onerror="this.src='/images/no-image.png'">
+                        </div>
+                        <div class="collection-card-info">
+                            <div class="collection-card-weapon">${escapeHtml(info.weapon)} ${teamBadge}</div>
+                            <div class="collection-card-name">${escapeHtml(info.skin_name)} ${info.stattrak ? '<span style="color:#f0a050;">★ STATRAK™</span>' : ''}</div>
+                            <div class="collection-card-details">
+                                <span>🔧 Seed: ${info.pattern}</span>
+                                <span>💧 Float: ${info.float.toFixed(3)} (${wearName})</span>
+                            </div>
+                        </div>
+                        <button class="collection-remove-btn" onclick="window.removeSkinLocal('${key.replace(/'/g, "\\'")}')">
+                            <i class="fas fa-trash"></i> Удалить
+                        </button>
+                    </div>
+                `;
+            }).join('')}
+        </div>
+    `;
+}
+
+function openModal(skin) {
+    let selectedWear = "Factory New";
+    let isStatTrak = false;
+    let seed = Math.floor(Math.random() * 1001);
+    let selectedTeam = "ct";
+    const weaponName = skin.weapon?.name || skin.weapon_name;
+    const paintIndex = skin.paint_index || 0;
+    const skinImage = skin.image || '/images/no-image.png';
+    const weaponTeam = getWeaponTeam(weaponName);
+    const canChooseTeam = (weaponTeam === "both");
+    
+    let teamSelectorHtml = '';
+    if (canChooseTeam) {
+        teamSelectorHtml = `
+            <div class="team-selector">
+                <button class="team-selector-btn ct active" data-team="ct">🔵 CT</button>
+                <button class="team-selector-btn t" data-team="t">🔴 T</button>
+            </div>
+        `;
+    } else {
+        selectedTeam = weaponTeam;
+    }
+    
+    const modalHtml = `
+        <div class="skin-modal" id="skinModal">
+            <div class="skin-modal-content">
+                <div class="skin-modal-header">
+                    <h3><i class="fas fa-gun"></i> Применить скин</h3>
+                    <button class="modal-close" id="closeModalBtn"><i class="fas fa-times"></i></button>
+                </div>
+                <div class="skin-modal-preview">
+                    <img src="${skinImage}" onerror="this.src='/images/no-image.png'">
+                </div>
+                <div class="skin-modal-info">
+                    <h4>${escapeHtml(skin.name)}</h4>
+                    <p>${escapeHtml(weaponName)}</p>
+                </div>
+                ${teamSelectorHtml}
+                <div class="qualities">
+                    ${WEAR_NAMES.map(w => `<button class="quality-btn ${w === selectedWear ? 'active' : ''}" data-wear="${w}">${w}</button>`).join('')}
+                </div>
+                <div class="pattern-control">
+                    <label>PATTERN SEED</label>
+                    <input type="number" id="patternSeed" min="0" max="1000" value="${seed}">
+                    <button class="random-pattern" id="randomPatternBtn"><i class="fas fa-random"></i></button>
+                </div>
+                <button class="stattrak-btn" id="stattrakBtn">
+                    <i class="fas fa-star"></i> STATRAK™
+                </button>
+                <button class="modal-apply-btn" id="modalApplyBtn">
+                    <i class="fas fa-check-circle"></i> Применить скин
+                </button>
+            </div>
+        </div>
+    `;
+    document.body.insertAdjacentHTML('beforeend', modalHtml);
+    const modal = document.getElementById('skinModal');
+    
+    if (canChooseTeam) {
+        document.querySelectorAll('.team-selector-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.team-selector-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                selectedTeam = btn.dataset.team;
+            });
+        });
+    }
+    
+    document.querySelectorAll('.quality-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('.quality-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            selectedWear = btn.dataset.wear;
+        });
+    });
+    
+    document.getElementById('randomPatternBtn').addEventListener('click', () => {
+        seed = Math.floor(Math.random() * 1001);
+        document.getElementById('patternSeed').value = seed;
+    });
+    
+    document.getElementById('patternSeed').addEventListener('input', (e) => {
+        seed = parseInt(e.target.value) || 0;
+        if (seed < 0) seed = 0;
+        if (seed > 1000) seed = 1000;
+    });
+    
+    const stBtn = document.getElementById('stattrakBtn');
+    stBtn.addEventListener('click', () => {
+        isStatTrak = !isStatTrak;
+        stBtn.classList.toggle('active');
+        stBtn.innerHTML = `<i class="fas fa-star"></i> STATRAK™ ${isStatTrak ? '✓' : ''}`;
+    });
+    
+    document.getElementById('closeModalBtn').addEventListener('click', () => modal.remove());
+    modal.addEventListener('click', (e) => { if (e.target === modal) modal.remove(); });
+    
+    document.getElementById('modalApplyBtn').addEventListener('click', () => {
+        const wearFloat = WEAR_VALUES[selectedWear];
+        saveSkinLocal(weaponName, skin.name, paintIndex, seed, wearFloat, isStatTrak, skinImage, selectedTeam);
+        modal.remove();
+    });
+}
+
+function switchTab(tabId) {
+    currentTab = tabId;
+    document.querySelectorAll('.content-tab-btn').forEach(btn => {
+        if (btn.dataset.tab === tabId) btn.classList.add('active');
+        else btn.classList.remove('active');
+    });
+    
+    const allSkinsTab = document.getElementById('allSkinsTab');
+    const myCollectionTab = document.getElementById('myCollectionTab');
+    
+    if (tabId === 'all-skins') {
+        allSkinsTab.style.display = 'block';
+        myCollectionTab.style.display = 'none';
+        if (currentWeapon) renderSkinsForWeapon(currentWeapon);
+    } else {
+        allSkinsTab.style.display = 'none';
+        myCollectionTab.style.display = 'block';
+        renderCollection();
+    }
+}
+
+document.addEventListener('DOMContentLoaded', async () => {
+    await loadSkins();
+    
+    document.getElementById('resetAllSkinsBtn').addEventListener('click', resetAllSkinsLocal);
+    
+    document.querySelectorAll('.content-tab-btn').forEach(btn => {
+        btn.addEventListener('click', () => switchTab(btn.dataset.tab));
+    });
+    
+    document.querySelectorAll('.collection-team-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('.collection-team-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            collectionTeamFilter = btn.dataset.team;
+            renderCollection();
+        });
+    });
+});
+
+window.removeSkinLocal = removeSkinLocal;
+window.resetAllSkinsLocal = resetAllSkinsLocal;
+</script>
+</body>
+</html>
