@@ -1,5 +1,5 @@
 <?php
-define('DB_HOST', '95.213.255.80');
+define('DB_HOST', 'localhost');
 define('DB_PORT', 3306);
 define('DB_USER', 'u4795_T9UpeZNjB1');
 define('DB_PASS', 'LVcysg^+5R!74P@hHtpe1Cs!');
