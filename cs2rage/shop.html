@@ -5,368 +5,26 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
     <title>CS2RAGE — Привилегии</title>
     <meta name="description" content="Привилегии CS2RAGE. BASIC, LITE, PREMIUM, KING, GOD.">
-    
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Oswald:wght@500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="css/main.css">
-    
-    <style>
-        :root {
-            --bg: #0f0f0f;
-            --primary: #e0883a;
-            --primary-dark: #c0702a;
-            --primary-glow: #f0a050;
-            --text: #e8e6e3;
-            --text-muted: #8a8a8a;
-            --card-bg: rgba(20, 20, 24, 0.65);
-            --border: rgba(255, 255, 255, 0.06);
-            
-            --color-basic: #9ca3af;
-            --color-lite: #3b82f6;
-            --color-premium: #e0883a;
-            --color-king: #fbbf24;
-            --color-god: #ef4444;
-        }
-        
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        
-        body {
-            background: #0f0f0f;
-            background-image: 
-                radial-gradient(800px 500px at 90% -10%, rgba(224,136,58,0.12), transparent 60%),
-                radial-gradient(600px 400px at 10% 20%, rgba(240,160,80,0.08), transparent 55%),
-                radial-gradient(500px 350px at 60% 90%, rgba(224,136,58,0.10), transparent 50%);
-            background-attachment: fixed;
-            font-family: 'Rajdhani', system-ui, sans-serif;
-            color: #e8e6e3;
-            min-height: 100vh;
-        }
-        
-        body::before {
-            content: '';
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 0;
-            background-image: 
-                radial-gradient(3px 3px at 15% 25%, rgba(224,136,58,0.6), transparent),
-                radial-gradient(2px 2px at 45% 65%, rgba(240,160,80,0.5), transparent),
-                radial-gradient(3px 3px at 75% 15%, rgba(224,136,58,0.4), transparent),
-                radial-gradient(2px 2px at 85% 75%, rgba(240,160,80,0.6), transparent),
-                radial-gradient(3px 3px at 25% 85%, rgba(224,136,58,0.5), transparent),
-                radial-gradient(2px 2px at 55% 35%, rgba(240,160,80,0.3), transparent),
-                radial-gradient(3px 3px at 65% 55%, rgba(224,136,58,0.5), transparent),
-                radial-gradient(2px 2px at 35% 45%, rgba(240,160,80,0.4), transparent),
-                radial-gradient(3px 3px at 5% 55%, rgba(224,136,58,0.3), transparent),
-                radial-gradient(2px 2px at 95% 35%, rgba(240,160,80,0.5), transparent);
-            background-size: 200px 200px;
-            animation: float-particles 20s ease-in-out infinite;
-        }
-        
-        @keyframes float-particles {
-            0%, 100% { transform: translateY(0) rotate(0deg); opacity: 0.8; }
-            25% { transform: translateY(-15px) rotate(1deg); opacity: 1; }
-            50% { transform: translateY(-5px) rotate(-1deg); opacity: 0.6; }
-            75% { transform: translateY(-20px) rotate(0.5deg); opacity: 0.9; }
-        }
-        
-        .container {
-            max-width: 1500px;
-            margin: 0 auto;
-            padding: 3rem 2rem;
-            position: relative;
-            z-index: 1;
-        }
-        
-        .header {
-            text-align: center;
-            margin-bottom: 4rem;
-        }
-        
-        .header h1 {
-            font-family: 'Oswald', sans-serif;
-            font-size: clamp(2.5rem, 5vw, 3.5rem);
-            text-transform: uppercase;
-            letter-spacing: 0.25em;
-            background: linear-gradient(135deg, #fff, #e0883a, #f0a050);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-            margin-bottom: 0.8rem;
-        }
-        
-        .header p {
-            color: #8a8a8a;
-            font-size: 1rem;
-        }
-        
-        .tiers {
-            display: grid;
-            grid-template-columns: repeat(5, 1fr);
-            gap: 1.5rem;
-        }
-        
-        @media (max-width: 1400px) {
-            .tiers { grid-template-columns: repeat(3, 1fr); }
-        }
-        
-        @media (max-width: 900px) {
-            .tiers { grid-template-columns: repeat(2, 1fr); }
-        }
-        
-        @media (max-width: 600px) {
-            .tiers { grid-template-columns: 1fr; }
-            .container { padding: 1.5rem 1rem; }
-        }
-        
-        .tier {
-            background: rgba(18, 18, 24, 0.75);
-            backdrop-filter: blur(20px);
-            border-radius: 24px;
-            border: 1px solid rgba(255, 255, 255, 0.06);
-            padding: 2.5rem 1.8rem 2rem;
-            display: flex;
-            flex-direction: column;
-            position: relative;
-            transition: all 0.35s ease;
-            overflow: visible;
-        }
-        
-        .tier:hover {
-            transform: translateY(-8px);
-            background: rgba(22, 22, 30, 0.85);
-        }
-        
-        .tier::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 10%;
-            width: 80%;
-            height: 3px;
-            border-radius: 0 0 3px 3px;
-            transition: all 0.3s ease;
-        }
-        
-        .tier.basic::before { background: linear-gradient(90deg, transparent, #9ca3af, transparent); }
-        .tier.lite::before { background: linear-gradient(90deg, transparent, #3b82f6, transparent); }
-        .tier.premium::before { background: linear-gradient(90deg, transparent, #e0883a, transparent); }
-        .tier.king::before { background: linear-gradient(90deg, transparent, #fbbf24, transparent); }
-        .tier.god::before { background: linear-gradient(90deg, transparent, #ef4444, transparent); }
-        
-        .tier:hover::before { left: 0; width: 100%; height: 4px; }
-        
-        .tier.basic:hover { box-shadow: 0 25px 60px -15px rgba(156,163,175,0.2); border-color: rgba(156,163,175,0.2); }
-        .tier.lite:hover { box-shadow: 0 25px 60px -15px rgba(59,130,246,0.25); border-color: rgba(59,130,246,0.2); }
-        .tier.premium:hover { box-shadow: 0 25px 60px -15px rgba(224,136,58,0.3); border-color: rgba(224,136,58,0.25); }
-        .tier.king:hover { box-shadow: 0 25px 60px -15px rgba(251,191,36,0.3); border-color: rgba(251,191,36,0.25); }
-        .tier.god:hover { box-shadow: 0 25px 60px -15px rgba(239,68,68,0.25); border-color: rgba(239,68,68,0.25); }
-        
-        /* Популярный бейдж - ИСПРАВЛЕНО */
-        .popular-badge {
-            position: absolute;
-            top: -16px;
-            right: 24px;
-            background: linear-gradient(135deg, #e0883a, #c07020);
-            color: #1a1a1a;
-            font-size: 0.65rem;
-            font-weight: 700;
-            padding: 0.4rem 1.2rem;
-            border-radius: 20px;
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-            z-index: 10;
-            box-shadow: 0 4px 20px rgba(224,136,58,0.5);
-            white-space: nowrap;
-        }
-        
-        .tier-label {
-            font-size: 0.7rem;
-            text-transform: uppercase;
-            letter-spacing: 0.2em;
-            font-weight: 700;
-            margin-bottom: 0.8rem;
-            opacity: 0.9;
-        }
-        
-        .tier.basic .tier-label { color: #9ca3af; }
-        .tier.lite .tier-label { color: #3b82f6; }
-        .tier.premium .tier-label { color: #e0883a; }
-        .tier.king .tier-label { color: #fbbf24; }
-        .tier.god .tier-label { color: #ef4444; }
-        
-        .tier-name {
-            font-family: 'Oswald', sans-serif;
-            font-size: 2rem;
-            font-weight: 600;
-            letter-spacing: 0.1em;
-            text-transform: uppercase;
-            margin-bottom: 0.5rem;
-            color: #fff;
-        }
-        
-        .old-price {
-            font-size: 0.9rem;
-            text-decoration: line-through;
-            color: #6b7280;
-            margin-bottom: 0.2rem;
-        }
-        
-        .tier-price {
-            font-size: 3rem;
-            font-weight: 700;
-            font-family: 'Oswald', sans-serif;
-            line-height: 1;
-            margin-bottom: 1.5rem;
-        }
-        
-        .tier.basic .tier-price { color: #9ca3af; }
-        .tier.lite .tier-price { color: #3b82f6; }
-        .tier.premium .tier-price { color: #e0883a; }
-        .tier.king .tier-price { color: #fbbf24; }
-        .tier.god .tier-price { color: #ef4444; }
-        
-        .tier-price small {
-            font-size: 1.1rem;
-            color: #8a8a8a;
-            font-weight: 400;
-        }
-        
-        .divider {
-            height: 1px;
-            background: rgba(255,255,255,0.06);
-            margin-bottom: 1.5rem;
-        }
-        
-        .features {
-            list-style: none;
-            flex: 1;
-            margin-bottom: 2rem;
-        }
-        
-        .features li {
-            display: flex;
-            align-items: center;
-            gap: 0.8rem;
-            padding: 0.5rem 0;
-            font-size: 0.85rem;
-            color: #a1a1aa;
-            border-bottom: 1px solid rgba(255,255,255,0.03);
-            transition: all 0.2s;
-        }
-        
-        .features li:last-child { border-bottom: none; }
-        .features li:hover { color: #fff; }
-        
-        .features li i {
-            width: 16px;
-            font-size: 0.55rem;
-        }
-        
-        .tier.basic .features li i { color: #9ca3af; }
-        .tier.lite .features li i { color: #3b82f6; }
-        .tier.premium .features li i { color: #e0883a; }
-        .tier.king .features li i { color: #fbbf24; }
-        .tier.god .features li i { color: #ef4444; }
-        
-        /* Кнопка - ИСПРАВЛЕНО */
-        .btn {
-            width: 100%;
-            padding: 0.9rem;
-            border-radius: 50px;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.15em;
-            font-size: 0.8rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-family: 'Rajdhani', sans-serif;
-            background: rgba(255, 255, 255, 0.03);
-            border: 2px solid rgba(255, 255, 255, 0.1);
-            color: #fff;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .btn::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 0%;
-            height: 100%;
-            transition: width 0.35s cubic-bezier(0.2, 0.9, 0.4, 1.1);
-            z-index: -1;
-        }
-        
-        .tier.basic .btn::after { background: rgba(156, 163, 175, 0.15); }
-        .tier.lite .btn::after { background: rgba(59, 130, 246, 0.15); }
-        .tier.premium .btn::after { background: rgba(224, 136, 58, 0.15); }
-        .tier.king .btn::after { background: rgba(251, 191, 36, 0.15); }
-        .tier.god .btn::after { background: rgba(239, 68, 68, 0.15); }
-        
-        .btn:hover::after {
-            width: 100%;
-        }
-        
-        .btn:hover {
-            border-color: rgba(255, 255, 255, 0.3);
-            transform: translateY(-2px);
-            letter-spacing: 0.2em;
-        }
-        
-        .tier.basic .btn:hover { border-color: rgba(156, 163, 175, 0.5); }
-        .tier.lite .btn:hover { border-color: rgba(59, 130, 246, 0.5); }
-        .tier.premium .btn:hover { border-color: rgba(224, 136, 58, 0.5); }
-        .tier.king .btn:hover { border-color: rgba(251, 191, 36, 0.5); }
-        .tier.god .btn:hover { border-color: rgba(239, 68, 68, 0.5); }
-        
-        .toast {
-            position: fixed;
-            bottom: 30px;
-            right: 30px;
-            background: rgba(20, 20, 24, 0.95);
-            backdrop-filter: blur(20px);
-            border-left: 4px solid #e0883a;
-            border-radius: 12px;
-            padding: 1rem 1.5rem;
-            display: flex;
-            align-items: center;
-            gap: 0.8rem;
-            z-index: 10000;
-            color: #fff;
-            font-weight: 600;
-            font-size: 0.9rem;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-            animation: slideIn 0.3s ease;
-        }
-        
-        .toast.error { border-left-color: #ef4444; }
-        
-        @keyframes slideIn {
-            from { opacity: 0; transform: translateX(100px); }
-            to { opacity: 1; transform: translateX(0); }
-        }
-    </style>
+    <link rel="stylesheet" href="css/shop.css">
+    <link rel="icon" type="image/png" href="images/favicon.png">
 </head>
 <body>
 
 <script src="js/layout.js"></script>
 
-<div class="container">
-    <div class="header">
+<div class="shop-container">
+    <div class="shop-header">
         <h1>Привилегии CS2RAGE</h1>
-        <p>Выберите свой уровень и получите эксклюзивные возможности на сервере</p>
+        <p>Выберите уровень и получите доступ к VIP-возможностям</p>
     </div>
     
     <div class="tiers">
         
-        <!-- BASIC -->
         <div class="tier basic">
             <div class="tier-label">BASIC</div>
             <div class="tier-name">Basic</div>
@@ -374,15 +32,16 @@
             <div class="tier-price">99 <small>₽/мес</small></div>
             <div class="divider"></div>
             <ul class="features">
-                <li><i class="fas fa-circle"></i> Цветной ник в чате</li>
-                <li><i class="fas fa-circle"></i> Резерв-слот при заполнении</li>
-                <li><i class="fas fa-circle"></i> Доступ к голосованиям</li>
-                <li><i class="fas fa-circle"></i> Иконка BASIC</li>
+                <li><i class="fas fa-circle"></i> VIP-тег в чате</li>
+                <li><i class="fas fa-circle"></i> Цветной ник</li>
+                <li><i class="fas fa-circle"></i> Резерв-слот</li>
+                <li><i class="fas fa-circle"></i> Звук при входе</li>
+                <li><i class="fas fa-circle"></i> Сброс смертей</li>
+                <li><i class="fas fa-circle"></i> Нет урона от падения</li>
             </ul>
             <button class="btn" data-tier="basic">Выбрать BASIC</button>
         </div>
         
-        <!-- LITE -->
         <div class="tier lite">
             <div class="tier-label">LITE</div>
             <div class="tier-name">Lite</div>
@@ -390,35 +49,36 @@
             <div class="tier-price">199 <small>₽/мес</small></div>
             <div class="divider"></div>
             <ul class="features">
-                <li><i class="fas fa-circle"></i> Все привилегии BASIC</li>
-                <li><i class="fas fa-circle"></i> Скинченджер (10 скинов)</li>
-                <li><i class="fas fa-circle"></i> Граффити в чате</li>
-                <li><i class="fas fa-circle"></i> Команда !ws</li>
-                <li><i class="fas fa-circle"></i> Приоритет в очереди</li>
+                <li><i class="fas fa-circle"></i> Всё из BASIC</li>
+                <li><i class="fas fa-circle"></i> Баннихоп (Auto Bhop)</li>
+                <li><i class="fas fa-circle"></i> Вампиризм</li>
+                <li><i class="fas fa-circle"></i> Защита от флешек</li>
+                <li><i class="fas fa-circle"></i> Ускоренное разминирование</li>
+                <li><i class="fas fa-circle"></i> Ускоренная установка бомбы</li>
+                <li><i class="fas fa-circle"></i> Медицинский шприц</li>
             </ul>
             <button class="btn" data-tier="lite">Выбрать LITE</button>
         </div>
         
-        <!-- PREMIUM -->
         <div class="tier premium">
-            <span class="popular-badge">BEST</span>
+            <span class="popular-badge">ЛУЧШЕЕ</span>
             <div class="tier-label">PREMIUM</div>
             <div class="tier-name">Premium</div>
             <div class="old-price">600 ₽</div>
             <div class="tier-price">399 <small>₽/мес</small></div>
             <div class="divider"></div>
             <ul class="features">
-                <li><i class="fas fa-circle"></i> Все привилегии LITE</li>
-                <li><i class="fas fa-circle"></i> Полный доступ к скинченджеру</li>
-                <li><i class="fas fa-circle"></i> Скины ножей и перчаток</li>
-                <li><i class="fas fa-circle"></i> Кастомные паттерны (Seed)</li>
-                <li><i class="fas fa-circle"></i> Настройка износа (Float)</li>
-                <li><i class="fas fa-circle"></i> +30% к опыту</li>
+                <li><i class="fas fa-circle"></i> Всё из LITE</li>
+                <li><i class="fas fa-circle"></i> Восстановление брони</li>
+                <li><i class="fas fa-circle"></i> Восстановление HP</li>
+                <li><i class="fas fa-circle"></i> Регулировка FOV</li>
+                <li><i class="fas fa-circle"></i> Эффект при попадании</li>
+                <li><i class="fas fa-circle"></i> Стартовое оружие</li>
+                <li><i class="fas fa-circle"></i> +30% опыта</li>
             </ul>
             <button class="btn" data-tier="premium">Выбрать PREMIUM</button>
         </div>
         
-        <!-- KING -->
         <div class="tier king">
             <div class="tier-label">KING</div>
             <div class="tier-name">King</div>
@@ -426,17 +86,17 @@
             <div class="tier-price">699 <small>₽/мес</small></div>
             <div class="divider"></div>
             <ul class="features">
-                <li><i class="fas fa-circle"></i> Все привилегии PREMIUM</li>
-                <li><i class="fas fa-circle"></i> Кастомный плеймодель</li>
-                <li><i class="fas fa-circle"></i> Команда !knife</li>
-                <li><i class="fas fa-circle"></i> Личный значок KING</li>
-                <li><i class="fas fa-circle"></i> Быстрый коннект</li>
-                <li><i class="fas fa-circle"></i> +60% к опыту</li>
+                <li><i class="fas fa-circle"></i> Всё из PREMIUM</li>
+                <li><i class="fas fa-circle"></i> Радужная модель</li>
+                <li><i class="fas fa-circle"></i> Гравитация</li>
+                <li><i class="fas fa-circle"></i> Двойной прыжок</li>
+                <li><i class="fas fa-circle"></i> Покупка оружия врага</li>
+                <li><i class="fas fa-circle"></i> Лечение команды</li>
+                <li><i class="fas fa-circle"></i> +60% опыта</li>
             </ul>
             <button class="btn" data-tier="king">Выбрать KING</button>
         </div>
         
-        <!-- GOD -->
         <div class="tier god">
             <div class="tier-label">GOD</div>
             <div class="tier-name">God</div>
@@ -444,12 +104,13 @@
             <div class="tier-price">1299 <small>₽/мес</small></div>
             <div class="divider"></div>
             <ul class="features">
-                <li><i class="fas fa-circle"></i> Все привилегии KING</li>
-                <li><i class="fas fa-circle"></i> Базовые команды модерации</li>
-                <li><i class="fas fa-circle"></i> Доступ в закрытый Discord</li>
-                <li><i class="fas fa-circle"></i> Эксклюзивные стикеры</li>
-                <li><i class="fas fa-circle"></i> Приоритет заявок</li>
-                <li><i class="fas fa-circle"></i> +100% к опыту</li>
+                <li><i class="fas fa-circle"></i> Всё из KING</li>
+                <li><i class="fas fa-circle"></i> Возрождение</li>
+                <li><i class="fas fa-circle"></i> Видеть сквозь дым</li>
+                <li><i class="fas fa-circle"></i> Экран убийства</li>
+                <li><i class="fas fa-circle"></i> Управление AWP</li>
+                <li><i class="fas fa-circle"></i> Discord доступ</li>
+                <li><i class="fas fa-circle"></i> +100% опыта</li>
             </ul>
             <button class="btn" data-tier="god">Выбрать GOD</button>
         </div>
@@ -457,66 +118,6 @@
     </div>
 </div>
 
-<script>
-    const prices = { basic: 99, lite: 199, premium: 399, king: 699, god: 1299 };
-
-    function showToast(message, isError = false) {
-        const toast = document.createElement('div');
-        toast.className = `toast ${isError ? 'error' : ''}`;
-        toast.innerHTML = `<div>${message}</div>`;
-        document.body.appendChild(toast);
-        setTimeout(() => {
-            toast.style.opacity = '0';
-            toast.style.transform = 'translateX(100px)';
-            toast.style.transition = 'all 0.3s ease';
-            setTimeout(() => toast.remove(), 300);
-        }, 3000);
-    }
-
-    async function purchaseTier(tier) {
-        try {
-            const authRes = await fetch('/api/check-auth.php');
-            const authData = await authRes.json();
-            
-            if (!authData.authenticated) {
-                if (confirm('Нужно войти через Steam. Перейти?')) {
-                    window.location.href = '/api/steam-auth.php?return=/shop.html';
-                }
-                return;
-            }
-            
-            const balanceRes = await fetch('/api/get-balance.php');
-            const balanceData = await balanceRes.json();
-            const balance = balanceData.success ? balanceData.balance : 0;
-            const price = prices[tier];
-            
-            if (balance < price) {
-                showToast(`Недостаточно средств! Нужно ${price} ₽, у вас ${balance} ₽`, true);
-                return;
-            }
-            
-            const buyRes = await fetch('/api/buy-privilege.php', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ tier: tier, price: price })
-            });
-            const buyData = await buyRes.json();
-            
-            if (buyData.success) {
-                showToast(`✅ Привилегия ${tier.toUpperCase()} активирована!`);
-                setTimeout(() => location.reload(), 1500);
-            } else {
-                showToast(buyData.error || 'Ошибка активации', true);
-            }
-        } catch (e) {
-            showToast('Ошибка соединения с сервером', true);
-        }
-    }
-
-    document.querySelectorAll('.btn').forEach(btn => {
-        btn.addEventListener('click', () => purchaseTier(btn.dataset.tier));
-    });
-</script>
-
+<script src="js/shop.js"></script>
 </body>
 </html>

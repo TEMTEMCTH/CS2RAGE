@@ -2,5 +2,5 @@
 .top-table th,.top-table td{padding:.85rem 1rem;text-align:left;border-bottom:1px solid var(--border);font-size:.9rem}
 .top-table th{font-family:'Oswald',sans-serif;text-transform:uppercase;letter-spacing:.1em;font-size:.8rem;color:var(--muted);background:rgba(0,0,0,.3)}
 .top-table tr:last-child td{border-bottom:none}
-.top-table tr:hover td{background:rgba(224,136,58,.04)}
+.top-table tr:hover td{background:rgba(245,197,24,.04)}
 .rank{font-family:'Oswald',sans-serif;font-size:1.1rem;color:var(--primary);width:50px}

@@ -9,8 +9,8 @@ section{padding:2rem 0}
 .stat span{color:var(--muted);font-size:.7rem;text-transform:uppercase;letter-spacing:.2em;margin-top:.2rem}
 .modes{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:.75rem}
 .mode-btn{position:relative;overflow:hidden;text-align:left;padding:1rem;border-radius:12px;background:var(--card);border:1px solid var(--border);cursor:pointer;transition:.2s}
-.mode-btn:hover{border-color:rgba(224,136,58,.5)}
-.mode-btn.active{border-color:var(--primary);background:linear-gradient(135deg,rgba(224,136,58,.15),var(--card))}
+.mode-btn:hover{border-color:rgba(245,197,24,.5)}
+.mode-btn.active{border-color:var(--primary);background:linear-gradient(135deg,rgba(245,197,24,.15),var(--card))}
 .mode-btn .bar{position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--border)}
 .mode-btn.active .bar{background:var(--primary);box-shadow:0 0 20px var(--primary-glow)}
 .mode-btn .num{font-family:'Oswald',sans-serif;font-size:1.875rem;color:var(--primary)}
@@ -33,12 +33,12 @@ section{padding:2rem 0}
 .map-head span{font-size:.7rem;color:var(--muted);text-transform:uppercase;letter-spacing:.1em}
 .servers-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:.85rem}
 .server-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:1.1rem;transition:.2s}
-.server-card:hover{border-color:rgba(224,136,58,.5);transform:translateY(-2px)}
+.server-card:hover{border-color:rgba(245,197,24,.5);transform:translateY(-2px)}
 .server-card .top{display:flex;justify-content:space-between;align-items:flex-start;gap:.75rem;margin-bottom:.85rem}
 .server-card .name{font-weight:700;font-size:1rem}
 .server-card .meta{font-size:.75rem;color:var(--muted);margin-top:.2rem;text-transform:uppercase;letter-spacing:.05em}
 .badge-off{background:rgba(138,138,138,.1);color:var(--muted);font-size:.65rem;font-weight:700;padding:.3rem .55rem;border-radius:6px;text-transform:uppercase;letter-spacing:.1em;border:1px solid var(--border);white-space:nowrap}
-.badge-on{background:rgba(224,136,58,.12);color:var(--primary);font-size:.65rem;font-weight:700;padding:.3rem .55rem;border-radius:6px;text-transform:uppercase;letter-spacing:.1em;border:1px solid rgba(224,136,58,.3);white-space:nowrap}
+.badge-on{background:rgba(245,197,24,.12);color:var(--primary);font-size:.65rem;font-weight:700;padding:.3rem .55rem;border-radius:6px;text-transform:uppercase;letter-spacing:.1em;border:1px solid rgba(245,197,24,.3);white-space:nowrap}
 .players-bar{height:4px;background:var(--border);border-radius:2px;overflow:hidden;margin:.85rem 0 .5rem}
 .players-bar div{height:100%;background:var(--gradient-orange);width:0}
 .players-info{display:flex;justify-content:space-between;font-size:.75rem;color:var(--muted)}

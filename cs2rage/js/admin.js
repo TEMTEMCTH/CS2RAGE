@@ -1,148 +1,122 @@
-const ADMIN_PASSWORD = 'cs2rage2026';
-
+const ADMIN_PASSWORD = 'Alan13375267';
+let allUsers = [];
 let customServers = [];
 
-function loadServersFromStorage() {
-    const saved = localStorage.getItem('customServers');
-    customServers = saved ? JSON.parse(saved) : [];
-    renderServersList();
+async function loadUsers() {
+    const container = document.getElementById('usersList');
+    if (container) container.innerHTML = '<div class="loading-text"><i class="fas fa-spinner fa-pulse"></i> Загрузка пользователей...</div>';
+    try {
+        const response = await fetch('/api/get-users.php');
+        const data = await response.json();
+        if (data.success && data.users) { allUsers = data.users; renderUsers(); }
+        else container.innerHTML = '<div class="loading-text">❌ Ошибка: ' + (data.error || 'Неизвестная ошибка') + '</div>';
+    } catch(e) { container.innerHTML = '<div class="loading-text">❌ Ошибка соединения</div>'; }
 }
 
-function saveServersToStorage() {
-    localStorage.setItem('customServers', JSON.stringify(customServers));
+async function updateBalance(steamid, newBalance) {
+    try {
+        const response = await fetch('/api/update-balance.php', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ steamid, balance: newBalance }) });
+        const data = await response.json();
+        if (data.success) { showToast('Баланс обновлён!'); loadUsers(); }
+        else showToast('Ошибка: ' + data.error, true);
+    } catch(e) { showToast('Ошибка соединения', true); }
 }
 
-function addServer() {
-    const name = document.getElementById('srv-name')?.value.trim();
-    if (!name) {
-        alert('Введите название сервера');
-        return;
-    }
-    
-    const newServer = {
-        id: Date.now(),
-        name: name,
-        mode: document.getElementById('srv-mode')?.value || 'public',
-        map: document.getElementById('srv-map')?.value || 'de_mirage',
-        region: document.getElementById('srv-region')?.value || 'ru',
-        city: document.getElementById('srv-city')?.value || 'Москва',
-        slots: parseInt(document.getElementById('srv-slots')?.value) || 32,
-        players: parseInt(document.getElementById('srv-players')?.value) || 0,
-        status: document.getElementById('srv-status')?.value || 'offline',
-        ip: document.getElementById('srv-ip')?.value || '—'
-    };
-    
-    customServers.unshift(newServer);
-    saveServersToStorage();
-    renderServersList();
-    
-    // Очищаем форму
-    document.getElementById('srv-name').value = '';
-    document.getElementById('srv-ip').value = '';
-    document.getElementById('srv-players').value = '0';
-    
-    // Показываем JSON для вставки в data-servers.js
-    const jsonLine = JSON.stringify(newServer, null, 4);
-    const block = document.createElement('div');
-    block.id = 'export-block';
-    block.innerHTML = `
-        <p style="color:var(--primary);margin-top:1rem;"><i class="fas fa-check"></i> Скопируй и добавь в массив SERVERS в файле data-servers.js:</p>
-        <textarea style="width:100%;height:80px;background:#0f0f0f;color:#e8e6e3;border:1px solid #2a2a2a;border-radius:8px;padding:0.5rem;">${jsonLine},</textarea>
-        <button class="admin-btn" style="margin-top:0.5rem;" onclick="copyToClipboard(this.previousElementSibling)">Копировать код</button>
-    `;
-    document.getElementById('add-server-btn')?.parentNode?.appendChild(block);
-    
-    setTimeout(() => {
-        const existing = document.getElementById('export-block');
-        if (existing && existing !== block) existing.remove();
-    }, 5000);
-}
-
-function deleteServer(id) {
-    if (!confirm('Удалить сервер?')) return;
-    customServers = customServers.filter(s => s.id !== id);
-    saveServersToStorage();
-    renderServersList();
-}
-
-function renderServersList() {
-    const container = document.getElementById('srv-list');
+function renderUsers() {
+    const search = document.getElementById('searchUser')?.value.toLowerCase() || '';
+    const filtered = allUsers.filter(u => (u.nickname?.toLowerCase() || '').includes(search) || (u.steamid?.includes(search)));
+    const container = document.getElementById('usersList');
     if (!container) return;
-    
-    const search = document.getElementById('admin-search')?.value.toLowerCase() || '';
-    const filtered = customServers.filter(s => 
-        s.name.toLowerCase().includes(search) || 
-        s.map.toLowerCase().includes(search)
-    );
-    
-    document.getElementById('srv-count').textContent = filtered.length;
-    document.getElementById('total-servers').textContent = filtered.length;
-    
-    if (filtered.length === 0) {
-        container.innerHTML = '<p style="color:var(--muted);text-align:center;padding:20px;">Нет добавленных серверов</p>';
-        return;
-    }
-    
-    container.innerHTML = filtered.map(s => `
-        <div class="admin-mod-item">
-            <div class="admin-mod-item-info">
-                <h4>${escapeHtml(s.name)}</h4>
-                <span>${s.mode.toUpperCase()} | ${s.map} | ${s.city} | ${s.status}</span>
+    if (filtered.length === 0) { container.innerHTML = '<div class="loading-text">👤 Пользователи не найдены</div>'; return; }
+    container.innerHTML = filtered.map(u => `
+        <div class="user-row">
+            <div class="user-info">
+                <img src="${u.avatar || '/images/default-avatar.png'}" class="user-avatar" onerror="this.src='/images/default-avatar.png'">
+                <div><strong>${escapeHtml(u.nickname || 'Unknown')}</strong><br><span style="font-size:0.7rem;color:#8a8a8a;">${u.steamid || '—'}</span></div>
             </div>
-            <button class="admin-mod-item-del" onclick="deleteServer(${s.id})"><i class="fas fa-trash"></i></button>
+            <div style="display:flex;align-items:center;gap:0.5rem;flex-wrap:wrap;">
+                <span class="user-balance" id="balance-${u.steamid}">${u.balance || 0} ₽</span>
+                <input type="number" id="input-${u.steamid}" class="balance-input" placeholder="Сумма" value="0">
+                <div class="action-btns">
+                    <button class="action-btn" onclick="updateBalance('${u.steamid}', (parseInt(document.getElementById('input-${u.steamid}').value) || 0) + (${u.balance || 0}))">➕</button>
+                    <button class="action-btn" onclick="updateBalance('${u.steamid}', (${u.balance || 0}) - (parseInt(document.getElementById('input-${u.steamid}').value) || 0))">➖</button>
+                    <button class="action-btn" onclick="updateBalance('${u.steamid}', parseInt(document.getElementById('input-${u.steamid}').value) || 0)">✏️</button>
+                </div>
+            </div>
         </div>
     `).join('');
 }
 
-function copyToClipboard(textarea) {
-    textarea.select();
-    document.execCommand('copy');
-    showToast('JSON скопирован!');
-}
-
-function showToast(message) {
+function showToast(message, isError = false) {
     const toast = document.createElement('div');
-    toast.style.cssText = 'position:fixed;top:90px;right:20px;background:#1a1a1a;border-left:4px solid #e0883a;border-radius:12px;padding:0.8rem 1.2rem;color:#e8e6e3;z-index:10000;animation:slideInRight 0.3s ease';
-    toast.innerHTML = `<i class="fas fa-check-circle" style="color:#e0883a;"></i> ${message}`;
+    toast.className = 'toast';
+    toast.style.borderLeftColor = isError ? '#e34d4d' : '#f5c518';
+    toast.innerHTML = `<i class="fas ${isError ? 'fa-exclamation-circle' : 'fa-check-circle'}"></i><div>${message}</div>`;
     document.body.appendChild(toast);
     setTimeout(() => toast.remove(), 3000);
 }
 
-function escapeHtml(str) {
-    if (!str) return '';
-    return str.replace(/[&<>]/g, m => m === '&' ? '&amp;' : (m === '<' ? '&lt;' : '&gt;'));
+function escapeHtml(str) { if (!str) return ''; return str.replace(/[&<>]/g, m => m === '&' ? '&amp;' : (m === '<' ? '&lt;' : '&gt;')); }
+
+function checkAdminAuth() {
+    const password = document.getElementById('adminPassword')?.value;
+    if (password === ADMIN_PASSWORD) {
+        sessionStorage.setItem('adminAuth', 'true');
+        document.getElementById('loginScreen').style.display = 'none';
+        document.getElementById('adminPanel').style.display = 'block';
+        loadUsers(); loadServersFromStorage();
+    } else document.getElementById('loginError').style.display = 'block';
+}
+
+function loadServersFromStorage() { const saved = localStorage.getItem('customServers'); customServers = saved ? JSON.parse(saved) : []; renderServersList(); }
+function saveServersToStorage() { localStorage.setItem('customServers', JSON.stringify(customServers)); }
+
+function addServer() {
+    const name = document.getElementById('srvName')?.value.trim();
+    if (!name) { showToast('Введите название сервера', true); return; }
+    const newServer = {
+        id: Date.now(), name,
+        mode: document.getElementById('srvMode')?.value || 'public',
+        map: document.getElementById('srvMap')?.value || 'de_mirage',
+        region: document.getElementById('srvRegion')?.value || 'ru',
+        city: document.getElementById('srvCity')?.value || 'Москва',
+        slots: parseInt(document.getElementById('srvSlots')?.value) || 32,
+        players: parseInt(document.getElementById('srvPlayers')?.value) || 0,
+        status: document.getElementById('srvStatus')?.value || 'offline',
+        ip: document.getElementById('srvIp')?.value || '—'
+    };
+    customServers.unshift(newServer); saveServersToStorage(); renderServersList(); showToast('Сервер добавлен!');
+    document.getElementById('srvName').value = ''; document.getElementById('srvIp').value = ''; document.getElementById('srvPlayers').value = '0';
+}
+
+function deleteServer(id) { if (!confirm('Удалить сервер?')) return; customServers = customServers.filter(s => s.id !== id); saveServersToStorage(); renderServersList(); showToast('Сервер удалён'); }
+
+function renderServersList() {
+    const search = document.getElementById('searchServer')?.value.toLowerCase() || '';
+    const filtered = customServers.filter(s => s.name.toLowerCase().includes(search) || s.map.toLowerCase().includes(search));
+    const container = document.getElementById('serversList');
+    const countSpan = document.getElementById('serversCount');
+    if (!container) return;
+    if (countSpan) countSpan.textContent = filtered.length;
+    if (filtered.length === 0) { container.innerHTML = '<div class="loading-text">Нет добавленных серверов</div>'; return; }
+    container.innerHTML = filtered.map(s => `
+        <div class="user-row" style="justify-content:space-between;">
+            <div><strong>${escapeHtml(s.name)}</strong><br><span style="font-size:0.7rem;color:#8a8a8a;">${s.map} · ${s.city} · ${s.status === 'online' ? '🟢 Online' : '⚫ Offline'} · 👥 ${s.players}/${s.slots}</span></div>
+            <button class="action-btn" style="background:transparent;border-color:#e34d4d;" onclick="deleteServer(${s.id})"><i class="fas fa-trash"></i> Удалить</button>
+        </div>
+    `).join('');
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-    const loginScreen = document.getElementById('login-screen');
-    const adminPanel = document.getElementById('admin-panel');
-    
-    if (sessionStorage.getItem('cs2rage-auth') === 'true') {
-        if (loginScreen) loginScreen.style.display = 'none';
-        if (adminPanel) adminPanel.style.display = 'block';
-        loadServersFromStorage();
-    }
-    
-    document.getElementById('login-btn')?.addEventListener('click', () => {
-        const pwd = document.getElementById('admin-password')?.value;
-        if (pwd === ADMIN_PASSWORD) {
-            sessionStorage.setItem('cs2rage-auth', 'true');
-            if (loginScreen) loginScreen.style.display = 'none';
-            if (adminPanel) adminPanel.style.display = 'block';
-            loadServersFromStorage();
-        } else {
-            const errorEl = document.getElementById('login-error');
-            if (errorEl) errorEl.textContent = 'Неверный пароль';
-        }
-    });
-    
-    document.getElementById('logout-btn')?.addEventListener('click', () => {
-        sessionStorage.removeItem('cs2rage-auth');
-        if (loginScreen) loginScreen.style.display = 'block';
-        if (adminPanel) adminPanel.style.display = 'none';
-        location.reload();
-    });
-    
-    document.getElementById('add-server-btn')?.addEventListener('click', addServer);
-    document.getElementById('admin-search')?.addEventListener('input', renderServersList);
+    if (sessionStorage.getItem('adminAuth') === 'true') { document.getElementById('loginScreen').style.display = 'none'; document.getElementById('adminPanel').style.display = 'block'; loadUsers(); loadServersFromStorage(); }
+    document.getElementById('loginBtn')?.addEventListener('click', checkAdminAuth);
+    document.getElementById('adminPassword')?.addEventListener('keypress', (e) => { if (e.key === 'Enter') checkAdminAuth(); });
+    document.getElementById('addServerBtn')?.addEventListener('click', addServer);
+    document.getElementById('refreshUsersBtn')?.addEventListener('click', loadUsers);
+    document.getElementById('searchUser')?.addEventListener('input', renderUsers);
+    document.getElementById('searchServer')?.addEventListener('input', renderServersList);
+    document.querySelectorAll('.tab-btn').forEach(btn => { btn.addEventListener('click', () => { document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active')); btn.classList.add('active'); document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active')); if (btn.dataset.tab === 'users') { document.getElementById('usersTab').classList.add('active'); if (allUsers.length === 0) loadUsers(); } else document.getElementById('serversTab').classList.add('active'); }); });
 });
+
+window.updateBalance = updateBalance;
+window.deleteServer = deleteServer;

@@ -9,188 +9,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Oswald:wght@500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="css/main.css">
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { background: #0f0f0f; font-family: 'Rajdhani', sans-serif; color: #e8e6e3; }
-        
-        .admin-container { max-width: 1200px; margin: 2rem auto; padding: 0 2rem; }
-        .admin-card {
-            background: rgba(26,26,26,0.7);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(42,42,42,0.5);
-            border-radius: 20px;
-            padding: 1.5rem;
-            margin-bottom: 1.5rem;
-        }
-        .admin-card h2 {
-            color: #e0883a;
-            font-family: 'Oswald', sans-serif;
-            margin-bottom: 1rem;
-            font-size: 1.2rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 0.5rem;
-        }
-        .admin-input {
-            background: #0f0f0f;
-            border: 1px solid #2a2a2a;
-            border-radius: 10px;
-            padding: 0.7rem;
-            color: #e8e6e3;
-            width: 100%;
-            margin-bottom: 0.5rem;
-            outline: none;
-        }
-        .admin-input:focus { border-color: #e0883a; }
-        .admin-btn {
-            background: linear-gradient(135deg, #c0702a, #f0a050);
-            border: none;
-            border-radius: 30px;
-            padding: 0.7rem 1.5rem;
-            color: #1a1a1a;
-            font-weight: 700;
-            cursor: pointer;
-            transition: 0.2s;
-        }
-        .admin-btn-small {
-            background: linear-gradient(135deg, #c0702a, #f0a050);
-            border: none;
-            border-radius: 20px;
-            padding: 0.3rem 0.8rem;
-            color: #1a1a1a;
-            font-weight: 700;
-            cursor: pointer;
-            font-size: 0.7rem;
-        }
-        .admin-btn:hover, .admin-btn-small:hover { transform: translateY(-1px); }
-        
-        .login-card {
-            max-width: 400px;
-            margin: 100px auto;
-            text-align: center;
-        }
-        .login-card .admin-icon {
-            width: 70px;
-            height: 70px;
-            background: rgba(224,136,58,0.1);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 20px;
-            font-size: 2rem;
-            color: #e0883a;
-        }
-        .admin-error { color: #e34d4d; font-size: 0.8rem; margin-top: 0.5rem; display: none; }
-        
-        .tabs {
-            display: flex;
-            gap: 1rem;
-            margin-bottom: 1.5rem;
-            border-bottom: 1px solid rgba(42,42,42,0.5);
-            padding-bottom: 0.5rem;
-        }
-        .tab-btn {
-            background: none;
-            border: none;
-            color: #8a8a8a;
-            font-size: 1rem;
-            cursor: pointer;
-            padding: 0.5rem 1rem;
-            transition: 0.2s;
-        }
-        .tab-btn.active { color: #e0883a; border-bottom: 2px solid #e0883a; }
-        .tab-content { display: none; }
-        .tab-content.active { display: block; }
-        
-        .users-list {
-            display: flex;
-            flex-direction: column;
-            gap: 0.5rem;
-            max-height: 500px;
-            overflow-y: auto;
-        }
-        .user-row {
-            background: rgba(15,15,15,0.8);
-            border-radius: 12px;
-            padding: 0.8rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 0.5rem;
-        }
-        .user-info {
-            display: flex;
-            align-items: center;
-            gap: 0.8rem;
-        }
-        .user-avatar {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-        }
-        .user-balance {
-            color: #e0883a;
-            font-weight: 700;
-            font-size: 1.1rem;
-        }
-        .balance-input {
-            width: 120px;
-            background: #0f0f0f;
-            border: 1px solid #2a2a2a;
-            border-radius: 8px;
-            padding: 0.4rem 0.6rem;
-            color: #e8e6e3;
-            text-align: center;
-        }
-        .action-btns {
-            display: flex;
-            gap: 0.5rem;
-        }
-        .action-btn {
-            background: rgba(15,15,15,0.8);
-            border: 1px solid #2a2a2a;
-            border-radius: 20px;
-            padding: 0.4rem 0.8rem;
-            font-size: 0.7rem;
-            cursor: pointer;
-            transition: 0.2s;
-            color: #e8e6e3;
-        }
-        .action-btn:hover { border-color: #e0883a; color: #e0883a; }
-        
-        .toast {
-            position: fixed;
-            top: 90px;
-            right: 20px;
-            background: #1a1a1a;
-            border-left: 4px solid #e0883a;
-            border-radius: 12px;
-            padding: 0.8rem 1.2rem;
-            display: flex;
-            align-items: center;
-            gap: 0.8rem;
-            z-index: 10000;
-            animation: slideInRight 0.3s ease forwards;
-        }
-        @keyframes slideInRight {
-            from { opacity: 0; transform: translateX(50px); }
-            to { opacity: 1; transform: translateX(0); }
-        }
-        
-        input[type="number"] {
-            -webkit-appearance: none;
-            -moz-appearance: textfield;
-            appearance: textfield;
-        }
-        input[type="number"]::-webkit-inner-spin-button,
-        input[type="number"]::-webkit-outer-spin-button {
-            display: none;
-        }
-    </style>
+    <link rel="stylesheet" href="css/admin.css">
+    <link rel="icon" type="image/png" href="images/favicon.png">
 </head>
 <body>
 
@@ -218,16 +38,9 @@
         
         <div id="usersTab" class="tab-content active">
             <div class="admin-card">
-                <h2>
-                    👥 Управление балансом пользователей
-                    <button class="admin-btn-small" id="refreshUsersBtn"><i class="fas fa-sync-alt"></i> Обновить</button>
-                </h2>
+                <h2>👥 Управление балансом пользователей <button class="admin-btn-small" id="refreshUsersBtn"><i class="fas fa-sync-alt"></i> Обновить</button></h2>
                 <input type="text" id="searchUser" class="admin-input" placeholder="🔍 Поиск по нику или SteamID...">
-                <div id="usersList" class="users-list">
-                    <div style="text-align:center; padding:2rem; color:#8a8a8a;">
-                        <i class="fas fa-spinner fa-pulse"></i> Загрузка пользователей...
-                    </div>
-                </div>
+                <div id="usersList" class="users-list"><div class="loading-text"><i class="fas fa-spinner fa-pulse"></i> Загрузка пользователей...</div></div>
             </div>
         </div>
         
@@ -235,7 +48,7 @@
             <div class="admin-card">
                 <h2><i class="fas fa-plus-circle"></i> Добавить сервер</h2>
                 <div class="admin-form">
-                    <div style="display: flex; gap: 1rem; flex-wrap: wrap; margin-bottom: 1rem;">
+                    <div class="admin-row">
                         <input type="text" id="srvName" class="admin-input" placeholder="Название сервера" style="flex:2">
                         <select id="srvMode" class="admin-input" style="flex:1">
                             <option value="public">Public</option>
@@ -243,7 +56,7 @@
                             <option value="arena">Arena 1v1</option>
                         </select>
                     </div>
-                    <div style="display: flex; gap: 1rem; flex-wrap: wrap; margin-bottom: 1rem;">
+                    <div class="admin-row">
                         <input type="text" id="srvMap" class="admin-input" placeholder="Карта (например de_mirage)" style="flex:1">
                         <select id="srvRegion" class="admin-input" style="flex:1">
                             <option value="ru">Россия</option>
@@ -251,7 +64,7 @@
                         </select>
                         <input type="text" id="srvCity" class="admin-input" placeholder="Город" style="flex:1">
                     </div>
-                    <div style="display: flex; gap: 1rem; flex-wrap: wrap; margin-bottom: 1rem;">
+                    <div class="admin-row">
                         <input type="number" id="srvSlots" class="admin-input" placeholder="Слотов" value="32" style="flex:1">
                         <input type="number" id="srvPlayers" class="admin-input" placeholder="Игроков онлайн" value="0" style="flex:1">
                         <select id="srvStatus" class="admin-input" style="flex:1">
@@ -273,225 +86,6 @@
     </div>
 </div>
 
-<script>
-const ADMIN_PASSWORD = 'Alan13375267';
-let allUsers = [];
-let customServers = [];
-
-async function loadUsers() {
-    const container = document.getElementById('usersList');
-    if (container) {
-        container.innerHTML = '<div style="text-align:center; padding:2rem; color:#8a8a8a;"><i class="fas fa-spinner fa-pulse"></i> Загрузка пользователей...</div>';
-    }
-    
-    try {
-        const response = await fetch('/api/get-users.php');
-        const data = await response.json();
-        
-        if (data.success && data.users) {
-            allUsers = data.users;
-            renderUsers();
-        } else {
-            container.innerHTML = '<div style="text-align:center; padding:2rem; color:#e34d4d;">❌ Ошибка: ' + (data.error || 'Неизвестная ошибка') + '</div>';
-        }
-    } catch(e) {
-        container.innerHTML = '<div style="text-align:center; padding:2rem; color:#e34d4d;">❌ Ошибка соединения</div>';
-    }
-}
-
-async function updateBalance(steamid, newBalance) {
-    try {
-        const response = await fetch('/api/update-balance.php', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ steamid: steamid, balance: newBalance })
-        });
-        const data = await response.json();
-        if (data.success) {
-            showToast('Баланс обновлён!');
-            loadUsers();
-        } else {
-            showToast('Ошибка: ' + data.error, true);
-        }
-    } catch(e) {
-        showToast('Ошибка соединения', true);
-    }
-}
-
-function renderUsers() {
-    const search = document.getElementById('searchUser')?.value.toLowerCase() || '';
-    const filtered = allUsers.filter(u => 
-        (u.nickname?.toLowerCase() || '').includes(search) || 
-        (u.steamid?.includes(search))
-    );
-    
-    const container = document.getElementById('usersList');
-    if (!container) return;
-    
-    if (filtered.length === 0) {
-        container.innerHTML = '<div style="text-align:center; padding:2rem; color:#8a8a8a;">👤 Пользователи не найдены</div>';
-        return;
-    }
-    
-    container.innerHTML = filtered.map(u => `
-        <div class="user-row">
-            <div class="user-info">
-                <img src="${u.avatar || '/images/default-avatar.png'}" class="user-avatar" onerror="this.src='/images/default-avatar.png'">
-                <div>
-                    <strong>${escapeHtml(u.nickname || 'Unknown')}</strong><br>
-                    <span style="font-size:0.7rem; color:#8a8a8a;">${u.steamid || '—'}</span>
-                </div>
-            </div>
-            <div style="display:flex; align-items:center; gap:0.5rem; flex-wrap:wrap;">
-                <span class="user-balance" id="balance-${u.steamid}">${u.balance || 0} ₽</span>
-                <input type="number" id="input-${u.steamid}" class="balance-input" placeholder="Сумма" value="0">
-                <div class="action-btns">
-                    <button class="action-btn" onclick="updateBalance('${u.steamid}', (parseInt(document.getElementById('input-${u.steamid}').value) || 0) + (${u.balance || 0}))">➕ Добавить</button>
-                    <button class="action-btn" onclick="updateBalance('${u.steamid}', (${u.balance || 0}) - (parseInt(document.getElementById('input-${u.steamid}').value) || 0))">➖ Снять</button>
-                    <button class="action-btn" onclick="updateBalance('${u.steamid}', parseInt(document.getElementById('input-${u.steamid}').value) || 0)">✏️ Установить</button>
-                </div>
-            </div>
-        </div>
-    `).join('');
-}
-
-function showToast(message, isError = false) {
-    const toast = document.createElement('div');
-    toast.className = 'toast';
-    toast.style.borderLeftColor = isError ? '#e34d4d' : '#e0883a';
-    toast.innerHTML = `<i class="fas ${isError ? 'fa-exclamation-circle' : 'fa-check-circle'}"></i><div>${message}</div>`;
-    document.body.appendChild(toast);
-    setTimeout(() => toast.remove(), 3000);
-}
-
-function escapeHtml(str) {
-    if (!str) return '';
-    return str.replace(/[&<>]/g, m => m === '&' ? '&amp;' : (m === '<' ? '&lt;' : '&gt;'));
-}
-
-function checkAdminAuth() {
-    const password = document.getElementById('adminPassword')?.value;
-    if (password === ADMIN_PASSWORD) {
-        sessionStorage.setItem('adminAuth', 'true');
-        document.getElementById('loginScreen').style.display = 'none';
-        document.getElementById('adminPanel').style.display = 'block';
-        loadUsers();
-        loadServersFromStorage();
-    } else {
-        document.getElementById('loginError').style.display = 'block';
-    }
-}
-
-function loadServersFromStorage() {
-    const saved = localStorage.getItem('customServers');
-    customServers = saved ? JSON.parse(saved) : [];
-    renderServersList();
-}
-
-function saveServersToStorage() {
-    localStorage.setItem('customServers', JSON.stringify(customServers));
-}
-
-function addServer() {
-    const name = document.getElementById('srvName')?.value.trim();
-    if (!name) {
-        showToast('Введите название сервера', true);
-        return;
-    }
-    
-    const newServer = {
-        id: Date.now(),
-        name: name,
-        mode: document.getElementById('srvMode')?.value || 'public',
-        map: document.getElementById('srvMap')?.value || 'de_mirage',
-        region: document.getElementById('srvRegion')?.value || 'ru',
-        city: document.getElementById('srvCity')?.value || 'Москва',
-        slots: parseInt(document.getElementById('srvSlots')?.value) || 32,
-        players: parseInt(document.getElementById('srvPlayers')?.value) || 0,
-        status: document.getElementById('srvStatus')?.value || 'offline',
-        ip: document.getElementById('srvIp')?.value || '—'
-    };
-    
-    customServers.unshift(newServer);
-    saveServersToStorage();
-    renderServersList();
-    showToast('Сервер добавлен!');
-    
-    document.getElementById('srvName').value = '';
-    document.getElementById('srvIp').value = '';
-    document.getElementById('srvPlayers').value = '0';
-}
-
-function deleteServer(id) {
-    if (!confirm('Удалить сервер?')) return;
-    customServers = customServers.filter(s => s.id !== id);
-    saveServersToStorage();
-    renderServersList();
-    showToast('Сервер удалён');
-}
-
-function renderServersList() {
-    const search = document.getElementById('searchServer')?.value.toLowerCase() || '';
-    const filtered = customServers.filter(s => 
-        s.name.toLowerCase().includes(search) || 
-        s.map.toLowerCase().includes(search)
-    );
-    
-    const container = document.getElementById('serversList');
-    const countSpan = document.getElementById('serversCount');
-    if (!container) return;
-    if (countSpan) countSpan.textContent = filtered.length;
-    
-    if (filtered.length === 0) {
-        container.innerHTML = '<div style="text-align:center; padding:2rem; color:#8a8a8a;">Нет добавленных серверов</div>';
-        return;
-    }
-    
-    container.innerHTML = filtered.map(s => `
-        <div class="user-row" style="justify-content:space-between;">
-            <div>
-                <div class="name"><strong>${escapeHtml(s.name)}</strong></div>
-                <div class="meta" style="font-size:0.7rem; color:#8a8a8a;">${s.map} · ${s.city} · ${s.status === 'online' ? '🟢 Online' : '⚫ Offline'} · 👥 ${s.players}/${s.slots}</div>
-            </div>
-            <button class="action-btn" style="background:transparent; border-color:#e34d4d;" onclick="deleteServer(${s.id})"><i class="fas fa-trash"></i> Удалить</button>
-        </div>
-    `).join('');
-}
-
-document.addEventListener('DOMContentLoaded', () => {
-    if (sessionStorage.getItem('adminAuth') === 'true') {
-        document.getElementById('loginScreen').style.display = 'none';
-        document.getElementById('adminPanel').style.display = 'block';
-        loadUsers();
-        loadServersFromStorage();
-    }
-    
-    document.getElementById('loginBtn')?.addEventListener('click', checkAdminAuth);
-    document.getElementById('adminPassword')?.addEventListener('keypress', (e) => {
-        if (e.key === 'Enter') checkAdminAuth();
-    });
-    document.getElementById('addServerBtn')?.addEventListener('click', addServer);
-    document.getElementById('refreshUsersBtn')?.addEventListener('click', loadUsers);
-    document.getElementById('searchUser')?.addEventListener('input', renderUsers);
-    document.getElementById('searchServer')?.addEventListener('input', renderServersList);
-    
-    document.querySelectorAll('.tab-btn').forEach(btn => {
-        btn.addEventListener('click', () => {
-            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
-            if (btn.dataset.tab === 'users') {
-                document.getElementById('usersTab').classList.add('active');
-                if (allUsers.length === 0) loadUsers();
-            } else {
-                document.getElementById('serversTab').classList.add('active');
-            }
-        });
-    });
-});
-
-window.updateBalance = updateBalance;
-window.deleteServer = deleteServer;
-</script>
+<script src="js/admin.js"></script>
 </body>
 </html>
