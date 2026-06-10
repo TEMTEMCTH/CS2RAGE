@@ -155,17 +155,90 @@ footer.site {
   background: rgba(26, 26, 26, 0.85) !important;
 }
 /* Логотип */
+/* ===== ЛОГОТИП ===== */
 .logo {
     font-family: 'Oswald', sans-serif;
     font-size: 1.5rem;
-    letter-spacing: .2em;
+    letter-spacing: 0.2em;
     font-weight: 700;
-    display: inline-flex;
+    display: flex;
     align-items: center;
-    gap: .5rem;
+    gap: 0.7rem;
     text-decoration: none;
+    color: var(--text);
+    transition: all 0.3s ease;
 }
 
+.logo:hover {
+    transform: translateY(-1px);
+}
+
+/* Контейнер для картинки */
+.logo-icon {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    position: relative;
+    border-radius: 8px;
+    overflow: hidden;
+    background: rgba(224, 136, 58, 0.1);
+    border: 2px solid rgba(224, 136, 58, 0.3);
+    transition: all 0.3s ease;
+}
+
+.logo:hover .logo-icon {
+    border-color: rgba(224, 136, 58, 0.6);
+    box-shadow: 0 0 15px rgba(224, 136, 58, 0.2);
+}
+
+/* Картинка внутри */
+.logo-icon img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    padding: 3px;
+}
+
+/* Если нет картинки - показываем треугольник */
+.logo-icon .fallback-icon {
+    color: var(--primary);
+    font-size: 1.5rem;
+    line-height: 1;
+}
+
+/* Текстовая часть */
+.logo-text {
+    display: flex;
+    align-items: baseline;
+    gap: 0.3rem;
+}
+
+.logo-text .cs2 {
+    color: var(--text);
+    font-size: inherit;
+}
+
+.logo-text .rage {
+    color: var(--primary);
+    font-size: inherit;
+}
+
+/* Версия для маленьких экранов */
+@media (max-width: 480px) {
+    .logo {
+        font-size: 1.2rem;
+        letter-spacing: 0.1em;
+        gap: 0.5rem;
+    }
+    .logo-icon {
+        width: 32px;
+        height: 32px;
+        border-radius: 6px;
+    }
+}
 /* Анимация только для треугольника (стрелочки) */
 .logo:hover .text-primary:first-child {
     animation: fullRotate 0.6s ease-in-out;
@@ -637,4 +710,107 @@ input[type="number"]::-webkit-outer-spin-button {
     display: none;
     -webkit-appearance: none;
     margin: 0;
+}
+/* ===== HEADER FIX ===== */
+.site-header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    backdrop-filter: blur(16px);
+    background: rgba(15, 15, 15, 0.85);
+    border-bottom: 1px solid var(--border);
+    width: 100%;
+}
+
+.header-inner {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 70px;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.logo {
+    font-family: 'Oswald', sans-serif;
+    font-size: 1.5rem;
+    letter-spacing: 0.2em;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    text-decoration: none;
+    color: var(--fg);
+    flex-shrink: 0;
+}
+
+.nav-links {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.nav-links a {
+    padding: 0.65rem 1rem;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--muted);
+    text-decoration: none;
+    transition: 0.2s;
+    white-space: nowrap;
+}
+
+.nav-links a:hover,
+.nav-links a.active {
+    color: var(--fg);
+    background: rgba(224, 136, 58, 0.12);
+}
+
+.steam-login-btn {
+    background: linear-gradient(135deg, #c0702a, #f0a050);
+    color: #1a1a1a;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-size: 0.75rem;
+    padding: 0.65rem 1.25rem;
+    border-radius: 8px;
+    transition: 0.2s;
+    box-shadow: 0 4px 12px rgba(224, 136, 58, 0.3);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    text-decoration: none;
+    white-space: nowrap;
+}
+
+.steam-login-btn:hover {
+    opacity: 0.9;
+    transform: translateY(-1px);
+}
+
+/* Адаптив для мобильных */
+@media (max-width: 768px) {
+    .header-inner {
+        flex-direction: column;
+        height: auto;
+        padding: 1rem;
+        gap: 0.8rem;
+    }
+    
+    .nav-links {
+        justify-content: center;
+    }
+    
+    .nav-links a {
+        padding: 0.4rem 0.8rem;
+        font-size: 0.75rem;
+    }
 }

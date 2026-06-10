@@ -2,306 +2,355 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
     <title>CS2RAGE — Привилегии</title>
+    <meta name="description" content="Привилегии CS2RAGE. BASIC, LITE, PREMIUM, KING, GOD.">
+    
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Oswald:wght@500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Oswald:wght@500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="css/main.css">
+    
     <style>
-        .shop-container { max-width: 1400px; margin: 0 auto; padding: 2rem; }
-        .page-title { text-align: center; margin-bottom: 3rem; }
-        .page-title h1 { font-size: 2.5rem; text-transform: uppercase; letter-spacing: 0.2em; color: var(--primary); }
-        .page-title p { color: var(--muted); }
-        
-        .tiers {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 1.5rem;
-            margin-top: 2rem;
+        :root {
+            --bg: #0f0f0f;
+            --primary: #e0883a;
+            --primary-dark: #c0702a;
+            --primary-glow: #f0a050;
+            --text: #e8e6e3;
+            --text-muted: #8a8a8a;
+            --card-bg: rgba(20, 20, 24, 0.65);
+            --border: rgba(255, 255, 255, 0.06);
+            
+            --color-basic: #9ca3af;
+            --color-lite: #3b82f6;
+            --color-premium: #e0883a;
+            --color-king: #fbbf24;
+            --color-god: #ef4444;
         }
         
-        .tier {
-            background: rgba(26, 26, 26, 0.8);
-            backdrop-filter: blur(12px);
-            border-radius: 24px;
-            padding: 1.8rem;
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            background: #0f0f0f;
+            background-image: 
+                radial-gradient(800px 500px at 90% -10%, rgba(224,136,58,0.12), transparent 60%),
+                radial-gradient(600px 400px at 10% 20%, rgba(240,160,80,0.08), transparent 55%),
+                radial-gradient(500px 350px at 60% 90%, rgba(224,136,58,0.10), transparent 50%);
+            background-attachment: fixed;
+            font-family: 'Rajdhani', system-ui, sans-serif;
+            color: #e8e6e3;
+            min-height: 100vh;
         }
         
-        /* ОБВОДКА СВОИМ ЦВЕТОМ У КАЖДОЙ КАРТОЧКИ */
-        .tier.basic {
-            border: 2px solid rgba(196,196,196,0.5);
-        }
-        .tier.lite {
-            border: 2px solid rgba(58,163,255,0.5);
-        }
-        .tier.premium {
-            border: 2px solid rgba(240,160,80,0.5);
-        }
-        .tier.king {
-            border: 2px solid rgba(255,215,0,0.5);
-        }
-        .tier.god {
-            border: 2px solid rgba(255,51,51,0.5);
-        }
-        
-        /* При наведении обводка становится ярче */
-        .tier.basic:hover {
-            border-color: #c4c4c4;
-            box-shadow: 0 0 25px rgba(196,196,196,0.8), 0 20px 40px -15px rgba(196,196,196,0.5);
-        }
-        .tier.lite:hover {
-            border-color: #3aa3ff;
-            box-shadow: 0 0 25px rgba(58,163,255,0.8), 0 20px 40px -15px rgba(58,163,255,0.5);
-        }
-        .tier.premium:hover {
-            border-color: #f0a050;
-            box-shadow: 0 0 30px rgba(240,160,80,0.9), 0 20px 40px -15px rgba(240,160,80,0.6);
-        }
-        .tier.king:hover {
-            border-color: #ffd700;
-            box-shadow: 0 0 35px rgba(255,215,0,0.9), 0 20px 40px -15px rgba(255,215,0,0.6);
-        }
-        .tier.god:hover {
-            border-color: #ff3333;
-            box-shadow: 0 0 35px rgba(255,51,51,0.9), 0 20px 40px -15px rgba(255,51,51,0.6);
-        }
-        
-        .tier:hover {
-            transform: translateY(-8px);
-        }
-        
-        .tier.featured {
-            background: linear-gradient(135deg, rgba(224,136,58,0.1), rgba(26,26,26,0.9));
-        }
-        
-        .tier-header {
-            text-align: center;
-            margin-bottom: 1.5rem;
-            padding-bottom: 1rem;
-            border-bottom: 1px solid rgba(66,66,66,0.5);
-        }
-        
-        /* Названия привилегий */
-        .tier-name.basic {
-            background: linear-gradient(135deg, #8a8a8a, #c4c4c4);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-        }
-        .tier-name.lite {
-            background: linear-gradient(135deg, #3aa3ff, #8de1ff);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-        }
-        .tier-name.premium {
-            background: linear-gradient(135deg, #f0a050, #ff8c00);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-            text-shadow: 0 0 15px rgba(240,160,80,0.5);
-        }
-        .tier-name.king {
-            background: linear-gradient(135deg, #ffd700, #ffed4a, #ffb800);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-            text-shadow: 0 0 15px rgba(255,215,0,0.5);
-        }
-        .tier-name.god {
-            background: linear-gradient(135deg, #ff3333, #ff0000, #cc0000);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-            text-shadow: 0 0 15px rgba(255,0,0,0.5);
-        }
-        
-        .tier-name {
-            font-family: 'Oswald', sans-serif;
-            font-size: 1.8rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-        }
-        
-        /* Цены под цвет привилегий */
-        .tier-price.basic {
-            color: #c4c4c4;
-        }
-        .tier-price.lite {
-            color: #3aa3ff;
-        }
-        .tier-price.premium {
-            color: #f0a050;
-            text-shadow: 0 0 15px rgba(240,160,80,0.5);
-        }
-        .tier-price.king {
-            color: #ffd700;
-            text-shadow: 0 0 15px rgba(255,215,0,0.5);
-        }
-        .tier-price.god {
-            color: #ff3333;
-            text-shadow: 0 0 15px rgba(255,0,0,0.5);
-        }
-        
-        .tier-price {
-            margin-top: 0.5rem;
-            font-size: 2rem;
-            font-weight: 700;
-        }
-        
-        .tier-price small {
-            font-size: 0.8rem;
-            color: var(--muted);
-        }
-        
-        .tier-price .old-price {
-            font-size: 0.9rem;
-            text-decoration: line-through;
-            color: #e34d4d;
-            margin-right: 0.5rem;
-        }
-        
-        .tier-price .new-price {
-            font-size: 1.8rem;
-        }
-        
-        .tier-perks {
-            flex: 1;
-            margin: 1rem 0;
-            list-style: none;
-        }
-        
-        .tier-perks li {
-            padding: 0.5rem 0;
-            font-size: 0.85rem;
-            color: var(--text-muted);
-            display: flex;
-            align-items: center;
-            gap: 0.6rem;
-            border-bottom: 1px dashed rgba(66,66,66,0.2);
-        }
-        
-        .tier-perks li i {
-            color: var(--primary);
-            width: 20px;
-            font-size: 0.8rem;
-        }
-        
-        .buy-btn {
-            background: linear-gradient(135deg, #c0702a, #f0a050);
-            border: none;
-            border-radius: 40px;
-            padding: 0.8rem;
-            color: #1a1a1a;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-            cursor: pointer;
-            font-size: 0.85rem;
-            transition: all 0.3s;
-            margin-top: 1rem;
-            width: 100%;
-        }
-        
-        .buy-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 20px -5px rgba(224,136,58,0.4);
-        }
-        
-        .period-modal {
+        body::before {
+            content: '';
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0,0,0,0.85);
-            backdrop-filter: blur(8px);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 10001;
-        }
-        .period-modal-content {
-            background: rgba(26,26,26,0.98);
-            backdrop-filter: blur(20px);
-            border: 1px solid var(--primary);
-            border-radius: 24px;
-            width: 90%;
-            max-width: 400px;
-            padding: 1.5rem;
-            position: relative;
-        }
-        .modal-close {
-            position: absolute;
-            top: 1rem;
-            right: 1rem;
-            background: none;
-            border: none;
-            color: var(--muted);
-            font-size: 1.2rem;
-            cursor: pointer;
-        }
-        .period-user-balance {
-            background: rgba(15,15,15,0.8);
-            border-radius: 12px;
-            padding: 0.5rem;
-            margin-bottom: 1rem;
-            text-align: center;
-        }
-        .period-user-balance span { color: var(--primary); font-weight: 700; }
-        .period-btn {
-            background: rgba(15,15,15,0.8);
-            border: 1px solid var(--border);
-            border-radius: 40px;
-            padding: 0.7rem;
-            margin: 0.5rem 0;
-            width: 100%;
-            display: flex;
-            justify-content: space-between;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-        .period-btn:hover { border-color: var(--primary); background: rgba(224,136,58,0.1); }
-        .period-btn.selected { border-color: var(--primary); background: rgba(224,136,58,0.2); }
-        .period-price { color: var(--primary); font-weight: 700; }
-        .old-price { text-decoration: line-through; font-size: 0.7rem; color: var(--muted); margin-right: 0.3rem; }
-        .confirm-btn {
-            background: linear-gradient(135deg, #c0702a, #f0a050);
-            border: none;
-            border-radius: 40px;
-            padding: 0.7rem;
-            margin-top: 1rem;
-            width: 100%;
-            color: #1a1a1a;
-            font-weight: 700;
-            cursor: pointer;
-        }
-        .toast {
-            position: fixed;
-            top: 90px;
-            right: 20px;
-            background: #1a1a1a;
-            border-left: 4px solid var(--primary);
-            border-radius: 12px;
-            padding: 0.8rem 1.2rem;
-            z-index: 10000;
-            animation: slideInRight 0.3s ease;
-        }
-        @keyframes slideInRight {
-            from { opacity: 0; transform: translateX(50px); }
-            to { opacity: 1; transform: translateX(0); }
+            pointer-events: none;
+            z-index: 0;
+            background-image: 
+                radial-gradient(3px 3px at 15% 25%, rgba(224,136,58,0.6), transparent),
+                radial-gradient(2px 2px at 45% 65%, rgba(240,160,80,0.5), transparent),
+                radial-gradient(3px 3px at 75% 15%, rgba(224,136,58,0.4), transparent),
+                radial-gradient(2px 2px at 85% 75%, rgba(240,160,80,0.6), transparent),
+                radial-gradient(3px 3px at 25% 85%, rgba(224,136,58,0.5), transparent),
+                radial-gradient(2px 2px at 55% 35%, rgba(240,160,80,0.3), transparent),
+                radial-gradient(3px 3px at 65% 55%, rgba(224,136,58,0.5), transparent),
+                radial-gradient(2px 2px at 35% 45%, rgba(240,160,80,0.4), transparent),
+                radial-gradient(3px 3px at 5% 55%, rgba(224,136,58,0.3), transparent),
+                radial-gradient(2px 2px at 95% 35%, rgba(240,160,80,0.5), transparent);
+            background-size: 200px 200px;
+            animation: float-particles 20s ease-in-out infinite;
         }
         
-        @media (max-width: 768px) {
+        @keyframes float-particles {
+            0%, 100% { transform: translateY(0) rotate(0deg); opacity: 0.8; }
+            25% { transform: translateY(-15px) rotate(1deg); opacity: 1; }
+            50% { transform: translateY(-5px) rotate(-1deg); opacity: 0.6; }
+            75% { transform: translateY(-20px) rotate(0.5deg); opacity: 0.9; }
+        }
+        
+        .container {
+            max-width: 1500px;
+            margin: 0 auto;
+            padding: 3rem 2rem;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+        
+        .header h1 {
+            font-family: 'Oswald', sans-serif;
+            font-size: clamp(2.5rem, 5vw, 3.5rem);
+            text-transform: uppercase;
+            letter-spacing: 0.25em;
+            background: linear-gradient(135deg, #fff, #e0883a, #f0a050);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: 0.8rem;
+        }
+        
+        .header p {
+            color: #8a8a8a;
+            font-size: 1rem;
+        }
+        
+        .tiers {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 1.5rem;
+        }
+        
+        @media (max-width: 1400px) {
+            .tiers { grid-template-columns: repeat(3, 1fr); }
+        }
+        
+        @media (max-width: 900px) {
+            .tiers { grid-template-columns: repeat(2, 1fr); }
+        }
+        
+        @media (max-width: 600px) {
             .tiers { grid-template-columns: 1fr; }
+            .container { padding: 1.5rem 1rem; }
+        }
+        
+        .tier {
+            background: rgba(18, 18, 24, 0.75);
+            backdrop-filter: blur(20px);
+            border-radius: 24px;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            padding: 2.5rem 1.8rem 2rem;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            transition: all 0.35s ease;
+            overflow: visible;
+        }
+        
+        .tier:hover {
+            transform: translateY(-8px);
+            background: rgba(22, 22, 30, 0.85);
+        }
+        
+        .tier::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 10%;
+            width: 80%;
+            height: 3px;
+            border-radius: 0 0 3px 3px;
+            transition: all 0.3s ease;
+        }
+        
+        .tier.basic::before { background: linear-gradient(90deg, transparent, #9ca3af, transparent); }
+        .tier.lite::before { background: linear-gradient(90deg, transparent, #3b82f6, transparent); }
+        .tier.premium::before { background: linear-gradient(90deg, transparent, #e0883a, transparent); }
+        .tier.king::before { background: linear-gradient(90deg, transparent, #fbbf24, transparent); }
+        .tier.god::before { background: linear-gradient(90deg, transparent, #ef4444, transparent); }
+        
+        .tier:hover::before { left: 0; width: 100%; height: 4px; }
+        
+        .tier.basic:hover { box-shadow: 0 25px 60px -15px rgba(156,163,175,0.2); border-color: rgba(156,163,175,0.2); }
+        .tier.lite:hover { box-shadow: 0 25px 60px -15px rgba(59,130,246,0.25); border-color: rgba(59,130,246,0.2); }
+        .tier.premium:hover { box-shadow: 0 25px 60px -15px rgba(224,136,58,0.3); border-color: rgba(224,136,58,0.25); }
+        .tier.king:hover { box-shadow: 0 25px 60px -15px rgba(251,191,36,0.3); border-color: rgba(251,191,36,0.25); }
+        .tier.god:hover { box-shadow: 0 25px 60px -15px rgba(239,68,68,0.25); border-color: rgba(239,68,68,0.25); }
+        
+        /* Популярный бейдж - ИСПРАВЛЕНО */
+        .popular-badge {
+            position: absolute;
+            top: -16px;
+            right: 24px;
+            background: linear-gradient(135deg, #e0883a, #c07020);
+            color: #1a1a1a;
+            font-size: 0.65rem;
+            font-weight: 700;
+            padding: 0.4rem 1.2rem;
+            border-radius: 20px;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            z-index: 10;
+            box-shadow: 0 4px 20px rgba(224,136,58,0.5);
+            white-space: nowrap;
+        }
+        
+        .tier-label {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+            font-weight: 700;
+            margin-bottom: 0.8rem;
+            opacity: 0.9;
+        }
+        
+        .tier.basic .tier-label { color: #9ca3af; }
+        .tier.lite .tier-label { color: #3b82f6; }
+        .tier.premium .tier-label { color: #e0883a; }
+        .tier.king .tier-label { color: #fbbf24; }
+        .tier.god .tier-label { color: #ef4444; }
+        
+        .tier-name {
+            font-family: 'Oswald', sans-serif;
+            font-size: 2rem;
+            font-weight: 600;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            margin-bottom: 0.5rem;
+            color: #fff;
+        }
+        
+        .old-price {
+            font-size: 0.9rem;
+            text-decoration: line-through;
+            color: #6b7280;
+            margin-bottom: 0.2rem;
+        }
+        
+        .tier-price {
+            font-size: 3rem;
+            font-weight: 700;
+            font-family: 'Oswald', sans-serif;
+            line-height: 1;
+            margin-bottom: 1.5rem;
+        }
+        
+        .tier.basic .tier-price { color: #9ca3af; }
+        .tier.lite .tier-price { color: #3b82f6; }
+        .tier.premium .tier-price { color: #e0883a; }
+        .tier.king .tier-price { color: #fbbf24; }
+        .tier.god .tier-price { color: #ef4444; }
+        
+        .tier-price small {
+            font-size: 1.1rem;
+            color: #8a8a8a;
+            font-weight: 400;
+        }
+        
+        .divider {
+            height: 1px;
+            background: rgba(255,255,255,0.06);
+            margin-bottom: 1.5rem;
+        }
+        
+        .features {
+            list-style: none;
+            flex: 1;
+            margin-bottom: 2rem;
+        }
+        
+        .features li {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            padding: 0.5rem 0;
+            font-size: 0.85rem;
+            color: #a1a1aa;
+            border-bottom: 1px solid rgba(255,255,255,0.03);
+            transition: all 0.2s;
+        }
+        
+        .features li:last-child { border-bottom: none; }
+        .features li:hover { color: #fff; }
+        
+        .features li i {
+            width: 16px;
+            font-size: 0.55rem;
+        }
+        
+        .tier.basic .features li i { color: #9ca3af; }
+        .tier.lite .features li i { color: #3b82f6; }
+        .tier.premium .features li i { color: #e0883a; }
+        .tier.king .features li i { color: #fbbf24; }
+        .tier.god .features li i { color: #ef4444; }
+        
+        /* Кнопка - ИСПРАВЛЕНО */
+        .btn {
+            width: 100%;
+            padding: 0.9rem;
+            border-radius: 50px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Rajdhani', sans-serif;
+            background: rgba(255, 255, 255, 0.03);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            color: #fff;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .btn::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 0%;
+            height: 100%;
+            transition: width 0.35s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+            z-index: -1;
+        }
+        
+        .tier.basic .btn::after { background: rgba(156, 163, 175, 0.15); }
+        .tier.lite .btn::after { background: rgba(59, 130, 246, 0.15); }
+        .tier.premium .btn::after { background: rgba(224, 136, 58, 0.15); }
+        .tier.king .btn::after { background: rgba(251, 191, 36, 0.15); }
+        .tier.god .btn::after { background: rgba(239, 68, 68, 0.15); }
+        
+        .btn:hover::after {
+            width: 100%;
+        }
+        
+        .btn:hover {
+            border-color: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+            letter-spacing: 0.2em;
+        }
+        
+        .tier.basic .btn:hover { border-color: rgba(156, 163, 175, 0.5); }
+        .tier.lite .btn:hover { border-color: rgba(59, 130, 246, 0.5); }
+        .tier.premium .btn:hover { border-color: rgba(224, 136, 58, 0.5); }
+        .tier.king .btn:hover { border-color: rgba(251, 191, 36, 0.5); }
+        .tier.god .btn:hover { border-color: rgba(239, 68, 68, 0.5); }
+        
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: rgba(20, 20, 24, 0.95);
+            backdrop-filter: blur(20px);
+            border-left: 4px solid #e0883a;
+            border-radius: 12px;
+            padding: 1rem 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            z-index: 10000;
+            color: #fff;
+            font-weight: 600;
+            font-size: 0.9rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            animation: slideIn 0.3s ease;
+        }
+        
+        .toast.error { border-left-color: #ef4444; }
+        
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(100px); }
+            to { opacity: 1; transform: translateX(0); }
         }
     </style>
 </head>
@@ -309,229 +358,165 @@
 
 <script src="js/layout.js"></script>
 
-<div class="shop-container">
-    <div class="page-title">
-        <h1>ПРИВИЛЕГИИ CS2RAGE</h1>
-        <p>Поддержи проект и получи плюшки на серверах. 5 привилегий — на любой вкус.</p>
+<div class="container">
+    <div class="header">
+        <h1>Привилегии CS2RAGE</h1>
+        <p>Выберите свой уровень и получите эксклюзивные возможности на сервере</p>
     </div>
-    <div class="tiers" id="tiers"></div>
+    
+    <div class="tiers">
+        
+        <!-- BASIC -->
+        <div class="tier basic">
+            <div class="tier-label">BASIC</div>
+            <div class="tier-name">Basic</div>
+            <div class="old-price">150 ₽</div>
+            <div class="tier-price">99 <small>₽/мес</small></div>
+            <div class="divider"></div>
+            <ul class="features">
+                <li><i class="fas fa-circle"></i> Цветной ник в чате</li>
+                <li><i class="fas fa-circle"></i> Резерв-слот при заполнении</li>
+                <li><i class="fas fa-circle"></i> Доступ к голосованиям</li>
+                <li><i class="fas fa-circle"></i> Иконка BASIC</li>
+            </ul>
+            <button class="btn" data-tier="basic">Выбрать BASIC</button>
+        </div>
+        
+        <!-- LITE -->
+        <div class="tier lite">
+            <div class="tier-label">LITE</div>
+            <div class="tier-name">Lite</div>
+            <div class="old-price">300 ₽</div>
+            <div class="tier-price">199 <small>₽/мес</small></div>
+            <div class="divider"></div>
+            <ul class="features">
+                <li><i class="fas fa-circle"></i> Все привилегии BASIC</li>
+                <li><i class="fas fa-circle"></i> Скинченджер (10 скинов)</li>
+                <li><i class="fas fa-circle"></i> Граффити в чате</li>
+                <li><i class="fas fa-circle"></i> Команда !ws</li>
+                <li><i class="fas fa-circle"></i> Приоритет в очереди</li>
+            </ul>
+            <button class="btn" data-tier="lite">Выбрать LITE</button>
+        </div>
+        
+        <!-- PREMIUM -->
+        <div class="tier premium">
+            <span class="popular-badge">BEST</span>
+            <div class="tier-label">PREMIUM</div>
+            <div class="tier-name">Premium</div>
+            <div class="old-price">600 ₽</div>
+            <div class="tier-price">399 <small>₽/мес</small></div>
+            <div class="divider"></div>
+            <ul class="features">
+                <li><i class="fas fa-circle"></i> Все привилегии LITE</li>
+                <li><i class="fas fa-circle"></i> Полный доступ к скинченджеру</li>
+                <li><i class="fas fa-circle"></i> Скины ножей и перчаток</li>
+                <li><i class="fas fa-circle"></i> Кастомные паттерны (Seed)</li>
+                <li><i class="fas fa-circle"></i> Настройка износа (Float)</li>
+                <li><i class="fas fa-circle"></i> +30% к опыту</li>
+            </ul>
+            <button class="btn" data-tier="premium">Выбрать PREMIUM</button>
+        </div>
+        
+        <!-- KING -->
+        <div class="tier king">
+            <div class="tier-label">KING</div>
+            <div class="tier-name">King</div>
+            <div class="old-price">1050 ₽</div>
+            <div class="tier-price">699 <small>₽/мес</small></div>
+            <div class="divider"></div>
+            <ul class="features">
+                <li><i class="fas fa-circle"></i> Все привилегии PREMIUM</li>
+                <li><i class="fas fa-circle"></i> Кастомный плеймодель</li>
+                <li><i class="fas fa-circle"></i> Команда !knife</li>
+                <li><i class="fas fa-circle"></i> Личный значок KING</li>
+                <li><i class="fas fa-circle"></i> Быстрый коннект</li>
+                <li><i class="fas fa-circle"></i> +60% к опыту</li>
+            </ul>
+            <button class="btn" data-tier="king">Выбрать KING</button>
+        </div>
+        
+        <!-- GOD -->
+        <div class="tier god">
+            <div class="tier-label">GOD</div>
+            <div class="tier-name">God</div>
+            <div class="old-price">1950 ₽</div>
+            <div class="tier-price">1299 <small>₽/мес</small></div>
+            <div class="divider"></div>
+            <ul class="features">
+                <li><i class="fas fa-circle"></i> Все привилегии KING</li>
+                <li><i class="fas fa-circle"></i> Базовые команды модерации</li>
+                <li><i class="fas fa-circle"></i> Доступ в закрытый Discord</li>
+                <li><i class="fas fa-circle"></i> Эксклюзивные стикеры</li>
+                <li><i class="fas fa-circle"></i> Приоритет заявок</li>
+                <li><i class="fas fa-circle"></i> +100% к опыту</li>
+            </ul>
+            <button class="btn" data-tier="god">Выбрать GOD</button>
+        </div>
+        
+    </div>
 </div>
 
 <script>
-(function() {
-    var TIERS_DATA = [
-        {
-            id: "basic",
-            name: "BASIC",
-            basePrice: 99,
-            featured: false,
-            perks: ["Цветной ник в чате", "Резерв-слот при заполнении сервера", "Доступ к голосованиям", "Иконка BASIC рядом с ником"]
-        },
-        {
-            id: "lite",
-            name: "LITE",
-            basePrice: 199,
-            featured: false,
-            perks: ["Все привилегии BASIC", "Скинченджер (10 скинов)", "Граффити в чате", "Команда !ws — выбор скина оружия", "Приоритет в очереди"]
-        },
-        {
-            id: "premium",
-            name: "PREMIUM",
-            basePrice: 399,
-            featured: true,
-            perks: ["Все привилегии LITE", "Полный доступ к скинченджеру (все скины)", "Скины ножей и перчаток", "Кастомные паттерны (Seed)", "Настройка износа (Float)", "+30% к опыту"]
-        },
-        {
-            id: "king",
-            name: "KING",
-            basePrice: 699,
-            featured: false,
-            perks: ["Все привилегии PREMIUM", "Кастомный плеймодель", "Команда !knife в любой момент", "Личный значок KING в TAB", "Быстрый коннект в любой момент", "+60% к опыту"]
-        },
-        {
-            id: "god",
-            name: "GOD",
-            basePrice: 1299,
-            featured: false,
-            perks: ["Все привилегии KING", "Базовые команды модерации (!kick, !mute)", "Доступ в закрытый Discord-канал", "Эксклюзивные стикеры и медальки", "Приоритет рассмотрения заявок", "+100% к опыту, личное обращение в поддержке"]
-        }
-    ];
+    const prices = { basic: 99, lite: 199, premium: 399, king: 699, god: 1299 };
 
-    var currentUser = null;
-    var currentBalance = 0;
-
-    async function checkAuth() {
-        try {
-            var res = await fetch('/api/check-auth.php');
-            var data = await res.json();
-            if (data.authenticated && data.user) {
-                currentUser = data.user;
-                var balanceRes = await fetch('/api/get-balance.php');
-                var balanceData = await balanceRes.json();
-                currentBalance = balanceData.success ? balanceData.balance : 0;
-                return true;
-            }
-            return false;
-        } catch(e) {
-            console.error(e);
-            return false;
-        }
-    }
-
-    function showToast(message, isError) {
-        var toast = document.createElement('div');
-        toast.className = 'toast';
-        toast.style.borderLeftColor = isError ? '#e34d4d' : '#e0883a';
-        toast.innerHTML = '<i class="fas ' + (isError ? 'fa-exclamation-circle' : 'fa-check-circle') + '"></i><div>' + message + '</div>';
+    function showToast(message, isError = false) {
+        const toast = document.createElement('div');
+        toast.className = `toast ${isError ? 'error' : ''}`;
+        toast.innerHTML = `<div>${message}</div>`;
         document.body.appendChild(toast);
-        setTimeout(function() { toast.remove(); }, 3000);
+        setTimeout(() => {
+            toast.style.opacity = '0';
+            toast.style.transform = 'translateX(100px)';
+            toast.style.transition = 'all 0.3s ease';
+            setTimeout(() => toast.remove(), 300);
+        }, 3000);
     }
 
-    async function purchasePrivilege(tierId, days, price) {
-        if (!currentUser) {
-            showToast('Сначала авторизуйтесь через Steam', true);
-            return false;
-        }
-        if (currentBalance < price) {
-            showToast('Недостаточно средств! Нужно ' + price + ' ₽, у вас ' + currentBalance + ' ₽', true);
-            return false;
-        }
+    async function purchaseTier(tier) {
         try {
-            var res = await fetch('/api/buy-privilege.php', {
+            const authRes = await fetch('/api/check-auth.php');
+            const authData = await authRes.json();
+            
+            if (!authData.authenticated) {
+                if (confirm('Нужно войти через Steam. Перейти?')) {
+                    window.location.href = '/api/steam-auth.php?return=/shop.html';
+                }
+                return;
+            }
+            
+            const balanceRes = await fetch('/api/get-balance.php');
+            const balanceData = await balanceRes.json();
+            const balance = balanceData.success ? balanceData.balance : 0;
+            const price = prices[tier];
+            
+            if (balance < price) {
+                showToast(`Недостаточно средств! Нужно ${price} ₽, у вас ${balance} ₽`, true);
+                return;
+            }
+            
+            const buyRes = await fetch('/api/buy-privilege.php', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    tier: tierId,
-                    days: days,
-                    price: price,
-                    steamid: currentUser.steamid
-                })
+                body: JSON.stringify({ tier: tier, price: price })
             });
-            var data = await res.json();
-            if (data.success) {
-                currentBalance -= price;
-                showToast('✅ Привилегия активирована на ' + days + ' дней!', false);
-                return true;
+            const buyData = await buyRes.json();
+            
+            if (buyData.success) {
+                showToast(`✅ Привилегия ${tier.toUpperCase()} активирована!`);
+                setTimeout(() => location.reload(), 1500);
             } else {
-                showToast(data.error || 'Ошибка активации', true);
-                return false;
+                showToast(buyData.error || 'Ошибка активации', true);
             }
-        } catch(e) {
-            showToast('Ошибка соединения', true);
-            return false;
+        } catch (e) {
+            showToast('Ошибка соединения с сервером', true);
         }
     }
 
-    function getPeriods(basePrice) {
-        var weekPrice = basePrice;
-        var monthPrice = basePrice * 3;
-        var yearOriginalPrice = basePrice * 12;
-        var yearDiscountPrice = basePrice * 10;
-        return [
-            { id: "week", days: 7, price: weekPrice, label: "Неделя (7 дней)", showOldPrice: false },
-            { id: "month", days: 30, price: monthPrice, label: "Месяц (30 дней)", showOldPrice: false },
-            { id: "year", days: 365, price: yearDiscountPrice, originalPrice: yearOriginalPrice, label: "Год (365 дней)", showOldPrice: true }
-        ];
-    }
-
-    function showPeriodModal(tier) {
-        if (!currentUser) {
-            showToast('Сначала авторизуйтесь через Steam', true);
-            return;
-        }
-        var periods = getPeriods(tier.basePrice);
-        var selectedPeriod = periods[0];
-        
-        var modalHtml = '<div class="period-modal" id="periodModal"><div class="period-modal-content"><button class="modal-close" id="closePeriodModal"><i class="fas fa-times"></i></button><h3 style="color:var(--primary);text-align:center;"><i class="fas fa-crown"></i> ' + tier.name + '</h3><div class="period-user-balance">💰 Баланс: <span>' + currentBalance.toLocaleString() + ' ₽</span></div>';
-        for (var i = 0; i < periods.length; i++) {
-            var p = periods[i];
-            modalHtml += '<button class="period-btn" data-days="' + p.days + '" data-price="' + p.price + '">';
-            modalHtml += '<span>📅 ' + p.label + '</span>';
-            modalHtml += '<span class="period-price">';
-            if (p.showOldPrice && p.originalPrice) {
-                modalHtml += '<span class="old-price">' + p.originalPrice + ' ₽</span>';
-                modalHtml += '<span class="new-price">' + p.price + ' ₽</span>';
-            } else {
-                modalHtml += p.price + ' ₽';
-            }
-            modalHtml += '</span></button>';
-        }
-        modalHtml += '<button class="confirm-btn" id="confirmPurchaseBtn">Купить</button></div></div>';
-        
-        document.body.insertAdjacentHTML('beforeend', modalHtml);
-        
-        var btns = document.querySelectorAll('.period-btn');
-        for (var i = 0; i < btns.length; i++) {
-            btns[i].addEventListener('click', function(e) {
-                var allBtns = document.querySelectorAll('.period-btn');
-                for (var j = 0; j < allBtns.length; j++) {
-                    allBtns[j].classList.remove('selected');
-                }
-                this.classList.add('selected');
-                selectedPeriod = {
-                    days: parseInt(this.dataset.days),
-                    price: parseInt(this.dataset.price)
-                };
-            });
-        }
-        if (btns.length > 0) btns[0].classList.add('selected');
-        
-        document.getElementById('confirmPurchaseBtn').onclick = function() {
-            document.getElementById('periodModal').remove();
-            purchasePrivilege(tier.id, selectedPeriod.days, selectedPeriod.price);
-        };
-        document.getElementById('closePeriodModal').onclick = function() { document.getElementById('periodModal').remove(); };
-        document.getElementById('periodModal').onclick = function(e) { if (e.target === this) this.remove(); };
-    }
-
-    function renderTiers() {
-        var container = document.getElementById('tiers');
-        if (!container) return;
-        var html = '';
-        for (var i = 0; i < TIERS_DATA.length; i++) {
-            var t = TIERS_DATA[i];
-            var perksHtml = '';
-            for (var j = 0; j < t.perks.length; j++) {
-                perksHtml += '<li><i class="fas fa-check-circle"></i> ' + t.perks[j] + '</li>';
-            }
-            html += '<div class="tier ' + t.id + ' ' + (t.featured ? 'featured' : '') + '">';
-            html += '<div class="tier-header">';
-            html += '<div class="tier-name ' + t.id + '">' + t.name + '</div>';
-            html += '<div class="tier-price ' + t.id + '">' + t.basePrice + ' ₽<small>/мес</small></div>';
-            html += '</div>';
-            html += '<ul class="tier-perks">' + perksHtml + '</ul>';
-            html += '<button class="buy-btn" data-tier-id="' + t.id + '">Купить</button>';
-            html += '</div>';
-        }
-        container.innerHTML = html;
-        
-        var btns = document.querySelectorAll('.buy-btn');
-        for (var i = 0; i < btns.length; i++) {
-            btns[i].addEventListener('click', function(e) {
-                var tierId = this.dataset.tierId;
-                var tier = null;
-                for (var j = 0; j < TIERS_DATA.length; j++) {
-                    if (TIERS_DATA[j].id === tierId) {
-                        tier = TIERS_DATA[j];
-                        break;
-                    }
-                }
-                if (tier) showPeriodModal(tier);
-            });
-        }
-    }
-
-    async function init() {
-        await checkAuth();
-        renderTiers();
-    }
-    
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', init);
-    } else {
-        init();
-    }
-})();
+    document.querySelectorAll('.btn').forEach(btn => {
+        btn.addEventListener('click', () => purchaseTier(btn.dataset.tier));
+    });
 </script>
+
 </body>
 </html>
