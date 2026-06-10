@@ -1,145 +1,24 @@
-// Скинченджер CS2RAGE
-let cat = "rifles";
-let weapon = "AK-47";
-let skin = "Vulcan";
-let pattern = 661;
-let wear = 0.07;
-
-function renderCats() {
-  document.getElementById("cats").innerHTML = WEAPON_CATEGORIES.map(c =>
-    `<button data-id="${c.id}" class="${c.id === cat ? "active" : ""}">${c.name}</button>`
-  ).join("");
-  document.querySelectorAll("#cats button").forEach(b => b.onclick = () => {
-    cat = b.dataset.id;
-    weapon = WEAPONS[cat][0];
-    skin = skinsForWeapon(weapon)[0];
-    renderAll();
-  });
-}
-
-function renderWeapons() {
-  document.getElementById("weapons").innerHTML = WEAPONS[cat].map(w =>
-    `<div class="weapon ${w === weapon ? "active" : ""}" data-w="${w}">
-      <div class="nm">${w}</div>
-      <div class="sk">${skinsForWeapon(w).length} скинов</div>
-    </div>`
-  ).join("");
-  document.querySelectorAll(".weapon").forEach(el => el.onclick = () => {
-    weapon = el.dataset.w;
-    skin = skinsForWeapon(weapon)[0];
-    renderConfig();
-    renderWeapons();
-  });
-}
-
-function wearLabel(v) {
-  if (v < 0.07) return "Factory New";
-  if (v < 0.15) return "Minimal Wear";
-  if (v < 0.38) return "Field-Tested";
-  if (v < 0.45) return "Well-Worn";
-  return "Battle-Scarred";
-}
-
-function renderConfig() {
-  const skins = skinsForWeapon(weapon);
-  document.getElementById("config").innerHTML = `
-    <div class="field">
-      <label>Оружие</label>
-      <select id="sel-weapon">${WEAPONS[cat].map(w => `<option ${w === weapon ? "selected" : ""}>${w}</option>`).join("")}</select>
-    </div>
-    <div class="field">
-      <label>Скин</label>
-      <select id="sel-skin">${skins.map(s => `<option ${s === skin ? "selected" : ""}>${s}</option>`).join("")}</select>
-    </div>
-    <div class="field">
-      <label>Паттерн (Seed)</label>
-      <div style="display:flex;gap:10px;align-items:center;">
-        <input id="inp-pattern" type="number" min="0" max="1000" value="${pattern}" style="flex:1;">
-        <button class="btn-random" id="btn-random" title="Случайный паттерн"><i class="fas fa-dice"></i></button>
-      </div>
-      <div class="row-val"><span>От 0 до 1000</span><b id="pattern-display">Seed: ${pattern}</b></div>
-    </div>
-    <div class="field">
-      <label>Износ (Float): <span id="float-value">${wear.toFixed(3)}</span></label>
-      <div style="display:flex;gap:8px;align-items:center;">
-        <input id="inp-wear-range" type="range" min="0" max="1000" value="${Math.round(wear * 1000)}" style="flex:1;">
-        <input id="inp-wear-number" type="number" min="0" max="1" step="0.001" value="${wear.toFixed(3)}" style="width:80px;text-align:center;">
-      </div>
-      <div class="row-val"><span id="wear-label">${wearLabel(wear)}</span><b>${wear.toFixed(3)}</b></div>
-    </div>
-    <button class="btn-apply" id="btn-apply">
-      Применить: <span id="apply-weapon">${weapon}</span> | <span id="apply-skin">${skin}</span> | seed <span id="apply-pattern">${pattern}</span> | float <span id="apply-float">${wear.toFixed(3)}</span>
-    </button>
-  `;
-
-  // Обработчики
-  document.getElementById("sel-weapon").onchange = (e) => { 
-    weapon = e.target.value; 
-    skin = skinsForWeapon(weapon)[0]; 
-    renderConfig(); 
-    renderWeapons(); 
-  };
-  
-  document.getElementById("sel-skin").onchange = (e) => { 
-    skin = e.target.value; 
-    updateApplyButton();
-  };
-
-  // Паттерн - ручной ввод
-  document.getElementById("inp-pattern").oninput = (e) => {
-    let val = parseInt(e.target.value) || 0;
-    if (val < 0) val = 0;
-    if (val > 1000) val = 1000;
-    pattern = val;
-    document.getElementById("pattern-display").textContent = `Seed: ${pattern}`;
-    updateApplyButton();
-  };
-
-  // Случайный паттерн
-  document.getElementById("btn-random").onclick = () => {
-    pattern = Math.floor(Math.random() * 1001);
-    document.getElementById("inp-pattern").value = pattern;
-    document.getElementById("pattern-display").textContent = `Seed: ${pattern}`;
-    updateApplyButton();
-  };
-
-  // Износ - ползунок
-  document.getElementById("inp-wear-range").oninput = (e) => {
-    wear = parseInt(e.target.value) / 1000;
-    syncWearInputs();
-  };
-
-  // Износ - ручной ввод
-  document.getElementById("inp-wear-number").oninput = (e) => {
-    let val = parseFloat(e.target.value);
-    if (isNaN(val)) val = 0;
-    if (val < 0) val = 0;
-    if (val > 1) val = 1;
-    wear = val;
-    syncWearInputs();
-  };
-
-  // Кнопка применить
-  document.getElementById("btn-apply").onclick = () => {
-    alert(`✅ Применено!\n\nОружие: ${weapon}\nСкин: ${skin}\nПаттерн (Seed): ${pattern}\nИзнос (Float): ${wear.toFixed(3)} (${wearLabel(wear)})`);
-  };
-}
-
-function syncWearInputs() {
-  document.getElementById("inp-wear-range").value = Math.round(wear * 1000);
-  document.getElementById("inp-wear-number").value = wear.toFixed(3);
-  document.getElementById("float-value").textContent = wear.toFixed(3);
-  document.getElementById("wear-label").textContent = wearLabel(wear);
-  updateApplyButton();
-}
-
-function updateApplyButton() {
-  document.getElementById("apply-weapon").textContent = weapon;
-  document.getElementById("apply-skin").textContent = skin;
-  document.getElementById("apply-pattern").textContent = pattern;
-  document.getElementById("apply-float").textContent = wear.toFixed(3);
-}
-
-function renderAll() { renderCats(); renderWeapons(); renderConfig(); }
-
-document.addEventListener("DOMContentLoaded", renderAll);
+const WEAPON_TEAM={"M4A4":"ct","M4A1-S":"ct","FAMAS":"ct","AUG":"ct","SCAR-20":"ct","USP-S":"ct","Five-SeveN":"ct","MP9":"ct","MAG-7":"ct","AK-47":"t","Galil AR":"t","SG 553":"t","G3SG1":"t","Glock-18":"t","Tec-9":"t","MAC-10":"t","Sawed-Off":"t","AWP":"both","SSG 08":"both","Desert Eagle":"both","P250":"both","CZ75-Auto":"both","Dual Berettas":"both","R8 Revolver":"both","MP7":"both","UMP-45":"both","P90":"both","PP-Bizon":"both","MP5-SD":"both","Nova":"both","XM1014":"both","M249":"both","Negev":"both","Karambit":"both","M9 Bayonet":"both","Butterfly Knife":"both","Bayonet":"both","Talon Knife":"both","Stiletto Knife":"both","Huntsman Knife":"both","Flip Knife":"both","Gut Knife":"both","Bowie Knife":"both","Classic Knife":"both","Nomad Knife":"both","Skeleton Knife":"both","Kukri Knife":"both","Sport Gloves":"both","Driver Gloves":"both","Specialist Gloves":"both","Hand Wraps":"both","Moto Gloves":"both","Bloodhound Gloves":"both","Hydra Gloves":"both","Broken Fang Gloves":"both"};
+const CATEGORIES={knives:{name:"🔪 Ножи",icon:"fa-gavel",weapons:["Karambit","M9 Bayonet","Butterfly Knife","Bayonet","Talon Knife","Stiletto Knife","Huntsman Knife","Flip Knife","Gut Knife","Bowie Knife","Classic Knife","Nomad Knife","Skeleton Knife","Kukri Knife"]},gloves:{name:"🧤 Перчатки",icon:"fa-hand-peace",weapons:["Sport Gloves","Driver Gloves","Specialist Gloves","Hand Wraps","Moto Gloves","Bloodhound Gloves","Hydra Gloves","Broken Fang Gloves"]},rifles:{name:"🔫 Винтовки",icon:"fa-gun",weapons:["AK-47","M4A4","M4A1-S","Galil AR","FAMAS","SG 553","AUG"]},snipers:{name:"🎯 Снайперские",icon:"fa-crosshairs",weapons:["AWP","SSG 08","SCAR-20","G3SG1"]},pistols:{name:"🔫 Пистолеты",icon:"fa-bullseye",weapons:["Desert Eagle","USP-S","Glock-18","P250","Tec-9","Five-SeveN","CZ75-Auto","Dual Berettas","R8 Revolver"]},smgs:{name:"💨 ПП",icon:"fa-fill-drip",weapons:["MP9","MAC-10","MP7","UMP-45","P90","PP-Bizon","MP5-SD"]},heavy:{name:"💣 Тяжёлое",icon:"fa-bomb",weapons:["Nova","XM1014","Sawed-Off","MAG-7","M249","Negev"]}};
+let weaponsSkins={},weaponsIcons={},userSkins={},currentWeapon="AK-47",hiddenWeapons={},currentTab="all-skins",collectionTeamFilter="both",pendingChangeKey=null;
+function showToast(msg,isError){isError=isError||false;var t=document.createElement('div');t.className='toast';t.style.borderLeftColor=isError?'#e34d4d':'#f5c518';t.innerHTML='<i class="fas '+(isError?'fa-exclamation-circle':'fa-check-circle')+'"></i><div>'+msg+'</div>';document.body.appendChild(t);setTimeout(function(){t.remove()},3000)}
+function getWeaponTeam(w){return WEAPON_TEAM[w]||"both"}
+function getWearName(f){if(f<0.07)return"Factory New";if(f<0.15)return"Minimal Wear";if(f<0.38)return"Field-Tested";if(f<0.45)return"Well-Worn";return"Battle-Scarred"}
+function floatToWearName(f){if(f<=0.07)return"Factory New";if(f<=0.15)return"Minimal Wear";if(f<=0.38)return"Field-Tested";if(f<=0.45)return"Well-Worn";return"Battle-Scarred"}
+function escapeHtml(s){if(!s)return'';return s.replace(/[&<>]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;'})[m])}
+async function loadSkins(){try{var r=await fetch('/api/skins.json');var d=await r.json();var arr=Array.isArray(d)?d:Object.values(d);weaponsSkins={};weaponsIcons={};for(var s of arr){var wn=s.weapon?.name||s.weapon_name;if(!wn||wn==='Unknown')continue;if(!weaponsSkins[wn])weaponsSkins[wn]=[];weaponsSkins[wn].push({name:s.name,paint_index:s.paint_index||0,image:s.image||'',rarity:s.rarity?.name||s.rarity||'Common'});if(!weaponsIcons[wn]&&s.image)weaponsIcons[wn]=s.image}for(var w of Object.keys(weaponsSkins)){if(!weaponsIcons[w])weaponsIcons[w]='https://community.cloudflare.steamstatic.com/econ/image/CSGO/game/items/rifles/'+w.toLowerCase().replace(/\s/g,'_')+'_large.png'}if(Object.keys(weaponsSkins).length===0){weaponsSkins={"AK-47":[{name:"Vulcan",paint_index:1,image:"",rarity:"Classified"}],"AWP":[{name:"Dragon Lore",paint_index:2,image:"",rarity:"Covert"}],"M4A4":[{name:"Howl",paint_index:3,image:"",rarity:"Covert"}]}}loadUserSkins();renderWeaponSidebar();renderSkinsForWeapon(currentWeapon)}catch(e){console.error(e);loadUserSkins();renderWeaponSidebar()}}
+function loadUserSkins(){var s=localStorage.getItem('cs2rage_skins_final8');userSkins=s?JSON.parse(s):{}}
+function saveSkinLocal(weapon,skinName,paintIndex,seed,wearFloat,isStatTrak,skinImage,team,customName){customName=customName||'';if(team==='both'){delete userSkins[weapon+'_ct'];delete userSkins[weapon+'_t'];userSkins[weapon+'_ct']={weapon,skin_name:skinName,pattern:seed,float:wearFloat,stattrak:isStatTrak,image:skinImage,paint:paintIndex,team:'ct',custom_name:customName,from_both:true};userSkins[weapon+'_t']={weapon,skin_name:skinName,pattern:seed,float:wearFloat,stattrak:isStatTrak,image:skinImage,paint:paintIndex,team:'t',custom_name:customName,from_both:true};localStorage.setItem('cs2rage_skins_final8',JSON.stringify(userSkins));showToast(weapon+' | '+skinName+' установлен для CT и T!')}else{var op=team==='ct'?'t':'ct';if(userSkins[weapon+'_'+op]&&userSkins[weapon+'_'+op].from_both)delete userSkins[weapon+'_'+op];userSkins[weapon+'_'+team]={weapon,skin_name:skinName,pattern:seed,float:wearFloat,stattrak:isStatTrak,image:skinImage,paint:paintIndex,team,custom_name:customName,from_both:false};localStorage.setItem('cs2rage_skins_final8',JSON.stringify(userSkins));showToast(weapon+' | '+skinName+' для '+(team==='ct'?'CT':'T')+' установлен!')}renderWeaponSidebar();renderCollection()}
+function updateSkin(key,newPattern,newWear,newStatTrak,newTeam,newCustomName){if(!userSkins[key])return;var skin=userSkins[key];var weapon=skin.weapon,skinName=skin.skin_name,paintIndex=skin.paint,skinImage=skin.image,wasFromBoth=skin.from_both;delete userSkins[key];if(wasFromBoth){var op=key.includes('_ct')?'_t':'_ct';delete userSkins[weapon+op]}userSkins[weapon+'_'+newTeam]={weapon,skin_name:skinName,pattern:newPattern,float:newWear,stattrak:newStatTrak,image:skinImage,paint:paintIndex,team:newTeam,custom_name:newCustomName,from_both:false};localStorage.setItem('cs2rage_skins_final8',JSON.stringify(userSkins));showToast(weapon+' | '+skinName+' обновлён!');renderWeaponSidebar();renderCollection();closeEditModal()}
+function removeSkinLocal(key){var skin=userSkins[key];if(skin&&skin.from_both){var w=skin.weapon;delete userSkins[w+'_ct'];delete userSkins[w+'_t']}else delete userSkins[key];localStorage.setItem('cs2rage_skins_final8',JSON.stringify(userSkins));showToast('Скин удалён');renderWeaponSidebar();renderCollection()}
+function resetAllSkins(){if(!confirm('Сбросить ВСЕ скины?'))return;userSkins={};localStorage.setItem('cs2rage_skins_final8',JSON.stringify(userSkins));showToast('Все скины сброшены!');renderWeaponSidebar();renderCollection()}
+function openChangeSkinModal(weapon,currentKey){pendingChangeKey=currentKey;currentWeapon=weapon;renderWeaponSidebar();if(currentTab!=='all-skins')switchTab('all-skins');renderSkinsForWeapon(currentWeapon);closeEditModal();showToast('Выберите новый скин для '+weapon)}
+function closeEditModal(){var m=document.getElementById('editModal');if(m)m.remove()}
+function openEditModal(key){var skin=userSkins[key];if(!skin)return;var wearName=getWearName(skin.float);var weaponTeam=getWeaponTeam(skin.weapon);var canChooseTeam=weaponTeam==="both";var isFromBoth=skin.from_both;var modalHtml='<div class="edit-modal" id="editModal"><div class="edit-modal-content"><div class="edit-preview"><img src="'+(skin.image||'https://via.placeholder.com/500x400?text=CS2')+'" onerror="this.src=\'https://via.placeholder.com/500x400?text=CS2\'"></div><div class="edit-controls"><h4 style="margin:0 0 0.5rem 0;color:var(--primary);">'+escapeHtml(skin.skin_name)+'</h4><p style="margin:0 0 1rem 0;font-size:0.7rem;color:var(--muted);">'+skin.weapon+'</p><div class="edit-group"><label>Качество: <span id="wearValueDisplay">'+skin.float.toFixed(3)+'</span> (<span id="wearNameDisplay">'+wearName+'</span>)</label><div class="wear-slider"><input type="range" id="wearSlider" min="0" max="1" step="0.001" value="'+skin.float+'"><span class="wear-value" id="wearValue">'+skin.float.toFixed(3)+'</span></div></div><div class="edit-group"><label>Паттерн (Seed)</label><div class="pattern-edit"><input type="number" id="editSeed" min="0" max="1000" value="'+skin.pattern+'"><button class="random-pattern" id="editRandom"><i class="fas fa-random"></i></button></div></div><div class="edit-group"><label>STATRAK</label><label class="stattrak-switch"><input type="checkbox" id="editStatTrakCheckbox" '+(skin.stattrak?'checked':'')+'><span class="stattrak-slider"></span></label></div><div class="edit-group"><label>Именной ярлык</label><div class="custom-name-input"><input type="text" id="editCustomName" placeholder="Введите имя" value="'+escapeHtml(skin.custom_name||'')+'" maxlength="30"><button class="custom-name-save" id="saveCustomNameBtn"><i class="fas fa-save"></i></button></div></div>'+(isFromBoth||!canChooseTeam?'<div class="edit-group"><label>Сторона</label><div style="text-align:center;padding:0.3rem;background:rgba(15,15,15,0.6);border-radius:30px;">'+(skin.team==='ct'?'CT':'T')+' (фиксировано)</div></div>':'<div class="edit-group"><label>Сторона</label><div class="team-edit" id="editTeam"><button class="team-edit-btn ct '+(skin.team==='ct'?'active':'')+'" data-team="ct">CT</button><button class="team-edit-btn t '+(skin.team==='t'?'active':'')+'" data-team="t">T</button></div></div>')+'<div class="edit-actions"><button class="edit-save" id="editSave">💾 Сохранить</button><button class="edit-change-skin" id="editChangeSkin">🔄 Замена скина</button><button class="edit-cancel" id="editCancel">Отмена</button></div></div></div></div>';document.body.insertAdjacentHTML('beforeend',modalHtml);var newPattern=skin.pattern,newStatTrak=skin.stattrak,newTeam=skin.team,newCustomName=skin.custom_name||'';document.getElementById('wearSlider').oninput=function(){var v=parseFloat(this.value);document.getElementById('wearValue').innerText=v.toFixed(3);document.getElementById('wearNameDisplay').innerText=floatToWearName(v)};document.getElementById('editRandom').onclick=function(){newPattern=Math.floor(Math.random()*1001);document.getElementById('editSeed').value=newPattern};document.getElementById('editSeed').oninput=function(e){newPattern=Math.min(1000,Math.max(0,parseInt(e.target.value)||0))};document.getElementById('editStatTrakCheckbox').onchange=function(){newStatTrak=this.checked};document.getElementById('saveCustomNameBtn').onclick=function(){newCustomName=document.getElementById('editCustomName').value.trim();showToast('Ярлык сохранён: '+(newCustomName||'удалён'))};if(!isFromBoth&&canChooseTeam){document.querySelectorAll('#editTeam .team-edit-btn').forEach(function(b){b.onclick=function(){document.querySelectorAll('#editTeam .team-edit-btn').forEach(function(x){x.classList.remove('active')});b.classList.add('active');newTeam=b.dataset.team}})}document.getElementById('editSave').onclick=function(){updateSkin(key,newPattern,parseFloat(document.getElementById('wearSlider').value),newStatTrak,newTeam,newCustomName)};document.getElementById('editChangeSkin').onclick=function(){openChangeSkinModal(skin.weapon,key)};document.getElementById('editCancel').onclick=function(){closeEditModal()};document.getElementById('editModal').onclick=function(e){if(e.target===e.currentTarget)closeEditModal()}}
+function renderWeaponSidebar(){var h='';for(var catId in CATEGORIES){var cat=CATEGORIES[catId];var weapons=cat.weapons.filter(function(w){return weaponsSkins[w]});if(!weapons.length)continue;var visible=weapons.slice(0,6);var hiddenCount=weapons.length-6;var isExpanded=hiddenWeapons[catId]||false;var displayList=isExpanded?weapons:visible;h+='<div class="weapon-category"><div class="weapon-category-title"><i class="fas '+cat.icon+'"></i> '+cat.name+'</div><div class="weapon-grid">';for(var i=0;i<displayList.length;i++){var w=displayList[i];var hasCt=userSkins[w+'_ct'],hasT=userSkins[w+'_t'];var indicators='';if(hasCt&&hasT)indicators='<div style="position:absolute;bottom:5px;right:5px;width:12px;height:12px;background:linear-gradient(135deg,#3a86ff,#ff6b3a);border-radius:50%;"></div>';else if(hasCt)indicators='<div style="position:absolute;bottom:5px;right:5px;width:12px;height:12px;background:#3a86ff;border-radius:50%;"></div>';else if(hasT)indicators='<div style="position:absolute;bottom:5px;right:5px;width:12px;height:12px;background:#ff6b3a;border-radius:50%;"></div>';var iconUrl=weaponsIcons[w]||'https://community.cloudflare.steamstatic.com/econ/image/CSGO/game/items/rifles/ak47/ak47_large.png';h+='<button class="weapon-item'+(currentWeapon===w?' active':'')+'" data-weapon="'+w+'" style="position:relative;"><div class="weapon-icon"><img src="'+iconUrl+'" onerror="this.src=\'https://community.cloudflare.steamstatic.com/econ/image/CSGO/game/items/rifles/ak47/ak47_large.png\'"></div><span class="weapon-name">'+w+'</span>'+indicators+'</button>'}h+='</div>';if(hiddenCount>0&&!isExpanded)h+='<button class="show-more-btn" data-category="'+catId+'"><i class="fas fa-chevron-down"></i> Скрыто '+hiddenCount+'</button>';else if(hiddenCount>0&&isExpanded)h+='<button class="show-more-btn" data-category="'+catId+'"><i class="fas fa-chevron-up"></i> Скрыть</button>';h+='</div>'}document.getElementById('weaponCategories').innerHTML=h;document.querySelectorAll('.weapon-item').forEach(function(b){b.onclick=function(){currentWeapon=b.dataset.weapon;renderWeaponSidebar();if(currentTab!=='all-skins')switchTab('all-skins');renderSkinsForWeapon(currentWeapon)}});document.querySelectorAll('.show-more-btn').forEach(function(b){b.onclick=function(e){e.stopPropagation();var c=b.dataset.category;if(c){hiddenWeapons[c]=!hiddenWeapons[c];renderWeaponSidebar()}}})}
+function renderSkinsForWeapon(weapon){var skins=weaponsSkins[weapon]||[];document.getElementById('selectedWeaponTitle').innerHTML='<i class="fas fa-gun"></i> '+weapon;if(!skins.length){document.getElementById('skinsContainer').innerHTML='<div class="loader-wrapper"><p>Нет скинов для этого оружия</p></div>';return}var grid=document.createElement('div');grid.className='skins-grid';grid.innerHTML=skins.map(function(s,idx){return'<div class="skin-card" data-index="'+idx+'"><div class="skin-card-image"><img src="'+(s.image||'https://via.placeholder.com/140x100?text=CS2')+'" onerror="this.src=\'https://via.placeholder.com/140x100?text=CS2\'"></div><div class="skin-card-name">'+escapeHtml(s.name)+'</div><div class="skin-card-weapon">'+s.rarity+'</div></div>'}).join('');document.getElementById('skinsContainer').innerHTML='';document.getElementById('skinsContainer').appendChild(grid);document.querySelectorAll('.skin-card').forEach(function(card){card.onclick=function(){var idx=parseInt(card.dataset.index);if(!isNaN(idx)&&skins[idx]){if(pendingChangeKey&&userSkins[pendingChangeKey]){var oldSkin=userSkins[pendingChangeKey];var newSkin=skins[idx];var weapon=oldSkin.weapon,team=oldSkin.team,key=weapon+'_'+team;if(userSkins[key]){userSkins[key].skin_name=newSkin.name;userSkins[key].image=newSkin.image;userSkins[key].paint=newSkin.paint_index;userSkins[key].from_both=false;localStorage.setItem('cs2rage_skins_final8',JSON.stringify(userSkins));showToast('Скин заменён на '+newSkin.name);renderWeaponSidebar();renderCollection()}pendingChangeKey=null}else{openApplyModal(skins[idx],weapon)}}}})}
+function openApplyModal(skin,weaponName){var selectedWear=0.07,isStatTrak=false,seed=Math.floor(Math.random()*1001),selectedTeam="both";var weaponTeam=getWeaponTeam(weaponName);if(weaponTeam==='ct')selectedTeam='ct';if(weaponTeam==='t')selectedTeam='t';var teamHtml='';if(weaponTeam==='both')teamHtml='<div class="team-toggle"><button class="team-toggle-btn ct" data-team="ct">CT</button><button class="team-toggle-btn both active" data-team="both">ВСЕ</button><button class="team-toggle-btn t" data-team="t">T</button></div>';else teamHtml='<div style="text-align:center;margin-bottom:0.5rem;padding:0.3rem;background:rgba(15,15,15,0.6);border-radius:30px;">'+(weaponTeam==='ct'?'CT':'T')+' (фиксировано)</div>';var modalHtml='<div class="edit-modal" id="applyModal"><div class="edit-modal-content"><div class="edit-preview"><img src="'+(skin.image||'https://via.placeholder.com/500x400?text=CS2')+'" onerror="this.src=\'https://via.placeholder.com/500x400?text=CS2\'"></div><div class="edit-controls"><h4 style="margin:0 0 0.5rem 0;color:var(--primary);">'+escapeHtml(skin.name)+'</h4><p style="margin:0 0 1rem 0;font-size:0.7rem;color:var(--muted);">'+weaponName+'</p><div class="edit-group"><label>Качество: <span id="applyWearLabel">0.07 (Factory New)</span></label><div class="wear-slider"><input type="range" id="applyWearSlider" min="0" max="1" step="0.001" value="0.07"><span class="wear-value" id="applyWearValue">0.07</span></div></div><div class="edit-group"><label>Паттерн (Seed)</label><div class="pattern-edit"><input type="number" id="applySeed" min="0" max="1000" value="'+seed+'"><button class="random-pattern" id="applyRandom"><i class="fas fa-random"></i></button></div></div><div class="edit-group"><label>STATRAK</label><label class="stattrak-switch"><input type="checkbox" id="applyStatTrakCheckbox"><span class="stattrak-slider"></span></label></div><div class="edit-group"><label>Именной ярлык</label><div class="custom-name-input"><input type="text" id="applyCustomName" placeholder="Введите имя" maxlength="30"><button class="custom-name-save" id="saveApplyCustomNameBtn"><i class="fas fa-save"></i></button></div></div>'+teamHtml+'<button class="modal-apply-btn" id="applyBtn">Применить скин</button></div></div></div>';document.body.insertAdjacentHTML('beforeend',modalHtml);var applyCustomName='';document.getElementById('applyWearSlider').oninput=function(){var v=parseFloat(this.value);document.getElementById('applyWearValue').innerText=v.toFixed(3);document.getElementById('applyWearLabel').innerText=v.toFixed(3)+' ('+floatToWearName(v)+')'};if(weaponTeam==='both'){document.querySelectorAll('#applyModal .team-toggle-btn').forEach(function(b){b.onclick=function(){document.querySelectorAll('#applyModal .team-toggle-btn').forEach(function(x){x.classList.remove('active')});b.classList.add('active');selectedTeam=b.dataset.team}})}document.getElementById('applyRandom').onclick=function(){seed=Math.floor(Math.random()*1001);document.getElementById('applySeed').value=seed};document.getElementById('applySeed').oninput=function(e){seed=Math.min(1000,Math.max(0,parseInt(e.target.value)||0))};document.getElementById('applyStatTrakCheckbox').onchange=function(){isStatTrak=this.checked};document.getElementById('saveApplyCustomNameBtn').onclick=function(){applyCustomName=document.getElementById('applyCustomName').value.trim();showToast('Ярлык сохранён: '+(applyCustomName||'удалён'))};document.getElementById('applyBtn').onclick=function(){var fn=document.getElementById('applyCustomName').value.trim();saveSkinLocal(weaponName,skin.name,skin.paint_index,seed,parseFloat(document.getElementById('applyWearSlider').value),isStatTrak,skin.image,selectedTeam,fn);document.getElementById('applyModal').remove()};document.getElementById('applyModal').onclick=function(e){if(e.target===e.currentTarget)e.currentTarget.remove()}}
+function renderCollection(){var arr=Object.entries(userSkins);if(collectionTeamFilter!=="both")arr=arr.filter(function(e){return e[1].team===collectionTeamFilter});var c=document.getElementById('collectionContainer');if(!arr.length){c.innerHTML='<div class="empty-collection"><i class="fas fa-star-of-life"></i><p>Нет сохранённых скинов</p></div>';return}var showBadge=collectionTeamFilter==="both";c.innerHTML='<div class="collection-grid">'+arr.map(function(e){var key=e[0],info=e[1];var wearName=getWearName(info.float);var badge='';if(showBadge){if(info.team==='ct')badge='<span class="team-badge ct">CT</span>';else if(info.team==='t')badge='<span class="team-badge t">T</span>'}var customHtml=info.custom_name?'<div class="custom-name">🏷️ '+escapeHtml(info.custom_name)+'</div>':'';return'<div class="collection-card" data-key="'+key+'"><button class="collection-remove-btn" onclick="event.stopPropagation();window.removeSkinLocal(\''+key.replace(/'/g,"\\'")+'\')"><i class="fas fa-trash"></i></button><div class="collection-card-image"><img src="'+(info.image||'https://via.placeholder.com/100x80?text=CS2')+'" onerror="this.src=\'https://via.placeholder.com/100x80?text=CS2\'"><div class="edit-overlay">✏️ Редактировать</div></div><div class="collection-card-weapon">'+escapeHtml(info.weapon)+' '+badge+'</div><div class="collection-card-name">'+escapeHtml(info.skin_name)+' '+(info.stattrak?'<span style="color:#ffe380;">★ STATRAK</span>':'')+'</div>'+customHtml+'<div class="collection-card-details">Seed: '+info.pattern+' | Float: '+info.float.toFixed(3)+' ('+wearName+')</div></div>'}).join('')+'</div>';document.querySelectorAll('.collection-card').forEach(function(card){card.onclick=function(){openEditModal(card.dataset.key)}})}
+function switchTab(tabId){currentTab=tabId;document.querySelectorAll('.content-tab-btn').forEach(function(b){b.classList.toggle('active',b.dataset.tab===tabId)});if(tabId==='all-skins'){document.getElementById('allSkinsTab').style.display='block';document.getElementById('myCollectionTab').style.display='none';if(currentWeapon)renderSkinsForWeapon(currentWeapon)}else{document.getElementById('allSkinsTab').style.display='none';document.getElementById('myCollectionTab').style.display='block';renderCollection()}}
+document.addEventListener('DOMContentLoaded',function(){loadSkins();document.getElementById('resetAllSkinsBtn').addEventListener('click',resetAllSkins);document.querySelectorAll('.content-tab-btn').forEach(function(b){b.addEventListener('click',function(){switchTab(b.dataset.tab)})});document.querySelectorAll('.team-switch-btn').forEach(function(b){b.addEventListener('click',function(){document.querySelectorAll('.team-switch-btn').forEach(function(x){x.classList.remove('active')});b.classList.add('active');collectionTeamFilter=b.dataset.team;renderCollection()})})});
+window.removeSkinLocal=removeSkinLocal;window.resetAllSkins=resetAllSkins;
