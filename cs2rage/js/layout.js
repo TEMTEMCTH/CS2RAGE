@@ -72,7 +72,7 @@ async function renderHeader() {
         var bal = await getUserBalance();
         authHtml = '<div style="display:flex;align-items:center;gap:15px;"><div onclick="showTopupModal()" style="background:#1a1a1a;border:1px solid #2a2a2a;padding:6px 14px;border-radius:30px;cursor:pointer;display:flex;align-items:center;gap:8px;"><i class="fas fa-wallet" style="color:#f5c518;"></i><span>'+bal+' ₽</span></div><div style="background:#1a1a1a;border:1px solid #2a2a2a;padding:4px 12px 4px 6px;border-radius:30px;display:flex;align-items:center;gap:8px;"><img src="'+currentUser.avatar+'" width="28" height="28" style="border-radius:50%;"><span>'+escapeHtml(currentUser.nickname)+'</span><a href="/api/logout.php" style="color:#f5c518;text-decoration:none;"><i class="fas fa-sign-out-alt"></i></a></div></div>';
     } else {
-        authHtml = '<a href="/api/steam-auth.php" style="background:linear-gradient(135deg,#d4a90e,#f5c518);color:#1a1a1a;padding:8px 20px;border-radius:30px;font-weight:700;text-decoration:none;display:flex;align-items:center;gap:8px;"><i class="fab fa-steam"></i> Войти</a>';
+        authHtml = '<a href="/api/steam-auth.php" style="background:linear-gradient(135deg,#d4a90e,#f5c518);color:#1a1a1a;padding:8px 20px;border-radius:30px;font-weight:700;text-decoration:none;display:flex;align-items:center;gap:8px;"><i class="fab fa-steam"></i> Войти через Steam</a>';
     }
 
     var h = '';

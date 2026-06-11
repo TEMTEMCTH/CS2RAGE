@@ -4,3 +4,12 @@
 .top-table tr:last-child td{border-bottom:none}
 .top-table tr:hover td{background:rgba(245,197,24,.04)}
 .rank{font-family:'Oswald',sans-serif;font-size:1.1rem;color:var(--primary);width:50px}
+@media(max-width:768px){
+    .top-table th,.top-table td{padding:0.5rem 0.3rem;font-size:0.7rem}
+    .rank{font-size:0.9rem;width:30px}
+    .top-table{display:block;overflow-x:auto}
+}
+
+@media(max-width:480px){
+    .top-table th,.top-table td{font-size:0.65rem;padding:0.4rem 0.2rem}
+}

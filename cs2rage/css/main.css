@@ -144,3 +144,43 @@ input[type="number"]::-webkit-inner-spin-button,input[type="number"]::-webkit-ou
 .steam-login-btn:hover{opacity:0.9;transform:translateY(-1px)}
 
 @media(max-width:768px){.header-inner{flex-direction:column;height:auto;padding:1rem;gap:0.8rem}.nav-links{justify-content:center}.nav-links a{padding:0.4rem 0.8rem;font-size:0.75rem}}
+/* ===== АДАПТАЦИЯ ДЛЯ ТЕЛЕФОНОВ ===== */
+@media(max-width:768px){
+    .header-inner{flex-direction:column;height:auto;padding:0.8rem 1rem;gap:0.5rem}
+    .nav-links{justify-content:center;flex-wrap:wrap}
+    .nav-links a{padding:0.4rem 0.7rem;font-size:0.7rem}
+    .container{padding:1rem}
+    .page-title h1{font-size:2rem;letter-spacing:0.1em}
+    .page-title p{font-size:0.85rem}
+    .logo{font-size:1.2rem;gap:0.4rem}
+    .steam-login-btn{font-size:0.7rem;padding:0.5rem 1rem}
+    
+    /* Стеклянный эффект */
+    .server-card,.mode-btn,.mode-info,.tier,.faq-item,.rule-item,.ban-type-card,.weapon,.skin-cats,.skin-main,.admin-card,.top-table{padding:1rem}
+    
+    /* Карточки в 1 колонку */
+    .tiers{grid-template-columns:1fr}
+    .servers-grid{grid-template-columns:1fr}
+    .modes{grid-template-columns:repeat(2,1fr)}
+    
+    /* Статистика */
+    .hero-stats{flex-direction:row;gap:0.5rem}
+    .hero-stat{padding:0.6rem 1rem;min-width:80px}
+    .hero-stat b{font-size:1.3rem}
+    .hero-block{padding:1.5rem}
+    .hero-block h1{font-size:2rem}
+    
+    /* Таблица топа */
+    .top-table th,.top-table td{padding:0.5rem;font-size:0.75rem}
+    .top-table{overflow-x:auto;display:block}
+}
+
+@media(max-width:480px){
+    .page-title h1{font-size:1.5rem}
+    .hero-block h1{font-size:1.5rem}
+    .hero-stat b{font-size:1rem}
+    .modes{grid-template-columns:1fr}
+    .filters{flex-direction:column}
+    .search{width:100%}
+    .filter-group{flex-direction:column;width:100%}
+}

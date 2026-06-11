@@ -151,3 +151,24 @@ input:checked+.stattrak-slider:before{transform:translateX(22px);background-colo
 .team-badge.both{background:linear-gradient(135deg,rgba(58,134,255,.3),rgba(255,107,58,.3));color:var(--primary)}
 
 @media(max-width:900px){.skinchanger-layout{flex-direction:column}.weapon-sidebar{flex:auto;position:static;max-height:none}}
+@media(max-width:900px){
+    .skinchanger-layout{flex-direction:column}
+    .weapon-sidebar{flex:auto;position:static;max-height:none;width:100%}
+    .skins-grid{grid-template-columns:repeat(auto-fill,minmax(150px,1fr))}
+    .collection-grid{grid-template-columns:repeat(auto-fill,minmax(200px,1fr))}
+    .weapon-grid{grid-template-columns:repeat(2,1fr)}
+}
+
+@media(max-width:480px){
+    .skinchanger-wrapper{padding:1rem}
+    .weapon-sidebar{padding:1rem}
+    .skins-grid{grid-template-columns:repeat(2,1fr);gap:0.8rem}
+    .skin-card{padding:0.6rem}
+    .skin-card-image{height:120px}
+    .collection-grid{grid-template-columns:1fr}
+    .content-tab-btn{font-size:0.75rem;padding:0.4rem 1rem}
+    .selected-weapon-title{font-size:1.2rem}
+    .edit-modal-content{flex-direction:column;width:95%}
+    .edit-preview{min-height:250px}
+    .edit-controls{flex:auto}
+}

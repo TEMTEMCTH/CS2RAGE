@@ -45,3 +45,24 @@ section{padding:2rem 0}
 .players-info b{color:var(--fg)}
 .btn-connect{margin-top:.85rem;width:100%;background:transparent;border:1px solid var(--border);color:var(--muted);padding:.55rem;border-radius:8px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;font-size:.75rem;cursor:pointer;transition:.2s}
 .btn-connect:hover{border-color:var(--primary);color:var(--primary)}
+@media(max-width:768px){
+    .hero h1{font-size:2rem}
+    .hero p{font-size:0.9rem}
+    .modes{grid-template-columns:repeat(2,1fr)}
+    .mode-btn{padding:0.8rem}
+    .mode-btn .num{font-size:1.5rem}
+    .servers-grid{grid-template-columns:1fr}
+    .server-card{padding:0.8rem}
+    .map-head h3{font-size:1rem}
+    .filters{flex-direction:column;gap:0.5rem}
+    .filter-group{flex-direction:column;width:100%}
+    .filter{width:100%}
+    .search{width:100%}
+}
+
+@media(max-width:480px){
+    .hero h1{font-size:1.5rem}
+    .modes{grid-template-columns:1fr}
+    .stats{gap:1rem}
+    .stat b{font-size:1.3rem}
+}

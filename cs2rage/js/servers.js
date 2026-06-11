@@ -19,6 +19,15 @@ const MODE_COMMANDS = {
     arena: [{ cmd: "!ws", desc: "Выбрать скин" },{ cmd: "!knife", desc: "Выбрать нож" },{ cmd: "!accept", desc: "Принять дуэль" },{ cmd: "!decline", desc: "Отклонить дуэль" },{ cmd: "!stats", desc: "Статистика побед" }]
 };
 
+// Картинки карт
+const MAP_IMAGES = {
+    'de_mirage': 'https://static.wikiofclan.com/cs2/maps/de_mirage.jpg',
+    'de_dust2': 'https://static.wikiofclan.com/cs2/maps/de_dust2.jpg',
+    'de_cache': 'https://static.wikiofclan.com/cs2/maps/de_cache.jpg',
+    'awp_lego': 'https://static.wikiofclan.com/cs2/maps/awp_lego.jpg',
+    'aim_redline': 'https://static.wikiofclan.com/cs2/maps/aim_redline.jpg'
+};
+
 let currentMode = "public", region = "all", mapFilter = "all", searchQuery = "";
 
 function countUp(el, target, duration) {
@@ -41,20 +50,12 @@ function typeWriter(el, html, speed, cb) {
     el.innerHTML = '';
     let span = document.createElement('span'); el.appendChild(span);
     let i = 0;
-    function type() {
-        if (i < text.length) { span.textContent += text.charAt(i); i++; setTimeout(type, speed); }
-        else { el.innerHTML = html; if (cb) cb(); }
-    }
+    function type() { if (i < text.length) { span.textContent += text.charAt(i); i++; setTimeout(type, speed); } else { el.innerHTML = html; if (cb) cb(); } }
     type();
 }
 
-function showToast(m) {
-    let t = document.createElement('div'); t.className = 'toast';
-    t.innerHTML = `<i class="fas fa-check-circle" style="color:var(--primary);"></i> ${m}`;
-    document.body.appendChild(t); setTimeout(() => t.remove(), 3000);
-}
-
-function copyToClipboard(ip) { navigator.clipboard.writeText(`connect ${ip}`); showToast(`IP скопирован`); }
+function showToast(m) { let t = document.createElement('div'); t.className = 'toast'; t.innerHTML = `<i class="fas fa-check-circle" style="color:var(--primary);"></i> ${m}`; document.body.appendChild(t); setTimeout(() => t.remove(), 3000); }
+function copyToClipboard(ip) { navigator.clipboard.writeText(`connect ${ip}`); showToast('IP скопирован'); }
 function connectToServer(ip) { location.href = `steam://connect/${ip}`; }
 
 function showCommandsModal() {
@@ -89,19 +90,51 @@ function renderFilters() {
     document.getElementById('mapFilter').innerHTML = `<option value="all">Все карты</option>` + maps.map(m => `<option value="${m}">${m.replace('de_', '').replace('awp_', '').replace('aim_', '').toUpperCase()}</option>`).join('');
 }
 
+function getMapImage(map) {
+    return MAP_IMAGES[map] || 'https://static.wikiofclan.com/cs2/maps/de_mirage.jpg';
+}
+
+function getMapImage(map) {
+    var images = {
+        'de_mirage': 'images/mirage.png',
+        'de_dust2': 'images/dust2.webp',
+        'de_cache': 'images/cache.jpeg',
+        'awp_lego': 'images/mirage.png',
+        'aim_redline': 'images/mirage.png'
+    };
+    return images[map] || 'images/mirage.png';
+}
+
 function renderServers() {
-    let servers = SERVERS.filter(s => s.mode === currentMode);
-    if (region !== 'all') servers = servers.filter(s => s.region === region);
-    if (mapFilter !== 'all') servers = servers.filter(s => s.map === mapFilter);
-    if (searchQuery.trim()) { let q = searchQuery.toLowerCase(); servers = servers.filter(s => s.name.toLowerCase().includes(q) || s.map.toLowerCase().includes(q)); }
-    let grouped = {};
-    servers.forEach(s => { if (!grouped[s.map]) grouped[s.map] = []; grouped[s.map].push(s); });
-    let c = document.getElementById('serversContainer');
+    var servers = SERVERS.filter(function(s) { return s.mode === currentMode; });
+    if (region !== 'all') servers = servers.filter(function(s) { return s.region === region; });
+    if (mapFilter !== 'all') servers = servers.filter(function(s) { return s.map === mapFilter; });
+    if (searchQuery.trim()) { var q = searchQuery.toLowerCase(); servers = servers.filter(function(s) { return s.name.toLowerCase().includes(q) || s.map.toLowerCase().includes(q); }); }
+    var grouped = {};
+    servers.forEach(function(s) { if (!grouped[s.map]) grouped[s.map] = []; grouped[s.map].push(s); });
+    var c = document.getElementById('serversContainer');
     if (!Object.keys(grouped).length) { c.innerHTML = '<div style="text-align:center;padding:3rem;color:#8a8a8a;">😔 Серверов не найдено</div>'; return; }
-    let h = '';
-    for (let [map, arr] of Object.entries(grouped)) {
-        let md = map.replace('de_', '').replace('awp_', '').replace('aim_', '').toUpperCase();
-        h += `<div class="map-group"><div class="map-head"><h3>${md}</h3><span>(${arr.length})</span></div><div class="servers-grid">${arr.map(s => `<div class="server-card"><div class="top"><div class="name">${s.name}</div><div><button class="btn-copy-ip" onclick="copyToClipboard('${s.ip}')"><i class="fas fa-copy"></i></button><button class="btn-copy-ip" onclick="connectToServer('${s.ip}')" style="margin-left:0.3rem;"><i class="fas fa-plug"></i></button></div></div><div class="meta">${md} · ${s.city}</div><div class="players-bar"><div style="width:${(s.players/s.slots)*100}%;height:100%;background:var(--gradient-orange);border-radius:2px;"></div></div><div class="players-info"><span>Игроки</span><span><b>${s.players}</b>/${s.slots}</span></div><div class="server-status" style="color:${s.status==='online'?'#00c853':'#e34d4d'};">${s.status==='online'?'● ONLINE':'● OFFLINE'}</div></div>`).join('')}</div></div>`;
+    var h = '';
+    for (var map in grouped) {
+        var arr = grouped[map];
+        var md = map.replace('de_', '').replace('awp_', '').replace('aim_', '').toUpperCase();
+        var mapImg = getMapImage(map);
+        h += '<div class="map-group"><div class="map-head"><h3>' + md + '</h3><span>(' + arr.length + ')</span></div><div class="servers-grid">';
+        arr.forEach(function(s) {
+            h += '<div class="server-card" style="padding:0;overflow:hidden;">' +
+                '<div class="server-map-top" style="height:110px;overflow:hidden;background:rgba(0,0,0,0.5);">' +
+                    '<img src="' + mapImg + '" alt="' + md + '" style="width:100%;height:100%;object-fit:cover;" onerror="this.parentElement.style.background=\'linear-gradient(135deg,#1a1a1a,#0f0f0f)\';this.style.display=\'none\';">' +
+                '</div>' +
+                '<div style="padding:0.7rem;">' +
+                    '<div class="top"><div class="name">' + s.name + '</div><div><button class="btn-copy-ip" onclick="copyToClipboard(\'' + s.ip + '\')"><i class="fas fa-copy"></i></button><button class="btn-copy-ip" onclick="connectToServer(\'' + s.ip + '\')" style="margin-left:0.3rem;"><i class="fas fa-plug"></i></button></div></div>' +
+                    '<div class="meta">' + md + ' · ' + s.city + '</div>' +
+                    '<div class="players-bar"><div style="width:' + ((s.players/s.slots)*100) + '%;height:100%;background:var(--gradient-orange);border-radius:2px;"></div></div>' +
+                    '<div class="players-info"><span>Игроки</span><span><b>' + s.players + '</b>/' + s.slots + '</span></div>' +
+                    '<div class="server-status" style="color:' + (s.status==='online'?'#00c853':'#e34d4d') + ';">' + (s.status==='online'?'● ONLINE':'● OFFLINE') + '</div>' +
+                '</div>' +
+            '</div>';
+        });
+        h += '</div></div>';
     }
     c.innerHTML = h;
 }
@@ -120,12 +153,10 @@ async function updateRealOnline() {
 document.addEventListener('DOMContentLoaded', () => {
     renderHeroStats(); renderModeInfo(); renderModes(); renderFilters(); renderServers(); updateRealOnline();
     setInterval(updateRealOnline, 30000);
-    
     let t = document.querySelector('.hero-text h1');
     let d = document.querySelector('.hero-text p');
     if (t) { let h = t.innerHTML; t.innerHTML = ''; setTimeout(() => typeWriter(t, h, 15), 200); }
     if (d) { let txt = d.textContent; d.textContent = ''; setTimeout(() => typeWriter(d, txt, 10), 700); }
-    
     document.getElementById('region').addEventListener('change', e => { region = e.target.value; renderServers(); });
     document.getElementById('mapFilter').addEventListener('change', e => { mapFilter = e.target.value; renderServers(); });
     document.getElementById('search').addEventListener('input', e => { searchQuery = e.target.value; renderServers(); });

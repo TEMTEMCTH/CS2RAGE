@@ -32,15 +32,15 @@
     
     <div id="adminPanel" style="display:none;">
         <div class="tabs">
-            <button class="tab-btn active" data-tab="users">👥 Управление балансом</button>
-            <button class="tab-btn" data-tab="servers">🖥️ Управление серверами</button>
+            <button class="tab-btn active" data-tab="users">👥 Баланс</button>
+            <button class="tab-btn" data-tab="servers">🖥️ Серверы</button>
         </div>
         
         <div id="usersTab" class="tab-content active">
             <div class="admin-card">
-                <h2>👥 Управление балансом пользователей <button class="admin-btn-small" id="refreshUsersBtn"><i class="fas fa-sync-alt"></i> Обновить</button></h2>
+                <h2>👥 Управление балансом <button class="admin-btn-small" id="refreshUsersBtn"><i class="fas fa-sync-alt"></i> Обновить</button></h2>
                 <input type="text" id="searchUser" class="admin-input" placeholder="🔍 Поиск по нику или SteamID...">
-                <div id="usersList" class="users-list"><div class="loading-text"><i class="fas fa-spinner fa-pulse"></i> Загрузка пользователей...</div></div>
+                <div id="usersList" class="users-list"><div class="loading-text"><i class="fas fa-spinner fa-pulse"></i> Загрузка...</div></div>
             </div>
         </div>
         
@@ -57,7 +57,7 @@
                         </select>
                     </div>
                     <div class="admin-row">
-                        <input type="text" id="srvMap" class="admin-input" placeholder="Карта (например de_mirage)" style="flex:1">
+                        <input type="text" id="srvMap" class="admin-input" placeholder="Карта (de_mirage)" style="flex:1">
                         <select id="srvRegion" class="admin-input" style="flex:1">
                             <option value="ru">Россия</option>
                             <option value="eu">Европа</option>
@@ -66,20 +66,19 @@
                     </div>
                     <div class="admin-row">
                         <input type="number" id="srvSlots" class="admin-input" placeholder="Слотов" value="32" style="flex:1">
-                        <input type="number" id="srvPlayers" class="admin-input" placeholder="Игроков онлайн" value="0" style="flex:1">
+                        <input type="number" id="srvPlayers" class="admin-input" placeholder="Игроков" value="0" style="flex:1">
                         <select id="srvStatus" class="admin-input" style="flex:1">
                             <option value="online">Online</option>
                             <option value="offline" selected>Offline</option>
                         </select>
                     </div>
-                    <input type="text" id="srvIp" class="admin-input" placeholder="IP:Port (например 45.95.31.15:27015)">
-                    <button class="admin-btn" id="addServerBtn"><i class="fas fa-plus"></i> Добавить сервер</button>
+                    <input type="text" id="srvIp" class="admin-input" placeholder="IP:Port (45.95.31.15:27015)">
+                    <button class="admin-btn" id="addServerBtn"><i class="fas fa-plus"></i> Добавить</button>
                 </div>
             </div>
-            
             <div class="admin-card">
                 <h2><i class="fas fa-list"></i> Список серверов (<span id="serversCount">0</span>)</h2>
-                <input type="text" id="searchServer" class="admin-input" placeholder="🔍 Поиск по названию...">
+                <input type="text" id="searchServer" class="admin-input" placeholder="🔍 Поиск...">
                 <div id="serversList" class="users-list"></div>
             </div>
         </div>

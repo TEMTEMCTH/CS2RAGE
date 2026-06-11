@@ -25,3 +25,20 @@
 .rule-text{color:var(--muted);font-size:0.95rem;line-height:1.5;margin-bottom:0.75rem;padding-left:0.5rem}
 .rule-penalty{background:rgba(245,197,24,0.08);border-left:3px solid #f5c518;padding:0.6rem 1rem;border-radius:0 8px 8px 0;font-size:0.85rem;color:var(--fg);margin-top:0.5rem}
 .rule-penalty strong{color:#f5c518}
+@media(max-width:768px){
+    .rules-container{padding:1rem}
+    .rules-nav{gap:0.5rem}
+    .rules-nav a{padding:0.5rem 1rem;font-size:0.75rem}
+    .rules-section h2{font-size:1.3rem}
+    .rule-item{padding:1rem}
+    .rule-item .rule-header{flex-direction:column;gap:0.3rem}
+    .rule-item .rule-num{font-size:1.2rem}
+    .rule-item .rule-title{font-size:1rem}
+    .rule-item .rule-text{font-size:0.85rem}
+    .ban-types-grid{grid-template-columns:1fr}
+}
+
+@media(max-width:480px){
+    .rules-nav a{font-size:0.7rem;padding:0.4rem 0.8rem}
+    .rules-section h2{font-size:1.1rem}
+}
