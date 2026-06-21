@@ -1,11 +1,11 @@
 <?php
 define('DB_HOST', '95.213.255.80');
 define('DB_PORT', 3306);
-define('DB_USER', 'u4795_T9UpeZNjB1');
-define('DB_PASS', 'LVcysg^+5R!74P@hHtpe1Cs!');
-define('DB_NAME', 's4795_Main');
+define('DB_USER', 'u5006_lkP9XtcVyC');
+define('DB_PASS', 'VtiFk^S@lBKF+SDI@SD=TvHV');
+define('DB_NAME', 's5006_Main');
 
-define('STEAM_API_KEY', '529EF9E78B0A83A19796DE00D325CF33');
+define('STEAM_API_KEY', '40F730167B45B3497D8E5058BE91C521');
 define('SITE_URL', 'https://cs2rage.ru');
 
 if (session_status() === PHP_SESSION_NONE) {
