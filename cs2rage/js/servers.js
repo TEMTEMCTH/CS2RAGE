@@ -1,11 +1,11 @@
 const SERVERS = [];
 let serverId = 1;
 
-for (let i = 1; i <= 10; i++) { SERVERS.push({ id: serverId++, name: `CS2RAGE | MIRAGE #${i}`, mode: "public", map: "de_mirage", region: "ru", city: "Москва", slots: 32, players: i === 1 ? 0 : 0, status: i === 1 ? "online" : "offline", ip: `45.95.31.15:${27415 + i - 1}` }); }
-for (let i = 1; i <= 5; i++) { SERVERS.push({ id: serverId++, name: `CS2RAGE | DUST2 #${i}`, mode: "public", map: "de_dust2", region: "ru", city: "Москва", slots: 32, players: 0, status: "offline", ip: `45.95.31.15:${27425 + i - 1}` }); }
-for (let i = 1; i <= 5; i++) { SERVERS.push({ id: serverId++, name: `CS2RAGE | CACHE #${i}`, mode: "public", map: "de_cache", region: "ru", city: "Москва", slots: 32, players: 0, status: "offline", ip: `45.95.31.15:${27430 + i - 1}` }); }
-for (let i = 1; i <= 5; i++) { SERVERS.push({ id: serverId++, name: `CS2RAGE | AWP #${i}`, mode: "awp", map: "awp_lego", region: "ru", city: "Москва", slots: 20, players: 0, status: "offline", ip: `45.95.31.15:${27435 + i - 1}` }); }
-for (let i = 1; i <= 5; i++) { SERVERS.push({ id: serverId++, name: `CS2RAGE | ARENA #${i}`, mode: "arena", map: "aim_redline", region: "ru", city: "Москва", slots: 16, players: 0, status: "offline", ip: `45.95.31.15:${27440 + i - 1}` }); }
+for (let i = 1; i <= 10; i++) { SERVERS.push({ id: serverId++, name: `CS2RAGE | MIRAGE #${i}`, mode: "public", map: "de_mirage", region: "ru", city: "Москва", slots: 32, players: i === 1 ? 0 : 0, status: i === 1 ? "online" : "offline", ip: `45.95.31.102:${27315 + i - 1}` }); }
+for (let i = 1; i <= 5; i++) { SERVERS.push({ id: serverId++, name: `CS2RAGE | DUST2 #${i}`, mode: "public", map: "de_dust2", region: "ru", city: "Москва", slots: 32, players: 0, status: "offline", ip: `45.95.31.102:${27325 + i - 1}` }); }
+for (let i = 1; i <= 5; i++) { SERVERS.push({ id: serverId++, name: `CS2RAGE | CACHE #${i}`, mode: "public", map: "de_cache", region: "ru", city: "Москва", slots: 32, players: 0, status: "offline", ip: `45.95.31.102:${27330 + i - 1}` }); }
+for (let i = 1; i <= 5; i++) { SERVERS.push({ id: serverId++, name: `CS2RAGE | AWP #${i}`, mode: "awp", map: "awp_lego", region: "ru", city: "Москва", slots: 20, players: 0, status: "offline", ip: `45.95.31.102:${27335 + i - 1}` }); }
+for (let i = 1; i <= 5; i++) { SERVERS.push({ id: serverId++, name: `CS2RAGE | ARENA #${i}`, mode: "arena", map: "aim_redline", region: "ru", city: "Москва", slots: 16, players: 0, status: "offline", ip: `45.95.31.102:${27340 + i - 1}` }); }
 
 const MODES_LIST = [
     { id: "public", name: "PUBLIC", desc: "Классические публичные серверы CS2 — основа проекта." },
