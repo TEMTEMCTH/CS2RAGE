@@ -97,6 +97,20 @@ async function renderHeader() {
     document.body.insertAdjacentHTML('afterbegin', h);
 }
 
+function renderFooter() {
+    var f = '';
+    f += '<footer class="site" style="padding:3rem 0;border-top:1px solid #2a2a2a;background:rgba(15,15,15,0.6);margin-top:4rem">';
+    f += '<div style="max-width:1400px;margin:0 auto;padding:0 30px;display:flex;flex-wrap:wrap;justify-content:space-between;gap:2rem">';
+    f += '<div style="display:flex;gap:4rem;flex-wrap:wrap">';
+    f += '<div><h4 style="font-size:0.8rem;text-transform:uppercase;letter-spacing:0.2em;margin-bottom:0.75rem;color:#e34d4d;">CS2RAGE</h4><a href="index.html" style="display:block;font-size:0.85rem;color:#8a8a8a;padding:0.25rem 0;text-decoration:none;">Сервера</a><a href="shop.html" style="display:block;font-size:0.85rem;color:#8a8a8a;padding:0.25rem 0;text-decoration:none;">Привилегии</a><a href="rules.html" style="display:block;font-size:0.85rem;color:#8a8a8a;padding:0.25rem 0;text-decoration:none;">Правила</a></div>';
+    f += '<div><h4 style="font-size:0.8rem;text-transform:uppercase;letter-spacing:0.2em;margin-bottom:0.75rem;color:#e34d4d;">Инструменты</h4><a href="skinchanger.html" style="display:block;font-size:0.85rem;color:#8a8a8a;padding:0.25rem 0;text-decoration:none;">Скинченджер</a><a href="top.html" style="display:block;font-size:0.85rem;color:#8a8a8a;padding:0.25rem 0;text-decoration:none;">Топ игроков</a></div>';
+    f += '</div>';
+    f += '<div><p style="color:#8a8a8a;font-size:0.8rem;">© 2024 CS2RAGE. Все права защищены.</p><p style="color:#8a8a8a;font-size:0.8rem;">Связь: <a href="https://t.me/cs2rage" style="color:#e34d4d;text-decoration:none;">Telegram</a></p></div>';
+    f += '</div>';
+    f += '</footer>';
+    document.body.insertAdjacentHTML('beforeend', f);
+}
+
 function escapeHtml(s) {
     if(!s)return'';
     return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
@@ -105,4 +119,5 @@ function escapeHtml(s) {
 document.addEventListener('DOMContentLoaded', async function(){
     await checkAuth();
     await renderHeader();
+    renderFooter();
 });

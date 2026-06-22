@@ -6,12 +6,12 @@
 .rules-section h2{font-family:'Oswald',sans-serif;font-size:1.8rem;text-transform:uppercase;letter-spacing:.1em;color:var(--primary);margin-bottom:1.5rem;padding-bottom:.5rem;border-bottom:2px solid var(--border)}
 .rules-section h3{font-family:'Oswald',sans-serif;font-size:1.3rem;text-transform:uppercase;letter-spacing:.05em;color:var(--fg);margin:2rem 0 1rem}
 .rule-item{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:1.5rem;margin-bottom:1rem;transition:border-color .2s}
-.rule-item:hover{border-color:rgba(245,197,24,.4)}
+.rule-item:hover{border-color:rgba(227,77,77,.4)}
 .rule-item .rule-header{display:flex;align-items:flex-start;gap:1rem;margin-bottom:.75rem}
-.rule-item .rule-num{font-family:'Oswald',sans-serif;font-size:1.5rem;font-weight:700;color:var(--primary);text-shadow:0 0 10px rgba(245,197,24,.3);min-width:50px}
+.rule-item .rule-num{font-family:'Oswald',sans-serif;font-size:1.5rem;font-weight:700;color:var(--primary);text-shadow:0 0 10px rgba(227,77,77,.3);min-width:50px}
 .rule-item .rule-title{font-family:'Oswald',sans-serif;font-size:1.1rem;font-weight:700;color:var(--fg);text-transform:uppercase;letter-spacing:.05em;margin-bottom:.25rem}
 .rule-item .rule-text{color:var(--muted);font-size:.95rem;line-height:1.6;margin-bottom:.75rem}
-.rule-item .rule-penalty{background:rgba(245,197,24,.08);border-left:3px solid var(--primary);padding:.75rem 1rem;border-radius:0 8px 8px 0;font-size:.85rem;color:var(--fg)}
+.rule-item .rule-penalty{background:rgba(227,77,77,.08);border-left:3px solid var(--primary);padding:.75rem 1rem;border-radius:0 8px 8px 0;font-size:.85rem;color:var(--fg)}
 .rule-item .rule-penalty strong{color:var(--primary)}
 .ban-types-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:1rem}
 .ban-type-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:1.25rem;text-align:center}
@@ -20,11 +20,11 @@
 .ban-type-card p{color:var(--muted);font-size:.9rem;line-height:1.5}
 @media(max-width:600px){.rule-item .rule-header{flex-direction:column;gap:.5rem}}
 .rule-header{display:flex;align-items:baseline;gap:1rem;margin-bottom:0.75rem;flex-wrap:wrap}
-.rule-num{font-family:'Oswald',sans-serif;font-size:1.3rem;font-weight:700;color:#f5c518;min-width:50px}
+.rule-num{font-family:'Oswald',sans-serif;font-size:1.3rem;font-weight:700;color:var(--primary);min-width:50px}
 .rule-title{font-family:'Oswald',sans-serif;font-size:1.1rem;font-weight:700;color:var(--fg);text-transform:uppercase;letter-spacing:0.05em}
 .rule-text{color:var(--muted);font-size:0.95rem;line-height:1.5;margin-bottom:0.75rem;padding-left:0.5rem}
-.rule-penalty{background:rgba(245,197,24,0.08);border-left:3px solid #f5c518;padding:0.6rem 1rem;border-radius:0 8px 8px 0;font-size:0.85rem;color:var(--fg);margin-top:0.5rem}
-.rule-penalty strong{color:#f5c518}
+.rule-penalty{background:rgba(227,77,77,0.08);border-left:3px solid var(--primary);padding:0.6rem 1rem;border-radius:0 8px 8px 0;font-size:0.85rem;color:var(--fg);margin-top:0.5rem}
+.rule-penalty strong{color:var(--primary)}
 @media(max-width:768px){
     .rules-container{padding:1rem}
     .rules-nav{gap:0.5rem}
