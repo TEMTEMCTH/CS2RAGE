@@ -1,4 +1,4 @@
-// Демо-таблица топа игроков (статика)
+// топ игроков
 const TOP = [
   { rank: 1, nick: "RAGE_King", kills: 18432, deaths: 7211, kd: 2.55, hours: 1240 },
   { rank: 2, nick: "AwpMaster", kills: 15981, deaths: 7045, kd: 2.27, hours: 1102 },

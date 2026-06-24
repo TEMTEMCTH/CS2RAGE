@@ -1,4 +1,4 @@
-// data-tiers.js - Привилегии CS2RAGE
+//  Привилегии 
 const TIERS = [
   {
     id: "basic",

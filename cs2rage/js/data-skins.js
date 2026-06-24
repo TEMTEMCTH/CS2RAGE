@@ -1,4 +1,4 @@
-// Каталог скинов для скинченджера CS2RAGE
+// Каталог скинов для скинченджера 
 const WEAPON_CATEGORIES = [
   { id: "rifles",   name: "Винтовки" },
   { id: "snipers",  name: "Снайперки" },

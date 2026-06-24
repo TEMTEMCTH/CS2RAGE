@@ -1,11 +1,11 @@
-// Данные серверов CS2RAGE — все серверы OFFLINE, отображается реальный онлайн = 0
+// Данные серверов 
 const MODES = [
   { id: "public", name: "Public", desc: "Классические публичные серверы CS2 — основа проекта." },
   { id: "awp", name: "AWP", desc: "AWP-only арены для любителей снайперских дуэлей." },
   { id: "arena", name: "Arena 1v1", desc: "Дуэли 1 на 1 с системой ротации арен." },
 ];
 
-// Карты для каждого режима. Mirage в Public получает 10 серверов, остальные — 3-4
+// Карты 
 const MAPS = {
   public:   ["de_mirage", "de_dust2", "de_inferno", "de_nuke"],
   awp:      ["awp_lego", "awp_india", "awp_dust"],
@@ -21,7 +21,7 @@ const SERVERS = [];
 let id = 1;
 for (const mode of Object.keys(MAPS)) {
   for (const map of MAPS[mode]) {
-    // 10 серверов только для Mirage в Public, иначе 3-4
+    
     let count;
     if (mode === "public" && map === "de_mirage") count = 10;
     else count = 3 + Math.floor(Math.random() * 2); // 3 или 4
