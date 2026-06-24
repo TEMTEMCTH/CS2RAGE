@@ -8,13 +8,11 @@ header('Content-Type: application/json');
 header('Access-Control-Allow-Origin: *');
 
 // Параметры сервера
-$server_ip = '45.95.31.15';
-$server_port = 27415;
+$server_ip = '45.95.31.102';
+$server_port = 27315;
 
-// Пытаемся получить реальный онлайн через Source Query
+// Пытаемся получить реальный онлайн через Steam API
 $real_status = null;
-
-// Способ 1: через Steam API
 $steam_api_key = '40F730167B45B3497D8E5058BE91C521';
 $url = "https://api.steampowered.com/IGameServersService/GetServerList/v1/?key=" . $steam_api_key . "&filter=\\addr\\" . $server_ip . ":" . $server_port;
 
@@ -40,9 +38,8 @@ if ($http_code == 200 && $response) {
     }
 }
 
-// Если не удалось через Steam API, пробуем через UDP query
+// Если не удалось через Steam API, пробуем UDP ping
 if (!$real_status) {
-    // Простой UDP ping
     $socket = @fsockopen("udp://{$server_ip}", $server_port, $errno, $errstr, 1);
     if ($socket) {
         fclose($socket);
@@ -50,7 +47,7 @@ if (!$real_status) {
             'players' => 0,
             'max_players' => 32,
             'map' => 'de_mirage',
-            'status' => 'offline' // UDP открыт, но без игроков
+            'status' => 'offline'
         ];
     } else {
         $real_status = [
@@ -62,7 +59,7 @@ if (!$real_status) {
     }
 }
 
-// Формируем список серверов (10 Mirage, 5 Dust2, 5 Cache, 5 AWP, 5 Arena)
+// Формируем список серверов
 $servers = [];
 $id = 1;
 
@@ -79,7 +76,7 @@ for ($i = 1; $i <= 10; $i++) {
         'slots' => 32,
         'players' => $is_main ? $real_status['players'] : 0,
         'status' => $is_main ? $real_status['status'] : 'offline',
-        'ip' => $server_ip . ':' . (27415 + $i - 1)
+        'ip' => $server_ip . ':' . (27315 + $i - 1)
     ];
 }
 
@@ -95,7 +92,7 @@ for ($i = 1; $i <= 5; $i++) {
         'slots' => 32,
         'players' => 0,
         'status' => 'offline',
-        'ip' => $server_ip . ':' . (27425 + $i - 1)
+        'ip' => $server_ip . ':' . (27325 + $i - 1)
     ];
 }
 
@@ -111,7 +108,7 @@ for ($i = 1; $i <= 5; $i++) {
         'slots' => 32,
         'players' => 0,
         'status' => 'offline',
-        'ip' => $server_ip . ':' . (27430 + $i - 1)
+        'ip' => $server_ip . ':' . (27330 + $i - 1)
     ];
 }
 
@@ -127,7 +124,7 @@ for ($i = 1; $i <= 5; $i++) {
         'slots' => 20,
         'players' => 0,
         'status' => 'offline',
-        'ip' => $server_ip . ':' . (27435 + $i - 1)
+        'ip' => $server_ip . ':' . (27335 + $i - 1)
     ];
 }
 
@@ -143,7 +140,7 @@ for ($i = 1; $i <= 5; $i++) {
         'slots' => 16,
         'players' => 0,
         'status' => 'offline',
-        'ip' => $server_ip . ':' . (27440 + $i - 1)
+        'ip' => $server_ip . ':' . (27340 + $i - 1)
     ];
 }
 
